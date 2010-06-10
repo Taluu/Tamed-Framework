@@ -2,48 +2,29 @@
 /**
  * Initialisation du Bordel.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
  *
  * @package Talus' Works
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2007+
  * @link http://www.talus-works.net Talus' Works
  * @license http://www.gnu.org/licenses/gpl.html GNU Public License 3+
- * @version $Id: __init.php 2 2009-11-09 16:28:30Z talus $
  */
  
-if (!defined('ROOT') || !defined('PHP_EXT')) exit;
+if (!defined('SAFE')) exit;
 
-//TODO : Se documenter pour les espaces de noms... ?
+// -- Autoloader
 spl_autoload_register(
   function ($load) {
-    $folders = explode('\\', trim($load, '\\'));
-    $file = str_replace('_', '-', array_pop($folders)) . '.' . PHP_EXT;
+    $file = __DIR__ . DIRECTORY_SEPARATOR . $load . '.' . PHP_EXT;
 
-    $folders = empty($folders) ?: array('global');
-
-    $dir = ROOT . '/libs/namespaces/' . implode(DIRECTORY_SEPARATOR, $folders);
-    $file = "{$dir}/{$file}";
-
-    // -- Il s'agit soit d'une classe, soit d'un namespace
     if (file_exists($file)) {
       require $file;
-    } else {
-      throw new Exception("Wazzat ?");
+      return true;
     }
+
+    return false;
   }
  );
 
@@ -52,7 +33,7 @@ spl_autoload_register(
  */
 abstract class Obj {
   /**
-   * @var Talus_TPL
+   * @var Talus_TPL\Main
    */
   public static $tpl = null;
 
@@ -77,7 +58,7 @@ abstract class Sys {
 }
 
 // -- Init des objets
-Obj::$tpl = new Talus_TPL(__DIR__ . '/../apps/views/html/', __DIR__ . '/../apps/cache/');
+Obj::$tpl = new Talus_TPL\Main(__DIR__ . '/../views/html/', __DIR__ . '/../views/cache/');
 Obj::$date = new DateTime('now', new DateTimeZone(TW_TIME_ZONE));
 Obj::$router = new Router;
 
