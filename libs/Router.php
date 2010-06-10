@@ -46,7 +46,7 @@ class Router {
    * Nommage de paramètres
    *
    * @param string|array $arg,... Noms des paramètres à nommer
-   * @return void
+   * @return Router
    */
   public function name($arg) {
     $args = func_get_args();
@@ -75,6 +75,8 @@ class Router {
 
     unset($this->_params['command']);
     $this->_params['command'] = implode('/', array_merge($command, $this->_params));
+
+    return $this;
   }
 
   /**
@@ -83,7 +85,7 @@ class Router {
    * @param string $p Nom à récupérer
    * @return &string Valeur du paramètre (null si non trouvé)
    */
-  public function &get($p) {
+  protected function &_get($p) {
     if ($p == 'command') {
       return $this->_params['command'];
     }
@@ -93,6 +95,28 @@ class Router {
     }
 
     return null;
+  }
+
+  /**
+   * Récupère un ou plusieurs paramètres
+   *
+   * @param mixed $p,... Noms à récupérer
+   * @return &mixed Valeurs des paramètres (null si non trouvé)
+   */
+  public function &get($p) {
+    $p = is_array($p) ?: func_get_args();
+
+    if (count($p) > 1) {
+      $return = array();
+
+      foreach ($p as &$n) {
+        $return[$n] = $this->_get($n);
+      }
+
+      return $return;
+    }
+
+    return $this->_get($p);
   }
 }
 
