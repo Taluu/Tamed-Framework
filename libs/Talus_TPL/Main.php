@@ -40,12 +40,12 @@ class Main {
     $_vars = array(),
 
     /**
-     * @var Talus_TPL\Compiler_Interface
+     * @var Interfaces\Compiler
      */
     $_compiler = null,
 
     /**
-     * @var Talus_TPL\Cache_Interface
+     * @var Interfaces\Cache
      */
     $_cache = null;
 
@@ -54,7 +54,7 @@ class Main {
   const
     INCLUDE_TPL = 0,
     REQUIRE_TPL = 1,
-    VERSION = '1.8.0 Custom';
+    VERSION = 'Custom';
 
   /**
    * Initialisation.
