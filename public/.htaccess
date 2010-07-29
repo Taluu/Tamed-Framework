@@ -1,0 +1,27 @@
+##
+ # .htaccess
+ #
+ # For the full copyright and license information, please view the LICENSE file
+ # that was distributed with this source code.
+ #
+ # @package Talus' Works
+ # @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
+ # @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ # @link http://www.talus-works.net Talus' Works
+ # @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
+ ##
+
+Options +FollowSymLinks
+IndexIgnore */*
+
+# Turning on the RewriteEngine
+RewriteEngine On
+
+#  Rules
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php
+
+##
+ # EOF
+ ##
