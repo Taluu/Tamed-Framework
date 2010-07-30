@@ -70,11 +70,11 @@ interface Cache extends Dependency {
   public function destroy();
 
   /**
-   * Execute le contenu du cache
+   * Execute the cache's content
    *
-   * @param Talus_TPL $tpl TPL à executer
+   * @param Talus_TPL $tpl Object TPL to be used in the cache
    */
-  public function exec(Talus_TPL $tpl);
+  public function exec(\Talus_TPL\Main $tpl);
 }
 
 /*

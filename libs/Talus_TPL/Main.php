@@ -24,10 +24,11 @@
  * @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
  */
 
+namespace Talus_TPL;
+
 if (!defined('SAFE')) exit;
 if (!defined('PHP_EXT')) define('PHP_EXT', pathinfo(__FILE__, PATHINFO_EXTENSION));
 
-namespace Talus_TPL;
 
 class Main {
   protected
@@ -63,15 +64,19 @@ class Main {
    * @param string $root Directory where the templates files are.
    * @param string $cache Directory where the php version of the templates will be stored.
    * @param array $dependencies Dependency Injection
+   * @param boolean $autoload Set the autoloader (recommanded !) ?
    * @return void
    */
-  public function __construct($root, $cache, array $dependencies = array()){
+  public function __construct($root, $cache, array $dependencies = array(), $autoload = true){
     // -- Resetting the PHP cache concerning the files' information.
     clearstatcache();
 
     // -- Setting the autoload for the whole library
     if (self::$_autoloadSet === false) {
-      spl_autoload_register('self::_autoload');
+      if ($autoload == true) {
+        spl_autoload_register('self::_autoload');
+      }
+      
       self::$_autoloadSet = true;
     }
 

@@ -19,8 +19,18 @@ if (!defined('SAFE')) exit;
 if (defined('ALREADY_STARTED')) exit;
 define('ALREADY_STARTED', true);
 
-spl_autoload_register(function ($class) {});
+spl_autoload_register(function ($class) {
+  $file = explode('\\', $class); array_unshift($file, __DIR__);
+  $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
 
+  if (!is_file($file)) {
+    return false;
+  }
+
+  require $file;
+  return true;
+ });
+ 
 /**
  * Contains all the global objects needed for the project.
  */
@@ -28,12 +38,12 @@ abstract class Obj {
   static public $config = null;
 
   /**
-   * @var Controler
+   * @var Controller
    */
-  static public $controler = null;
+  static public $controller = null;
 
   /**
-   * @var Talus_TPL
+   * @var Talus_TPL\Main
    */
   static public $tpl = null;
 
@@ -44,6 +54,9 @@ abstract class Obj {
 }
 
 abstract class Sys {}
+
+Obj::$tpl = new Talus_TPL\Main(__DIR__ . '/../views/templates/', __DIR__ . '/../views/cache/', array(), false);
+Obj::$router = new Router;
 
 /*
  * EOF

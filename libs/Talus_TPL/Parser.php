@@ -23,9 +23,9 @@
  * @link http://www.talus-works.net Talus' Works
  * @license http://www.gnu.org/licenses/gpl.html GNU Public License 2+
  */
+namespace Talus_TPL;
 
 if (!defined('SAFE')) exit;
-namespace Talus_TPL;
 
 /**
  * Template's Parser

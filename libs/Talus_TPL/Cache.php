@@ -24,10 +24,10 @@
  * @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
  */
 
+namespace Talus_TPL;
+
 if (!defined('SAFE')) exit;
 if (!defined('PHP_EXT')) define('PHP_EXT', pathinfo(__FILE__, PATHINFO_EXTENSION));
-
-namespace Talus_TPL;
 
 /**
  * Cache Handler (file)
@@ -41,12 +41,6 @@ class Cache implements Interfaces\Cache {
     $_dir = null,
     $_file = array();
 
-  /**
-   * Accessor for $this->_dir
-   *
-   * @param string $dir Directory for the cache
-   * @return string
-   */
   public function dir($dir = null) {
     if ($dir !== null) {
       $dir = rtrim($dir, '/');
@@ -64,12 +58,6 @@ class Cache implements Interfaces\Cache {
     return $this->_dir;
   }
 
-  /**
-   * Set the file to use
-   *
-   * @param string $file File's name
-   * @return array Information on  the file
-   */
   public function file($file = null) {
     if ($file !== null) {
       $file = sprintf('%1$s/tpl_%2$s.%3$s', $this->dir(null), sha1(trim($file, '.')), PHP_EXT);
@@ -92,23 +80,11 @@ class Cache implements Interfaces\Cache {
     return $this->_file;
   }
 
-  /**
-   * Check if the cache file is still valid
-   *
-   * @param integer $time Last modification's timestamp
-   * @return boolean true if still valid, false if not
-   */
   public function isValid($time) {
     $file = $this->file(null);
     return $file['last_modif'] >= abs($time) && $file['size'] > 0;
   }
 
-  /**
-   * Write the content in the cache file
-   *
-   * @param string $data Data to be written
-   * @return boolean
-   */
   public function put($data) {
     $file = $this->file(null);
 
@@ -129,11 +105,6 @@ class Cache implements Interfaces\Cache {
     return true;
   }
 
-  /**
-   * Delete the cache file... If it exists.
-   *
-   * @return void
-   */
   public function destroy() {
     $file = $this->file(null);
 
@@ -143,13 +114,11 @@ class Cache implements Interfaces\Cache {
     }
   }
 
-  /**
-   * Executes the file's content
-   *
-   * @param Talus_TPL $tpl Templating object to be used in this file
-   * @return bool execution's status
-   */
-  public function exec(Talus_TPL $tpl) {
+  public function __invoke(Talus_TPL $tpl) {
+    return $this->exec($tpl);
+  }
+  
+  public function exec(Main $tpl) {
     $file = $this->file(null);
     $vars = $tpl->set(null);
 
@@ -166,19 +135,6 @@ class Cache implements Interfaces\Cache {
 
     include $file['url'];
     return true;
-  }
-
-  /**
-   * Executes the file's content
-   * Implementation of the magic method __invoke() for PHP >= 5.3
-   *
-   * @param Talus_TPL $tpl Objet TPL à utiliser lors de la lecture du cache
-   * @return bool
-   *
-   * @see self::exec()
-   */
-  public function __invoke(Talus_TPL $tpl) {
-    return $this->exec($tpl);
   }
 }
 

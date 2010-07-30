@@ -18,10 +18,13 @@
  * @link http://www.talus-works.net Talus' Works
  * @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
  */
+
 namespace Controller;
 
 define('SAFE', true);
-require __DIR__ . '/../libs/__init.php';
+if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo (__FILE__, \PATHINFO_EXTENSION));
+
+require __DIR__ . '/../libs/__init.' . PHP_EXT;
 
 abstract class Front {
   protected $_view;
@@ -42,11 +45,12 @@ abstract class Front {
   /**
    * @return Sub
    */
-  final public static function start() {}
+  final public static function start($controller = null) {
+    $controller = $controller ?: \Obj::$router->get('controller');
+  }
 }
 
 $p = Front::start();
-echo 'lala';
 
 /*
  * EOF
