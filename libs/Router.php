@@ -22,37 +22,15 @@ class Router {
     $_params = array(),
     $_namedParams = array();
 
+  /**
+   * @todo If it is not possible to work with REQUEST_URI, try to use the
+   *       QUERY_STRING instead... And build another QUERY_STRING then.
+   */
   public function __construct() {
-    $p = trim($_SERVER['REQUEST_URI']); $qs = '';
+    $p = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
+    $p = $p ?: trim($_SERVER['REQUEST_URI']);
 
-    if (strstr($p, '?') !== false) {
-      list($p, $qs) = explode('?', $_SERVER['REQUEST_URI'], 2);
-    }
-
-    // -- array_values is here used because array_filter preserves the keys
-    $this->_params = array_values(array_filter(explode('/', $p)));
-
-    // -- Query String recuperation if it's there
-    if (strlen($qs) > 0) {
-      $vars = array(); parse_str($qs, $vars);
-
-      /*
-       * Cleaning $_REQUEST, $_GET... And rebuilding them.
-       *
-       * @todo Check with the &request_order value to rebuild $_REQUEST
-       *       (Even if $_REQUEST is never used on the whole project, just to
-       *        make sure that it is correctly rebuilt !)
-       */
-      $_REQUEST = array(); $_GET = array();
-
-      foreach ($vars as $var => &$val) {
-        $_GET[$var] = $val;
-      }
-
-      $_REQUEST = array_merge($_GET, $_POST);
-    }
-
-    // -- Request URI interpretation.. Without the query string.
+    $this->_params = array_filter(explode('/', $p));
     $this->_command = implode('/', $this->_params);
     
     $this->name('controller');
