@@ -8,10 +8,10 @@
  * that was distributed with this source code.
  *
  * @package Talus' Works
- * @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
- * @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License 3+
  */
 
 if (!defined('SAFE')) exit;
@@ -65,7 +65,6 @@ class Router {
     }
     
     $this->_command = implode('/', array_merge($commands, $this->_params));
-
     return $this;
   }
 

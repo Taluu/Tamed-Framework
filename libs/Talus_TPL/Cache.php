@@ -7,11 +7,6 @@
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -41,6 +36,11 @@ class Cache implements Interfaces\Cache {
     $_dir = null,
     $_file = array();
 
+  protected 
+    $_dir = null,
+    $_file = array();
+
+
   public function dir($dir = null) {
     if ($dir !== null) {
       $dir = rtrim($dir, '/');
@@ -49,15 +49,15 @@ class Cache implements Interfaces\Cache {
         throw new Exceptions\Dir(array('The directory <b>"%s"</b> doesn\'t exist.', $dir));
         return false;
       }
-
+      
       $this->_dir = $dir;
     } elseif ($this->_dir === null) {
       $this->_dir = sys_get_temp_dir();
     }
-
+    
     return $this->_dir;
   }
-
+  
   public function file($file = null) {
     if ($file !== null) {
       $file = sprintf('%1$s/tpl_%2$s.%3$s', $this->dir(null), sha1(trim($file, '.')), PHP_EXT);
@@ -79,7 +79,7 @@ class Cache implements Interfaces\Cache {
 
     return $this->_file;
   }
-
+  
   public function isValid($time) {
     $file = $this->file(null);
     return $file['last_modif'] >= abs($time) && $file['size'] > 0;
@@ -94,7 +94,6 @@ class Cache implements Interfaces\Cache {
 
     if (!$lock){
       throw new Exceptions\Write('Writing in the cache not possible for now');
-      return false;
     }
 
     file_put_contents($file['url'], $data);
@@ -114,16 +113,11 @@ class Cache implements Interfaces\Cache {
     }
   }
 
-  public function __invoke(Talus_TPL $tpl) {
-    return $this->exec($tpl);
-  }
-  
   public function exec(Main $tpl) {
     $file = $this->file(null);
     $vars = $tpl->set(null);
 
     if ($file === array()) {
-      throw new Exceptions\Exec('Beware, this file is a ghost !');
       return false;
     }
 
@@ -135,6 +129,10 @@ class Cache implements Interfaces\Cache {
 
     include $file['url'];
     return true;
+  }
+  
+  public function __invoke(Main $tpl) {
+    return $this->exec($tpl);
   }
 }
 

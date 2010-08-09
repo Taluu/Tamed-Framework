@@ -22,7 +22,6 @@
  * @copyright ©Talus, Talus' Works 2007+
  * @link http://www.talus-works.net Talus' Works
  * @license http://www.gnu.org/licenses/lgpl.html Lesser GNU Public License 3+
- * @version $Id$
  */
 
 namespace Talus_TPL\Exceptions;

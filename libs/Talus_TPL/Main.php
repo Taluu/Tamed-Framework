@@ -146,7 +146,6 @@ class Main {
 
     if (!is_dir($root)) {
       throw new Exceptions\Dir(array('%s is not a directory.', $root), 1);
-      return;
     }
 
     $this->_root = $root;
@@ -187,7 +186,6 @@ class Main {
   public function bind($var, &$value) {
     if (mb_strtolower(gettype($var)) != 'string') {
       throw new Exceptions\Vars('Reference\'s name not valid.', 3);
-      return;
     }
 
     $this->_vars[$var] = &$value;
@@ -226,7 +224,6 @@ class Main {
       }
 
       throw new Exceptions\Block('Variable\'s name not valid.');
-      return null;
     }
 
     if (!is_array($vars)) {
@@ -249,7 +246,6 @@ class Main {
     foreach ($blocks as &$cur) {
       if (!isset($current[$cur])) {
         throw new Exceptions\Block(array('The <b>%s</b> block is not defined.', $cur), 4);
-        return null;
       }
 
       $current = &$current[$cur];
@@ -328,7 +324,6 @@ class Main {
     // -- Critical error if the argument $tpl is empty
     if (strlen((string) $tpl) === 0) {
       throw new Exceptions\Parse('No template to be parsed.', 5);
-      return false;
     }
 
     $file = sprintf('%1$s/%2$s', $this->_root, $tpl);
@@ -336,7 +331,6 @@ class Main {
     if (!isset($this->_last[$file])) {
       if (!is_file($file)) {
         throw new Exceptions\Parse(array('The template <b>%s</b> doesn\'t exist.', $tpl), 6);
-        return false;
       }
 
       $this->_last[$file] = filemtime($file);
@@ -367,15 +361,15 @@ class Main {
     }
 
     // -- Compilation
-    $compiled = $this->_parser->compile($str);
+    $compiled = $this->parser()->parse($str);
 
     // -- Cache if need to be executed. Will be destroyed right after the execution
     if ($exec === true) {
       $this->_tpl = sprintf('tmp_%s.html', sha1($str));
-      $this->_cache->file($this->_tpl, 0);
-      $this->_cache->put($compiled);
-      $this->_cache->exec($this);
-      $this->_cache->destroy();
+      $this->cache()->file($this->_tpl, 0);
+      $this->cache()->put($compiled);
+      $this->cache()->exec($this);
+      $this->cache()->destroy();
     }
 
     return $compiled;
@@ -511,9 +505,9 @@ class Main {
   /**
    * Compiler
    *
-   * @return Interfaces\Compiler
+   * @return Interfaces\Parser
    */
-  public function compiler() {
+  public function parser() {
     return $this->_parser;
   }
 
