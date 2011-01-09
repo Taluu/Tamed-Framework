@@ -51,12 +51,24 @@ abstract class Obj {
    * @var Router
    */
   static public $router = null;
+
+  /**
+   * @var Http\Request
+   */
+  static public $httpRequest = null;
+
+  /**
+   * @var Http\Response
+   */
+  static public $httpResponse = null;
 }
 
 abstract class Sys {}
 
 Obj::$tpl = new Talus_TPL\Main(__DIR__ . '/../views/templates/', __DIR__ . '/../views/cache/', array(), false);
 Obj::$router = new Router;
+Obj::$httpRequest = new Http\Request;
+Obj::$httpResponse = new Http\Response;
 
 /*
  * EOF

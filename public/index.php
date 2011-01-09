@@ -47,6 +47,7 @@ abstract class Front {
    */
   final public static function start($controller = null) {
     $controller = $controller ?: \Obj::$router->get('controller');
+    $controller = \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
   }
 }
 
