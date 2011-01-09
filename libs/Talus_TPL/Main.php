@@ -135,7 +135,7 @@ class Main {
    *
    * @param string $root Directory containing the original templates.
    * @param string $cache Directory containing the cache files.
-   * @throws Talus_Dir_Exception
+   * @throws Exceptions\Dir
    * @return void
    *
    * @since 1.7.0
