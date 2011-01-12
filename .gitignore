@@ -1,0 +1,11 @@
+#Ce fichier
+.gitignore
+
+#Ignorer le dossier .ignore
+.ignore/
+
+#Dossier de projet NetBeans
+nbproject/
+
+#MErise
+*.mwb
