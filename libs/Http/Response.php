@@ -17,12 +17,40 @@
 namespace Http;
 
 class Response {
+  /**
+   * Headers
+   */
   const
-    A = 0;
+    CONTINU = 100, SWITCHING_PROTOCOL = 101,
+    OK = 200, CREATED = 201, NO_CONTENT = 204, PARTIAL_CONTENT = 206,
+    MULTIPLE_CHOICE = 300, MOVED_PERMANENTLY = 301, MOVED_TEMPORARLY = 302, NOT_MODIFIED = 304,
+    BAD_REQUEST = 400, AUTHORIZATION_REQUIRED = 401, FORBIDDEN = 403, NOT_FOUND = 404, NOT_ALLOWED = 405,
+    SERVER_ERROR = 501, NOT_IMPLEMENTED = 502, SERVICE_UNAVAILABLE = 503, VERSION_NOT_SUPPORTED = 505;
 
-  protected
+  protected static
     $_status = array(
+      self::CONTINU => 'Continue',
+      self::SWITCHING_PROTOCOL => 'Switching Protocol',
 
+      self::CREATED => 'Created',
+      self::NO_CONTENT => 'No Content',
+      self::PARTIAL_CONTENT => 'Partial Content',
+
+      self::MULTIPLE_CHOICE => 'Multiple Choice',
+      self::MOVED_PERMANENTLY => 'Moved Permanently',
+      self::MOVED_TEMPORARLY => 'Moved Temporarly',
+      self::NOT_MODIFIED => 'Not Modified',
+
+      self::BAD_REQUEST => 'Bad Request',
+      self::AUTHORIZATION_REQUIRED => 'Authorization Required',
+      self::FORBIDDEN => 'Forbidden',
+      self::NOT_FOUND => 'Not Found',
+      self::NOT_ALLOWED => 'Not Allowed',
+
+      self::SERVER_ERROR => 'Server Error',
+      self::NOT_IMPLEMENTED => 'Not Implemented',
+      self::SERVICE_UNAVAILABLE => 'Service Unavailable',
+      self::VERSION_NOT_SUPPORTED => 'Version Not Supported'
      );
 
   /**
@@ -32,7 +60,7 @@ class Response {
    * @param boolean $replace Replace an existing header ?
    * @param integer $code
    */
-  public function header($header, $replace = true, $code = 200) {
+  public function header($header, $replace = true, $code = self::OK) {
     if (\headers_sent ()) {
       // @todo Manage correctly exceptions
       throw new Exception('The header have already been sent');
@@ -49,12 +77,14 @@ class Response {
    * @param integer $code Status code to be sent
    * @throws Exception if the URL is empty
    */
-  public function redirect($url, $time = 0, $code = 200) {
+  public function redirect($url, $time = 0, $code = self::OK) {
     if (empty($url)) {
       throw new Exception('Can\'t redirect to an empty url');
     }
 
     $header = $time !== 0 ? "Refresh: {$time};url={$url}" : "Location: {$url}";
+
+    $this->status($code);
     $this->header($header, true, $code);
   }
 
@@ -64,7 +94,12 @@ class Response {
    * @param integer $status Status of the page
    */
   public function status($status) {
-    $this->header($this->_status[$status], true, $status);
+    if (!isset(self::$_status[$status])) {
+      throw new Exception('Unknown status');
+    }
+
+    $header = sprintf('%1$s %2$d %3$s', $_SERVER['SERVER_PROTOCOL'], $status, self::$_status[$status]);
+    $this->header($header, true, $status);
   }
 
   /**
@@ -108,10 +143,7 @@ class Response {
    */
   public function __call($method, array $args) {
     if (substr($method, 0, 8) == 'redirect') {
-      $status = intval(substr($method, 8));
-
-      $this->status($status);
-      $this->redirect($args[0], $args[1] ?: 0, $status);
+      $this->redirect($args[0], $args[1] ?: 0, intval(substr($method, 8)));
       return;
     }
   }
