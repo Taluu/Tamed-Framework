@@ -27,8 +27,8 @@ class Router {
    *       QUERY_STRING instead... And build another QUERY_STRING then.
    */
   public function __construct() {
-    $p = strstr(trim(Obj::$httpRequest->server('REQUEST_URI')), '?', true);
-    $p = $p ?: trim(Obj::$httpRequest->server('REQUEST_URI'));
+    $p = strstr(trim(Obj::$httpResponse->server('request_uri')), '?', true);
+    $p = $p ?: trim(Obj::$httpResponse->server('request_uri'));
 
     $this->_params = array_filter(explode('/', $p));
     $this->_command = implode('/', $this->_params);

@@ -131,7 +131,7 @@ class Response {
    * @return mixed
    */
   public function server($key) {
-    return $_SERVER[$key] ?: null;
+    return $_SERVER[\strtolower($key)] ?: null;
   }
 
   /**

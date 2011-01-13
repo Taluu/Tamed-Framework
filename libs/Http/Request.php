@@ -65,22 +65,16 @@ class Request {
    * @return mixed
    */
   public function getParam($key, $filter = self::ALL) {
-    $methods = array();
-
     foreach (array('post', 'get', 'cookie') as $method) {
-      if ($filter & \constant('self::' . $method)) {
-        $methods[] = $method;
+      if ($filter & \constant('self::' . \strtoupper($method))) {
+        $val = \call_user_func(array($this, $method), $key);
+
+        if ($val !== null) {
+          return $val;
+        }
       }
     }
-
-    foreach ($methods as &$method) {
-      $val = \call_user_func(array($this, $method), $key);
-      
-      if ($val !== null) {
-        return $val;
-      }
-    }
-
+    
     return null;
   }
 }
