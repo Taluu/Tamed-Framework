@@ -11,7 +11,7 @@
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
- * @license http://www.gnu.org/licenses/gpl.html GNU Public License 3+
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
  */
 
 namespace Http;
@@ -98,12 +98,12 @@ class Response {
       throw new Exception('Unknown status');
     }
 
-    $header = sprintf('%1$s %2$d %3$s', $_SERVER['SERVER_PROTOCOL'], $status, self::$_status[$status]);
+    $header = sprintf('%1$s %2$d %3$s', $this->server('server_protocol'), $status, self::$_status[$status]);
     $this->header($header, true, $status);
   }
 
   /**
-   * Send a cookie to the client
+   * Sends a cookie to the client
    *
    * @param string $name Name of the cookie
    * @param mixed $val Value of the cookie
@@ -131,7 +131,7 @@ class Response {
    * @return mixed
    */
   public function server($key) {
-    return $_SERVER[\strtolower($key)] ?: null;
+    return $_SERVER[\strtoupper($key)] ?: null;
   }
 
   /**

@@ -11,7 +11,7 @@
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
- * @license http://www.gnu.org/licenses/gpl.html GNU Public License 3+
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
  */
 
 if (!defined('SAFE')) exit;

@@ -16,7 +16,7 @@
  * @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @link http://www.talus-works.net Talus' Works
- * @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
  */
 
 namespace Controller;

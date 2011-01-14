@@ -12,7 +12,7 @@
  * @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @link http://www.talus-works.net Talus' Works
- * @license http://www.gnu.org/licenses/lgpl.html LGNU Public License 2+
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
  */
 
 if (!defined('SAFE')) exit;
@@ -35,40 +35,48 @@ spl_autoload_register(function ($class) {
  * Contains all the global objects needed for the project.
  */
 abstract class Obj {
+  /**
+   * @var \Config
+   */
   static public $config = null;
 
   /**
-   * @var Controller
+   * @var \Controller\Front
    */
   static public $controller = null;
 
   /**
-   * @var Talus_TPL\Main
-   */
-  static public $tpl = null;
-
-  /**
-   * @var Router
-   */
-  static public $router = null;
-
-  /**
-   * @var Http\Request
+   * @var \Http\Request
    */
   static public $httpRequest = null;
 
   /**
-   * @var Http\Response
+   * @var \Http\Response
    */
   static public $httpResponse = null;
+
+  /**
+   * @var \ORM
+   */
+  static public $orm = null;
+
+  /**
+   * @var \Router
+   */
+  static public $router = null;
+
+  /**
+   * @var \Talus_TPL\Main
+   */
+  static public $tpl = null;
 }
 
 abstract class Sys {}
 
-Obj::$httpRequest = new Http\Request;
-Obj::$httpResponse = new Http\Response;
-Obj::$router = new Router;
-Obj::$tpl = new Talus_TPL\Main(__DIR__ . '/../views/templates/', __DIR__ . '/../views/cache/', array(), false);
+Obj::$httpRequest = new \Http\Request;
+Obj::$httpResponse = new \Http\Response;
+Obj::$router = new \Router;
+Obj::$tpl = new \Talus_TPL\Main(__DIR__ . '/../views/templates/', __DIR__ . '/../views/cache/', array(), false);
 
 /*
  * EOF
