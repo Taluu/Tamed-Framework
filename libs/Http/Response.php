@@ -19,6 +19,8 @@ namespace Http;
 class Response {
   /**
    * Headers
+   * 
+   * @todo check how to write CONTINUE for CONTINU...
    */
   const
     CONTINU = 100, SWITCHING_PROTOCOL = 101,

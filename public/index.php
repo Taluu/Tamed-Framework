@@ -80,9 +80,17 @@ abstract class Front {
    * @param self $controller Controller to be used. null if it has to guess it.
    * @return self
    */
-  final public static function dispatch(\Http\Request $_request, \Http\Response $_response, self $controller = null) {
-    if ($controller !== null) {
+  final public static function dispatch($_request = null, $_response = null, self $controller = null) {
+    if ($controller !== null) { 
       return $controller;
+    }
+    
+    if ($_request === null) {
+      $_request = new \Http\Request;
+    }
+    
+    if ($_response === null) {
+      $_response = new \Http\Response;  
     }
     
     $controller = $controller ?: \Obj::$router->get('controller');
@@ -93,7 +101,7 @@ abstract class Front {
   }
 }
 
-$p = Front::dispatch(new \Http\Request, new \Http\Response);
+$p = Front::dispatch();
 $p->main();
 
 /*
