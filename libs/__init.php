@@ -19,16 +19,23 @@ if (!defined('SAFE')) exit;
 if (defined('ALREADY_STARTED')) exit;
 define('ALREADY_STARTED', true);
 
+/**
+ * @todo Make a better handling of this loader
+ */
 spl_autoload_register(function ($class) {
-  $file = explode('\\', $class); array_unshift($file, __DIR__);
+  $file = explode('\\', $class);
   $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
 
-  if (!is_file($file)) {
+  if (is_file(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
+    require __DIR__ . DIRECTORY_SEPARATOR . $file;
+  } elseif (is_file(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $file)) {
+    require __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $file;
+  } else {
     return false;
   }
-
-  require $file;
+  
   return true;
+  
  });
  
 /**
@@ -41,22 +48,8 @@ abstract class Obj {
   static public $config = null;
 
   /**
-   * @var \Controller\Front
-   */
-  static public $controller = null;
-
-  /**
-   * @var \Http\Request
-   */
-  static public $httpRequest = null;
-
-  /**
-   * @var \Http\Response
-   */
-  static public $httpResponse = null;
-
-  /**
    * @var \ORM
+   * @todo Develop the ORM...
    */
   static public $orm = null;
 
@@ -64,19 +57,12 @@ abstract class Obj {
    * @var \Router
    */
   static public $router = null;
-
-  /**
-   * @var \Talus_TPL\Main
-   */
-  static public $tpl = null;
 }
 
 abstract class Sys {}
 
-Obj::$httpRequest = new \Http\Request;
-Obj::$httpResponse = new \Http\Response;
 Obj::$router = new \Router;
-Obj::$tpl = new \Talus_TPL\Main(__DIR__ . '/../views/templates/', __DIR__ . '/../views/cache/', array(), false);
+Obj::$config = new \Config;
 
 /*
  * EOF

@@ -22,36 +22,79 @@
 namespace Controller;
 
 define('SAFE', true);
-if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo (__FILE__, \PATHINFO_EXTENSION));
+if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSION));
 
 require __DIR__ . '/../libs/__init.' . PHP_EXT;
 
 abstract class Front {
-  protected $_view;
-
-  final protected function  __construct() {
-    $this->main();
-    
-    $this->_head();
-    Obj::$tpl->parse($this->_view);
-    $this->_foot();
-  }
-
-  final protected function _head() {}
-  final protected function _foot() {}
-
-  abstract protected function main();
+  protected
+    /**
+     * @var string
+     */
+    $_template,
+     
+    /**
+     * @var \Http\Request
+     */
+    $_request = null,
+     
+    /**
+     * @var Http\Response
+     */
+    $_response = null;
 
   /**
-   * @return Sub
+   * Starts the frame
+   * 
+   * @param \Http\Request $_request HTTP Request handler
+   * @param \Http\Response $_response HTTP Response handler
    */
-  final public static function start($controller = null) {
+  final protected function  __construct(\Http\Request $_request, \Http\Response $_response) {
+    $this->_request = $_request;
+    $this->_response = $_response;
+    
+    $this->_main();
+    $this->_response->render($this->_template);
+  }
+
+  /**
+   * Will be runned before the treatment
+   */
+  protected function _prepend() {}
+  
+  /**
+   * Will be runned after the treatment
+   */
+  protected function _append() {}
+
+  /**
+   * Main function
+   */
+  final public function main() {}
+
+  /**
+   * Prepare the page, matching a route if any
+   * 
+   * @param \Http\Request $_request HTTP Request Object
+   * @param \Http\Response $_request HTTP Response Object
+   * @param self $controller Controller to be used. null if it has to guess it.
+   * @return self
+   */
+  final public static function dispatch(\Http\Request $_request, \Http\Response $_response, self $controller = null) {
+    if ($controller !== null) {
+      return $controller;
+    }
+    
     $controller = $controller ?: \Obj::$router->get('controller');
-    $controller = \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
+    $controller = 'Sub\\' . \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
+    
+    // require sprintf('%1$s/../apps/%2$s/controller.%2$s', __DIR__, PHP_EXT);
+    // return new $controller($_request, $_response);
   }
 }
 
-$p = Front::start();
+$p = Front::dispatch(new \Http\Request, new \Http\Response);
+$p->main();
 
 /*
  * EOF
