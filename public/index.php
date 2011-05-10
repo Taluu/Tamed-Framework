@@ -31,7 +31,19 @@ abstract class Front {
     /**
      * @var string
      */
-    $_template,
+    $_template = null,
+     
+    /**
+     * View Engine
+     * 
+     * @var \View\iView
+     */
+    $_view = null,
+     
+    /**
+     * @var array
+     */
+    $_vars = array(),
      
     /**
      * @var \Http\Request
@@ -44,14 +56,16 @@ abstract class Front {
     $_response = null;
 
   /**
-   * Starts the frame
+   * Starts and render the frame
    * 
    * @param \Http\Request $_request HTTP Request handler
    * @param \Http\Response $_response HTTP Response handler
+   * @param \View\iView $_view View engine
    */
-  final protected function  __construct(\Http\Request $_request, \Http\Response $_response) {
+  final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\iView $_view) {
     $this->_request = $_request;
     $this->_response = $_response;
+    $this->_view = $this->_response->view($_view);
     
     $this->_main();
     $this->_response->render($this->_template);
@@ -59,11 +73,22 @@ abstract class Front {
 
   /**
    * Will be runned before the treatment
+   * 
+   * If it has to be overridden, don't forget to call __this__ method first !
+   * <code>protected function _prepend() { parent::_prepend(); }</code>
+   * ... Or at least, do the gist of what it is doing.
+   * 
+   * @return void
    */
   protected function _prepend() {}
   
   /**
    * Will be runned after the treatment
+   * If it has to be overridden, don't forget to call __this__ method first !
+   * <code>protected function _append() { parent::_append(); }</code>
+   * ... Or at least, do the gist of what it is doing.
+   * 
+   * @return void
    */
   protected function _append() {}
 
@@ -77,10 +102,11 @@ abstract class Front {
    * 
    * @param \Http\Request $_request HTTP Request Object
    * @param \Http\Response $_request HTTP Response Object
+   * @param 
    * @param self $controller Controller to be used. null if it has to guess it.
    * @return self
    */
-  final public static function dispatch($_request = null, $_response = null, self $controller = null) {
+  final public static function dispatch($_request = null, $_response = null, $_view = null, self $controller = null) {
     if ($controller !== null) { 
       return $controller;
     }
@@ -93,11 +119,46 @@ abstract class Front {
       $_response = new \Http\Response;  
     }
     
+    if ($_view === null) {
+      //$_view = new \View\Talus_TPL.php
+    }
+    
     $controller = $controller ?: \Obj::$router->get('controller');
     $controller = 'Sub\\' . \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
     
     // require sprintf('%1$s/../apps/%2$s/controller.%2$s', __DIR__, PHP_EXT);
     // return new $controller($_request, $_response);
+  }
+  
+  /**
+   * Sets a variable $var for the view
+   * 
+   * @param string $var Variable's name
+   * @param mixed $val  Variable's value
+   * @return void
+   */
+  final public function __set($var, $val) {
+    $this->_vars[$var] = $val;
+  }
+  
+  /**
+   * Unsets the variable $name
+   * 
+   * @param string $name Variable's name
+   * @return void
+   */
+  public function __unset($name) {
+    unset($this->_vars[$name]);
+  }
+  
+  /**
+   * Checks if the variable $name is set
+   * 
+   * @param string $name Variable's name
+   * @return boolean 
+   */
+  public function __isset($name) {
+    return isset($this->_vars[$name]);
   }
 }
 

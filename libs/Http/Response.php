@@ -54,6 +54,14 @@ class Response {
       self::SERVICE_UNAVAILABLE => 'Service Unavailable',
       self::VERSION_NOT_SUPPORTED => 'Version Not Supported'
      );
+  
+  protected
+    /**
+     * View
+     * 
+     * @var \View\iView
+     */
+    $_view = null;
 
   /**
    * Send a header to the client
@@ -118,11 +126,17 @@ class Response {
 
   /**
    * Render the current page
+   * Sends all the headers (cookie, session, ...), and render the $view file.
    *
-   * @todo To develop ?
+   * @param string $view File to be rendered
+   * @return void
+   * @todo well... todo.
    */
-  public function render() {
-    \ob_end_flush();
+  public function render($view) {
+    // -- Send headers (todo)
+    
+    \ob_end_flush(); // ?
+    $this->_view->render($view);
     exit;
   }
 
@@ -148,6 +162,20 @@ class Response {
       $this->redirect($args[0], $args[1] ?: 0, intval(substr($method, 8)));
       return;
     }
+  }
+  
+  /**
+   * Affects a new view engine (if it is not null).
+   * 
+   * @param \View\iView $_view View engine to affect
+   * @return \View\iView View engine affected
+   */
+  public function view(\View\iView $_view = null) {
+    if ($view !== null) {
+      $this->_view = $_view;
+    }
+    
+    return $this->view;
   }
 
 }
