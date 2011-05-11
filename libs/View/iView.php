@@ -20,29 +20,38 @@ interface iView {
   const
     INFO_NAME = 1,
     INFO_VERSION = 2,
-     
+
     /** Returning all the infos **/
     INFO_ALL = 3;
-  
+
   /**
-   * Assign a variable
-   * 
-   * @param string $var Variable's name
+   * Assigns a variable
+   *
+   * @param string $var Variable's name (tpl side)
    * @param string $value Variable's value
    * @return void
    */
   public function assign($var, $value);
-  
+
+  /**
+   * Binds a variable
+   *
+   * @param string $var Variable's name (tpl side)
+   * @param mixed &$value Variable references (php side)
+   * @return void
+   */
+  public function bind($var, &$value);
+
   /**
    * Renders a view
-   * 
+   *
    * @return void
    */
   public function render($view);
-  
+
   /**
    * Gets information regarding the engine
-   * 
+   *
    * @return mixed
    */
   public function getEngineInfos($info = self::INFO_ALL);
