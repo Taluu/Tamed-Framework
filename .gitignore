@@ -1,5 +1,8 @@
-#Ce fichier
-.gitignore
+#Fichiers .git
+.git*
+
+# ... Sauf gitattributes
+!.gitattributes
 
 #Ignorer le dossier .ignore
 .ignore/

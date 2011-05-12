@@ -12,6 +12,7 @@
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
+ * @version $Id$
  */
 
 namespace Http;
@@ -20,7 +21,7 @@ namespace Http;
  * @todo Handle sessions ?
  */
 class Request {
-  const 
+  const
       GET = 1,
       POST = 2,
       COOKIE = 4,
@@ -74,7 +75,7 @@ class Request {
         }
       }
     }
-    
+
     return null;
   }
 }

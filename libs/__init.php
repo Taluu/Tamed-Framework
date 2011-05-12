@@ -13,6 +13,7 @@
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
+ * @version $Id$
  */
 
 if (!defined('SAFE')) exit;
@@ -33,11 +34,11 @@ spl_autoload_register(function ($class) {
   } else {
     return false;
   }
-  
+
   return true;
-  
+
  });
- 
+
 /**
  * Contains all the global objects needed for the project.
  */

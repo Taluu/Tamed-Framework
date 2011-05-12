@@ -12,6 +12,7 @@
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
+ * @version $Id$
  */
 
 namespace Http;
@@ -19,7 +20,7 @@ namespace Http;
 class Response {
   /**
    * Headers
-   * 
+   *
    * @todo check how to write CONTINUE for CONTINU...
    */
   const
@@ -54,11 +55,11 @@ class Response {
       self::SERVICE_UNAVAILABLE => 'Service Unavailable',
       self::VERSION_NOT_SUPPORTED => 'Version Not Supported'
      );
-  
+
   protected
     /**
      * View
-     * 
+     *
      * @var \View\iView
      */
     $_view = null;
@@ -134,7 +135,7 @@ class Response {
    */
   public function render($view) {
     // -- Send headers (todo)
-    
+
     \ob_end_flush(); // ?
     $this->_view->render($view);
     exit;
@@ -163,10 +164,10 @@ class Response {
       return;
     }
   }
-  
+
   /**
    * Affects a new view engine (if it is not null).
-   * 
+   *
    * @param \View\iView $_view View engine to affect
    * @return \View\iView View engine affected
    */
@@ -174,7 +175,7 @@ class Response {
     if ($view !== null) {
       $this->_view = $_view;
     }
-    
+
     return $this->view;
   }
 
