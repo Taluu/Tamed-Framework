@@ -21,9 +21,10 @@ interface iView {
   const
     INFO_NAME = 1,
     INFO_VERSION = 2,
+    INFO_ENGINE = 4,
 
     /** Returning all the infos **/
-    INFO_ALL = 3;
+    INFO_ALL = 7;
 
   /**
    * Assigns a variable
@@ -53,6 +54,7 @@ interface iView {
   /**
    * Gets information regarding the engine
    *
+   * @param int $info Level of information needed
    * @return mixed
    */
   public function getEngineInfos($info = self::INFO_ALL);

@@ -24,19 +24,15 @@ define('ALREADY_STARTED', true);
  * @todo Make a better handling of this loader
  */
 spl_autoload_register(function ($class) {
-  $file = explode('\\', $class);
+  $file = explode('\\', $class);  array_unshift($file, __DIR__);
   $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
 
-  if (is_file(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
-    require __DIR__ . DIRECTORY_SEPARATOR . $file;
-  } elseif (is_file(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $file)) {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $file;
-  } else {
+  if (!is_file($file)) {
     return false;
   }
 
+  require_once $file;
   return true;
-
  });
 
 /**

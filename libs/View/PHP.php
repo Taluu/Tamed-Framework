@@ -1,0 +1,58 @@
+<?php
+/**
+ * Definition of a view written in PHP syntax
+ *
+ * Acts as a bridge between PHP and Talus' Works, letting PHP acts as the templating
+ * engine
+ *
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ *
+ * @package Talus' Works
+ * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ * @copyright ©Talus, Talus' Works 2010+
+ * @link http://www.talus-works.net Talus' Works
+ * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
+ * @version $Id$
+ */
+
+namespace View;
+
+class PHP implements iView {
+  protected $_vars = array();
+
+  public function assign($var, $value){
+    $this->_vars[$var] = $value;
+  }
+
+  public function bind($var, &$value){
+    $this->_vars[$var] = &$value;
+  }
+
+  public function getEngineInfos($info = self::INFO_ALL) {
+    $return = array();
+
+    if ($info & self::INFO_ENGINE) {
+      $return[] = null; // PHP Itself is the templating engine
+    }
+
+    if ($info & self::INFO_NAME) {
+      $return[] = 'PHP';
+    }
+
+    if ($info & self::INFO_VERSION) {
+      $return[] = PHP_VERSION;
+    }
+
+    if (count($return) == 1) {
+      $return = $return[0];
+    }
+
+    return $return;
+  }
+
+  public function render($view) {
+    extract($this->_vars, EXTR_REFS | EXTR_OVERWRITE);
+    include __DIR__ . '/../../views/templates/' . $view;
+  }
+}
