@@ -18,6 +18,8 @@
 
 namespace View;
 
+require __DIR__ . '/../Vendor/Talus-TPL/Talus_TPL/Talus_TPL.php';
+
 class Talus_TPL implements iView {
   protected
     /**
@@ -25,8 +27,9 @@ class Talus_TPL implements iView {
      */
     $_engine = null;
 
-  public function __construct($root, $cache) {
-    $this->_engine = new \Talus_TPL($root, $cache, array());
+  public function __construct() {
+    $dir = __DIR__ . '/../../views/';
+    $this->_engine = new \Talus_TPL($dir . 'templates', $dir . 'cache', array());
   }
 
   public function assign($var, $value){
@@ -60,6 +63,6 @@ class Talus_TPL implements iView {
   }
 
   public function render($view) {
-    return $this->_engine->parse($view);
+    return $this->_engine->parse($view . '.html');
   }
 }

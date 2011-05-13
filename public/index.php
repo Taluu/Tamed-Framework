@@ -124,7 +124,7 @@ abstract class Front {
     }
 
     if ($_view === null) {
-      //$_view = new \View\Talus_TPL.php
+      $_view = new \View\Talus_TPL;
     }
 
     $controller = $controller ?: \Obj::$router->get('controller');
