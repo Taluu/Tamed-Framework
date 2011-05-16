@@ -51,14 +51,13 @@ abstract class Obj {
   static public $orm = null;
 
   /**
-   * @var \Router
+   * @var \Controller\Front
    */
-  static public $router = null;
+  static public $controller = null;
 }
 
 abstract class Sys {}
 
-Obj::$router = new \Router;
 Obj::$config = new \Config;
 
 /*

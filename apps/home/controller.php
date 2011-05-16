@@ -19,7 +19,7 @@ class Home extends \Controller\Front {
   /**
    * Dispatcher
    */
-  protected function main() {
+  protected function dispatch() {
 
   }
 }

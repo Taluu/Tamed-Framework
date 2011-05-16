@@ -54,7 +54,12 @@ abstract class Front {
     /**
      * @var Http\Response
      */
-    $_response = null;
+    $_response = null,
+
+    /**
+     * @var \Router
+     */
+    $_router = null;
 
   /**
    * Starts and render the frame
@@ -97,7 +102,16 @@ abstract class Front {
   /**
    * Main function
    */
-  final public function main() {}
+  final public function main() {
+    $this->_prepend();
+    $this->_dispatch();
+    $this->_append();
+  }
+
+  /**
+   * Dispatcher
+   */
+  abstract protected function dispatch();
 
   /**
    * Prepare the page, matching a route if any
@@ -108,9 +122,9 @@ abstract class Front {
    * @param self $_controller Controller to be used. null if it has to guess it.
    * @return self
    *
-   * @todo Develop a bridge between the view and Talus TPL, or PHP, etc
+   * @todo Review the routing mechanism
    */
-  final public static function dispatch($_request = null, $_response = null, $_view = null, self $_controller = null) {
+  final public static function getController($_request = null, $_response = null, $_view = null, self $_controller = null) {
     if ($_controller !== null) {
       return $_controller;
     }
@@ -127,8 +141,8 @@ abstract class Front {
       $_view = new \View\Talus_TPL;
     }
 
-    $_controller = $_controller ?: \Obj::$router->get('controller');
-    $_controller = \mb_convert_case($_controller ?: 'home', \MB_CASE_TITLE);
+    // $router = new Router($_response);
+    // $_controller = \mb_convert_case($router->get('controller') ?: 'home', \MB_CASE_TITLE);
 
     // require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
     //
@@ -168,7 +182,7 @@ abstract class Front {
   }
 }
 
-$p = Front::dispatch();
+$p = Front::getController();
 $p->main();
 
 /*
