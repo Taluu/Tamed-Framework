@@ -105,14 +105,14 @@ abstract class Front {
    * @param \Http\Request $_request HTTP Request Object
    * @param \Http\Response $_request HTTP Response Object
    * @param \View\iView $_view View engine
-   * @param self $controller Controller to be used. null if it has to guess it.
+   * @param self $_controller Controller to be used. null if it has to guess it.
    * @return self
    *
    * @todo Develop a bridge between the view and Talus TPL, or PHP, etc
    */
-  final public static function dispatch($_request = null, $_response = null, $_view = null, self $controller = null) {
-    if ($controller !== null) {
-      return $controller;
+  final public static function dispatch($_request = null, $_response = null, $_view = null, self $_controller = null) {
+    if ($_controller !== null) {
+      return $_controller;
     }
 
     if ($_request === null) {
@@ -127,13 +127,13 @@ abstract class Front {
       $_view = new \View\Talus_TPL;
     }
 
-    $controller = $controller ?: \Obj::$router->get('controller');
-    $controller = \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
+    $_controller = $_controller ?: \Obj::$router->get('controller');
+    $_controller = \mb_convert_case($_controller ?: 'home', \MB_CASE_TITLE);
 
-    // require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, PHP_EXT);
+    // require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
     //
-    // $controller = 'Sub\\' . $controller;
-    // return new $controller($_request, $_response, $_view);
+    // $_controller = 'Sub\\' . $_controller;
+    // return new $_controller($_request, $_response, $_view);
   }
 
   /**
