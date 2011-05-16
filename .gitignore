@@ -1,14 +1,11 @@
-#Fichiers .git
+#.git files
 .git*
-
-# ... Sauf gitattributes
 !.gitattributes
 
-#Ignorer le dossier .ignore
 .ignore/
 
-#Dossier de projet NetBeans
+# Netbeans Project directory
 nbproject/
 
-#MErise
+# Merise
 *.mwb
