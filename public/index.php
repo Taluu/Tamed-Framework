@@ -128,9 +128,11 @@ abstract class Front {
     }
 
     $controller = $controller ?: \Obj::$router->get('controller');
-    $controller = 'Sub\\' . \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
+    $controller = \mb_convert_case($controller ?: 'home', \MB_CASE_TITLE);
 
-    // require sprintf('%1$s/../apps/%2$s/controller.%2$s', __DIR__, PHP_EXT);
+    // require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, PHP_EXT);
+    //
+    // $controller = 'Sub\\' . $controller;
     // return new $controller($_request, $_response, $_view);
   }
 
