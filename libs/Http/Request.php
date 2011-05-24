@@ -1,14 +1,8 @@
 <?php
 /**
- * Definition of the HttpRequest class
- *
- * Handles eveything sent by the client.
- *
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
- * @package Talus' Works
- * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
@@ -18,7 +12,12 @@
 namespace Http;
 
 /**
- * @todo Handle sessions ?
+ * Definition of the HttpRequest class
+ *
+ * Handles eveything sent by the client.
+ *
+ * @package twk.http
+ * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Request {
   const

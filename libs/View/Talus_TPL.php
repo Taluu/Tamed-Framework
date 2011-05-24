@@ -1,15 +1,8 @@
 <?php
 /**
- * Definition of a view written in Talus TPL syntax
- *
- * Acts as a bridge between Talus' TPL and Talus' Works, allowing to use Talus TPL
- * in the views
- *
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
- * @package Talus' Works
- * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
@@ -20,6 +13,15 @@ namespace View;
 
 require __DIR__ . '/../Vendor/Talus-TPL/Talus_TPL/Talus_TPL.php';
 
+/**
+ * Definition of a view written in Talus TPL syntax
+ *
+ * Acts as a bridge between Talus' TPL and Talus' Works, allowing to use Talus TPL
+ * in the views
+ *
+ * @package twk.view
+ * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ */
 class Talus_TPL implements iView {
   protected
     /**

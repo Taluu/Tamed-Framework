@@ -1,14 +1,8 @@
 <?php
 /**
- * Definition of the HttpResponse class
- *
- * Handles eveything sent by the server.
- *
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
- * @package Talus' Works
- * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
@@ -17,6 +11,14 @@
 
 namespace Http;
 
+/**
+ * Definition of the HttpResponse class
+ *
+ * Handles eveything sent by the server.
+ *
+ * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ * @package twk.http
+ */
 class Response {
   /**
    * Headers
@@ -30,7 +32,7 @@ class Response {
     BAD_REQUEST = 400, AUTHORIZATION_REQUIRED = 401, FORBIDDEN = 403, NOT_FOUND = 404, NOT_ALLOWED = 405,
     SERVER_ERROR = 501, NOT_IMPLEMENTED = 502, SERVICE_UNAVAILABLE = 503, VERSION_NOT_SUPPORTED = 505;
 
-  protected static
+  private static
     $_status = array(
       self::CONTINU => 'Continue',
       self::SWITCHING_PROTOCOL => 'Switching Protocol',
@@ -62,7 +64,9 @@ class Response {
      *
      * @var \View\iView
      */
-    $_view = null;
+    $_view = null,
+    $_headers = array(),
+    $_cookies = array();
 
   /**
    * Send a header to the client
@@ -71,13 +75,9 @@ class Response {
    * @param boolean $replace Replace an existing header ?
    * @param integer $code
    */
-  public function header($header, $replace = true, $code = self::OK) {
-    if (\headers_sent ()) {
-      // @todo Manage correctly exceptions
-      throw new Exception('The header have already been sent');
-    }
-
-    \header($header, $replace, $code);
+  public function header($header, $value, $replace = true, $code = self::OK) {
+    //$this->_headers[$header] = new Header($header, $value, $replace, $code);
+    \header($header. ': ' . $value, $replace, $code);
   }
 
   /**
@@ -119,10 +119,10 @@ class Response {
    * @param string $name Name of the cookie
    * @param mixed $val Value of the cookie
    * @param integer $timeout Timeout of the cookie
-   * @return bool Success of the operation
+   * @return void
    */
   public function cookie($name, $val, $timeout) {
-    return \setrawcookie($name, \rawurlencode($str), \time() + $timeout);
+    $this->_cookies[$name] = new Cookie($name, $val, $timeout);
   }
 
   /**
@@ -134,9 +134,7 @@ class Response {
    * @todo well... todo.
    */
   public function render($view) {
-    // -- Send headers (todo)
-
-    \ob_end_flush(); // ?
+    //\ob_end_flush(); // ?
     $this->_view->render($view);
     exit;
   }
@@ -177,6 +175,26 @@ class Response {
     }
 
     return $this->view;
+  }
+
+  /**
+   * Sends the header to the navigator
+   *
+   * @return void
+   */
+  public function sendHeaders() {
+    if (\headers_sent ()) {
+      // @todo Manage correctly exceptions
+      throw new Exception('The header have already been sent');
+    }
+
+    foreach ($this->_headers as &$header) {
+      $header->send();
+    }
+
+    foreach ($this->_cookies as &$cookie) {
+      $cookie->send();
+    }
   }
 
 }
