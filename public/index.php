@@ -106,8 +106,8 @@ abstract class Front {
   /**
    * Main function
    */
-  final private function main() {
-    $action = Obj::$router->get('action');
+  final private function _main() {
+    $action = \Obj::$router->get('action');
 
     if (!method_exists($this, $action)) {
       $this->_response->redirect404('/error/404');
@@ -147,13 +147,13 @@ abstract class Front {
       $_view = new \View\Talus_TPL;
     }
 
-    Obj::$router->route($_request);
+    \Obj::$router->route($_request);
 
-    $_controller = \mb_convert_case(Obj::$router->get('controller') ?: 'home', \MB_CASE_TITLE);
+    $_controller = \mb_convert_case(\Obj::$router->get('controller'), \MB_CASE_TITLE);
 
     require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
 
-    $_controller = 'Sub\\' . $_controller;
+    $_controller = '\Controller\Sub\\' . $_controller;
     return new $_controller($_request, $_response, $_view);
   }
 
@@ -190,7 +190,6 @@ abstract class Front {
 }
 
 $p = Front::getController();
-$p->main();
 
 /*
  * EOF

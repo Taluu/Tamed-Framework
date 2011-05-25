@@ -34,7 +34,7 @@ spl_autoload_register(function ($class) {
   require_once $file;
   return true;
  });
-
+ 
 /**
  * Contains all the global objects needed for the project.
  */

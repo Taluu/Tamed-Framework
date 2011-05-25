@@ -18,7 +18,7 @@ namespace Controller\Sub;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Home extends \Controller\Front {
-  private function index() {
-    // do something
+  public function index() {
+    $this->_template = 'index';
   }
 }

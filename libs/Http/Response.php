@@ -66,12 +66,12 @@ class Response {
   private $_view = null;
 
   protected
-    $_status = self::OK,
+    $_statusCode = self::OK,
     $_headers = array(),
     $_cookies = array();
 
-  function __construct($_code) {
-    $this->_status = $_code;
+  function __construct($_code = self::OK) {
+    $this->_statusCode = $_code;
   }
 
   /**
@@ -168,11 +168,11 @@ class Response {
    * @return \View\iView View engine affected
    */
   public function view(\View\iView $_view = null) {
-    if ($view !== null) {
+    if ($_view !== null) {
       $this->_view = $_view;
     }
 
-    return $this->view;
+    return $this->_view;
   }
 
   /**
@@ -196,7 +196,7 @@ class Response {
   }
 
   public function getStatus() {
-    return $this->_status;
+    return $this->_statusCode;
   }
 
   private function setStatus($_status) {
@@ -204,7 +204,7 @@ class Response {
       throw new Exception('Bad code for response component');
     }
 
-    $this->_status = $_status;
+    $this->_statusCode = $_status;
   }
 
   /**
