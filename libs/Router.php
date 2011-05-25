@@ -82,9 +82,10 @@ class Router {
     /*
      * @todo
      *
-     * /myController/myAction => class MyControllerController, method myActionAction
+     * /myController/myAction => class MyController, method myAction
      *
-     * params : /(?:[(name)(?:\:(default))?])?\:regex/
+     * params : /[name:default]:regex/
+     * regex type : :any, :alpha, :alphanum, :num
      *
      * if the name is present, it is an important parameter : else, we can simply
      * ignore it.
