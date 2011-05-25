@@ -18,10 +18,7 @@ namespace Controller\Sub;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Home extends \Controller\Front {
-  /**
-   * Dispatcher
-   */
-  protected function _entryPoint() {
-
+  private function index() {
+    // do something
   }
 }

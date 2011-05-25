@@ -30,39 +30,49 @@ class Router {
     $_routes = array();
 
   /**
-   * @todo If it is not possible to work with REQUEST_URI, try to use the
-   *       QUERY_STRING instead... And build another QUERY_STRING then.
+   * Route the current URI
+   *
+   * @param \Http\Request $_request Request object
    */
-  public function __construct(\Http\Request $_request) {
+  public function route(\Http\Request $_request) {
     $p = strstr(trim($_request->requestUri()), '?', true);
     $p = $p ?: trim($_request->requestUri());
 
     $this->_params = array_filter(explode('/', $p));
     $this->_command = implode('/', $this->_params);
 
-    $this->name('controller');
+    $this->name('controller', 'home');
+    $this->name('action', 'index');
+
+    // @todo analyze the URI, and get all the correct parameters
   }
 
   /**
-   * Give a name to parameters.
+   * Give a name to the next parameter.
    *
    * If there is not enough parameters to give it a name, the names will have a
-   * null value. It names the parameters in the order they are presented in the URL.
+   * the $default value. It names the parameters in the order they are presented
+   * in the URI.
    *
-   * @param string $n,... Names
+   * @param string $_name Name of this parameter
+   * @param mixed $_default Default Value
    * @return Router
    */
-  public function name($n) {
-    $args = func_get_args(); $args = array_map('mb_strtolower', $args);
+  public function name($_name, $_default = null) {
+    $_name = strtolower($_name);
 
-    foreach ($args as &$arg) {
-      if ($arg == 'controller' && isset($this->_namedParams['controller'])) {
-        throw new Exception('controller is a special parameter and can not be used outside its context.');
-        continue;
-      }
-
-      $this->_namedParams[$arg] = array_shift($this->_params);
+    if ($_name == 'controller' && isset($this->_namedParams['controller'])) {
+      throw new Exception('controller is a special parameter and can not be used outside its context.');
+      continue;
     }
+
+    if ($_name == 'action' && isset($this->_namedParams['action'])) {
+      throw new Exception('action is a special parameter and can not be used outside its context.');
+      continue;
+    }
+
+    $param = array_shift($this->_params);
+    $this->_namedParams[$_name] = empty($param) ? $_default : $param;
 
     // -- Refreshing the command special parameter
     $commands = array();
@@ -76,7 +86,13 @@ class Router {
   }
 
   /**
+   * Adds a route to the stack
    *
+   * Must consider that the first two matches are destined to be the
+   *
+   * @param string $_name Name of the route
+   * @param string $_pattern Pattern of the road (including named parameters)
+   * @return void
    */
   public function addRoute($_pattern) {
     /*

@@ -218,24 +218,33 @@ class Response {
     /*
      * redirectXYZ methods
      *
-     * Params : URL, Time to be redirected (0 : instant)
+     * Params :
+     *  $url; URL to be redirected
+     *  $time; Time to be redirected (0 : instant)
      */
     if (substr($method, 0, 8) == 'redirect') {
-      $this->redirect($args[0], $args[1] ?: 0, intval(substr($method, 8)));
+      $status = intval(substr($method, 8));
+
+      if ($this->isInvalid($status)) {
+        throw new Exception('Redirection Status not valid');
+      }
+
+      $this->redirect($args[0], $args[1] ?: 0, $status);
       return;
     }
 
     /*
      * isXYZ methods
      *
-     * Params : $_status ; Status to check. If it is not set, use current status
+     * Params :
+     *  $_status ; Status to check. If it is not set, use current status
      */
     if (substr($method, 0, 2) == 'is') {
       $code = substr($method, 0, 2);
       $status = $args[0] ?: $this->getStatus();
       $constant = strtoupper($code);
 
-      if (filter_var($code, FILTER_VALIDATE_INT) !== false && isset(self::$_status[$code])) {
+      if (filter_var($code, FILTER_VALIDATE_INT) !== false) {
         $code = (int) $code;
 
         if ($this->isInvalid($status)) {
