@@ -77,6 +77,10 @@ class Request {
 
     return null;
   }
+
+  public function requestUri() {
+    return $_SERVER['REQUEST_URI'];
+  }
 }
 
 /*

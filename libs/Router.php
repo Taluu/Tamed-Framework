@@ -33,9 +33,9 @@ class Router {
    * @todo If it is not possible to work with REQUEST_URI, try to use the
    *       QUERY_STRING instead... And build another QUERY_STRING then.
    */
-  public function __construct($_response) {
-    $p = strstr(trim($_response->server('request_uri')), '?', true);
-    $p = $p ?: trim($_response->server('request_uri'));
+  public function __construct(\Http\Request $_request) {
+    $p = strstr(trim($_request->requestUri()), '?', true);
+    $p = $p ?: trim($_request->requestUri());
 
     $this->_params = array_filter(explode('/', $p));
     $this->_command = implode('/', $this->_params);
