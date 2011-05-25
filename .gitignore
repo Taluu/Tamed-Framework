@@ -12,5 +12,5 @@ nbproject/
 
 #cache
 .cache/
-views/cache/
+views/cache/*.php
 
