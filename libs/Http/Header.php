@@ -49,7 +49,7 @@ class Header {
       $header = $this->_header;
     }
 
-    \header($header, $this->_replace, $this->_code);
+    \header($header, $this->_replace, $this->_status);
   }
 
   public function getHeader() {

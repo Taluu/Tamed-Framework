@@ -41,7 +41,7 @@ abstract class Front {
      */
     $_vars = array();
 
-  private
+  protected
     /**
      * View Engine
      *
@@ -57,12 +57,7 @@ abstract class Front {
     /**
      * @var Http\Response
      */
-    $_response = null,
-
-    /**
-     * @var \Router
-     */
-    $_router = null;
+    $_response = null;
 
 
   /**
@@ -73,6 +68,8 @@ abstract class Front {
    * @param \View\iView $_view View engine
    */
   final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\iView $_view) {
+    \Obj::$controller = $this;
+    
     $this->_request = $_request;
     $this->_response = $_response;
     $this->_view = $this->_response->view($_view);
@@ -110,7 +107,7 @@ abstract class Front {
     $action = \Obj::$router->get('action');
 
     if (!method_exists($this, $action)) {
-      $this->_response->redirect404('/error/404');
+      $this->_response->redirect404('/error/notfound_404');
       return;
     }
 
@@ -148,12 +145,22 @@ abstract class Front {
     }
 
     \Obj::$router->route($_request);
+    
+    $_controller = \Obj::$router->get('controller');
+    $file = sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
 
-    $_controller = \mb_convert_case(\Obj::$router->get('controller'), \MB_CASE_TITLE);
+    // @todo handle correctly when the controller does not exist
+    if (!\is_file($file)) {
 
-    require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
+      $_response->redirect404('/');
+      return;
+    }
+    
+    require $file;
 
+    $_controller = \mb_convert_case($_controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
+    
     return new $_controller($_request, $_response, $_view);
   }
 
@@ -187,8 +194,27 @@ abstract class Front {
   public function __isset($name) {
     return isset($this->_vars[$name]);
   }
+  
+  /**
+   * Returns the current HTTP Request object
+   * 
+   * @return \Http\Request
+   */
+  public function getRequest() {
+    return $this->_request;
+  }
+  
+  /**
+   * Returns the current HTTP Response object
+   * 
+   * @return \Http\Request 
+   */
+  public function getResponse() {
+    return $this->_response;
+  }
 }
 
+//$p = Front::getController(null, null, new \View\PHP); // DEBUG ONLY
 $p = Front::getController();
 
 /*

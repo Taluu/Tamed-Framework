@@ -67,6 +67,7 @@ class Response {
 
   protected
     $_statusCode = self::OK,
+    $_redirect = false,
     $_headers = array(),
     $_cookies = array();
 
@@ -80,9 +81,11 @@ class Response {
    * @param string $header Header's name
    * @param boolean $replace Replace an existing header ?
    * @param integer $code
+   * @return Header
    */
   public function header($header, $value = null, $replace = true, $code = self::OK) {
     $this->_headers[$header] = new Header($header, $value, $replace, $code);
+    return $this->_headers[$header];
   }
 
   /**
@@ -106,8 +109,9 @@ class Response {
       $value = $time . ';url=' . $url;
     }
 
+    $this->_redirect = true;
     $this->status($code);
-    $this->header($header, $value, true, $code);
+    $this->header($header, $value, true, $code)->send();
   }
 
   /**
@@ -147,8 +151,12 @@ class Response {
    */
   public function render($view) {
     //\ob_end_flush(); // ?
-    $this->_view->render($view);
-    exit;
+    $this->sendHeaders();
+    
+    if (!$this->isRedirected()) {
+      $this->_view->render($view);
+      exit;
+    }
   }
 
   /**
@@ -229,7 +237,7 @@ class Response {
         throw new Exception('Redirection Status not valid');
       }
 
-      $this->redirect($args[0], $args[1] ?: 0, $status);
+      $this->redirect($args[0], isset($args[1]) ? $args[1] : 0, $status);
       return;
     }
 
@@ -240,8 +248,8 @@ class Response {
      *  $_status ; Status to check. If it is not set, use current status
      */
     if (substr($method, 0, 2) == 'is') {
-      $code = substr($method, 0, 2);
-      $status = $args[0] ?: $this->getStatus();
+      $code = substr($method, 2);
+      $status = isset($args[0]) ? $args[0] : $this->getStatus();
       $constant = strtoupper($code);
 
       if (filter_var($code, FILTER_VALIDATE_INT) !== false) {
@@ -272,6 +280,9 @@ class Response {
 
         case 'ServerError':
           return $status >= 500 && $status < 600;
+          
+        case 'Redirected':
+          return $this->isRedirection() || $this->_redirect === true;
 
         default:
           return defined(constant('self::' . $constant))
