@@ -1,6 +1,6 @@
 #.git files
-.git*
-!.gitattributes
+#.git
+#!.gitattributes
 
 .ignore/
 
@@ -9,4 +9,8 @@ nbproject/
 
 # Merise
 *.mwb
-/.cache/
+
+#cache
+.cache/
+views/cache/
+
