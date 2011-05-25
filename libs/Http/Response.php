@@ -217,6 +217,8 @@ class Response {
   public function __call($method, array $args) {
     /*
      * redirectXYZ methods
+     *
+     * Params : URL, Time to be redirected (0 : instant)
      */
     if (substr($method, 0, 8) == 'redirect') {
       $this->redirect($args[0], $args[1] ?: 0, intval(substr($method, 8)));
@@ -225,6 +227,8 @@ class Response {
 
     /*
      * isXYZ methods
+     *
+     * Params : $_status ; Status to check. If it is not set, use current status
      */
     if (substr($method, 0, 2) == 'is') {
       $code = substr($method, 0, 2);
