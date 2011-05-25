@@ -1,14 +1,8 @@
 <?php
 /**
- * Definition of the Router Class
- *
- * Handles all the requests made towards the front controller.
- *
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
- * @package Talus' Works
- * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @copyright ©Talus, Talus' Works 2010+
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
@@ -17,6 +11,16 @@
 
 if (!defined('SAFE')) exit;
 
+/**
+ * Definition of the Router Class
+ *
+ * Handles all the requests made towards the front controller.
+ *
+ * @package twk
+ * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ *
+ * @todo Review the routing mechanism
+ */
 class Router {
   protected
     $_command = null,

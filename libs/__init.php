@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
- * @package Talus' Works
+ * @package twk
  * @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @link http://www.talus-works.net Talus' Works

@@ -1,20 +1,9 @@
 <?php
 /**
- * Main Controller
- *
- * This is the Entry Point, choosing which controller we'll be using, and how
- * to make it all work. It appends every needed things, like how to get a correct
- * header and a correct footer.
- *
- * To make it simple, this is the basis of all the sub-controllers ; in order to
- * make them work, they MUST extend this class.
- *
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
- * @package Talus' Works
  * @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
- * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @link http://www.talus-works.net Talus' Works
  * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
  * @version $Id$
@@ -27,6 +16,19 @@ if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSI
 
 require __DIR__ . '/../libs/__init.' . PHP_EXT;
 
+/**
+ * Main Controller
+ *
+ * This is the Entry Point, choosing which controller we'll be using, and how
+ * to make it all work. It appends every needed things, like how to get a correct
+ * header and a correct footer.
+ *
+ * To make it simple, this is the basis of all the sub-controllers ; in order to
+ * make them work, they MUST extend this class.
+ *
+ * @package twk.controller
+ * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ */
 abstract class Front {
   protected
     /**
@@ -35,16 +37,17 @@ abstract class Front {
     $_template = null,
 
     /**
+     * @var array
+     */
+    $_vars = array();
+
+  private
+    /**
      * View Engine
      *
      * @var \View\iView
      */
     $_view = null,
-
-    /**
-     * @var array
-     */
-    $_vars = array(),
 
     /**
      * @var \Http\Request
@@ -60,6 +63,7 @@ abstract class Front {
      * @var \Router
      */
     $_router = null;
+
 
   /**
    * Starts and render the frame
@@ -81,7 +85,7 @@ abstract class Front {
   /**
    * Will be runned before the treatment
    *
-   * If it has to be overridden, don't forget to call __this__ method first !
+   * If it has to be overridden, don't forget to call __this__ method !
    * <code>protected function _prepend() { parent::_prepend(); }</code>
    * ... Or at least, do the gist of what it is doing.
    *
@@ -91,7 +95,7 @@ abstract class Front {
 
   /**
    * Will be runned after the treatment
-   * If it has to be overridden, don't forget to call __this__ method first !
+   * If it has to be overridden, don't forget to call __this__ method !
    * <code>protected function _append() { parent::_append(); }</code>
    * ... Or at least, do the gist of what it is doing.
    *
@@ -102,16 +106,16 @@ abstract class Front {
   /**
    * Main function
    */
-  final public function main() {
+  final private function main() {
     $this->_prepend();
-    $this->_dispatch();
+    $this->_entryPoint();
     $this->_append();
   }
 
   /**
-   * Dispatcher
+   * Entry Point of the controller
    */
-  abstract protected function dispatch();
+  abstract protected function _entryPoint();
 
   /**
    * Prepare the page, matching a route if any
