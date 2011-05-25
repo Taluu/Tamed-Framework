@@ -22,3 +22,4 @@ Requirements / Dependencies
 Credits
 =======
 - The routing mechanism is built with the help of [Capitaine Mousse](https://github.com/CapMousse)
+- The Response mechanism is greatly inspired from [Symfony 2](https://github.com/symfony/symfony)

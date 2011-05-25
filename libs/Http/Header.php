@@ -20,15 +20,36 @@ namespace Http;
 class Header {
   protected
     $_header = null,
+    $_value = null,
     $_replace = false,
     $_status = Response::CONTINU;
 
-  public function __construct() {
+  /**
+   * Construct this header
+   *
+   * @param string $_header Header to send
+   * @param string $_value Value of this header
+   * @param bool $_replace Does this header replace an already existing value ?
+   * @param int $_status Status code to be sent with this header
+   */
+    function __construct($_header, $_value = null, $_replace = true, $_status = Response::OK) {
+      $this->_header = $_header;
+      $this->_value = $_value;
+      $this->_replace = $_replace;
+      $this->_status = $_status;
+    }
 
-  }
-
+    /**
+     * Sends the header
+     */
   public function send() {
-    
+    $header = $this->_header . ': ' . $this->_value;
+
+    if ($this->_value === null) {
+      $header = $this->_header;
+    }
+
+    \header($header, $this->_replace, $this->_code);
   }
 
   public function getHeader() {
@@ -41,5 +62,9 @@ class Header {
 
   public function getStatus() {
     return $this->_status;
+  }
+
+  public function getValue() {
+    return $this->_value;
   }
 }

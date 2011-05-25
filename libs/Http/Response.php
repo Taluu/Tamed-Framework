@@ -58,15 +58,21 @@ class Response {
       self::VERSION_NOT_SUPPORTED => 'Version Not Supported'
      );
 
+  /**
+   * View
+   *
+   * @var \View\iView
+   */
+  private $_view = null;
+
   protected
-    /**
-     * View
-     *
-     * @var \View\iView
-     */
-    $_view = null,
+    $_status = self::OK,
     $_headers = array(),
     $_cookies = array();
+
+  function __construct($_code) {
+    $this->_status = $_code;
+  }
 
   /**
    * Send a header to the client
@@ -75,9 +81,8 @@ class Response {
    * @param boolean $replace Replace an existing header ?
    * @param integer $code
    */
-  public function header($header, $value, $replace = true, $code = self::OK) {
-    //$this->_headers[$header] = new Header($header, $value, $replace, $code);
-    \header($header. ': ' . $value, $replace, $code);
+  public function header($header, $value = null, $replace = true, $code = self::OK) {
+    $this->_headers[$header] = new Header($header, $value, $replace, $code);
   }
 
   /**
@@ -93,24 +98,31 @@ class Response {
       throw new Exception('Can\'t redirect to an empty url');
     }
 
-    $header = $time !== 0 ? "Refresh: {$time};url={$url}" : "Location: {$url}";
+    if ($time === 0) {
+      $header = 'Location';
+      $value = $url;
+    } else {
+      $header = 'Refresh';
+      $value = $time . ';url=' . $url;
+    }
 
     $this->status($code);
-    $this->header($header, true, $code);
+    $this->header($header, $value, true, $code);
   }
 
   /**
-   * Sets the status for the current page
+   * Sets the status header for the current page
    *
-   * @param integer $status Status of the page
+   * @param integer $_status Status of the page
    */
-  public function status($status) {
-    if (!isset(self::$_status[$status])) {
+  public function status($_status) {
+    if (!isset(self::$_status[$_status])) {
       throw new Exception('Unknown status');
     }
 
-    $header = sprintf('%1$s %2$d %3$s', $this->server('server_protocol'), $status, self::$_status[$status]);
-    $this->header($header, true, $status);
+    $header = sprintf('%1$s %2$d %3$s', $this->server('server_protocol'), $_status, self::$_status[$_status]);
+    $this->header($header, null, true, $_status);
+    $this->setStatus($_status);
   }
 
   /**
@@ -150,20 +162,6 @@ class Response {
   }
 
   /**
-   * Magic method, catching the short cuts methods (like redirectXYZ)
-   *
-   * @param string $method Method name
-   * @param array $args
-   * @return mixed
-   */
-  public function __call($method, array $args) {
-    if (substr($method, 0, 8) == 'redirect') {
-      $this->redirect($args[0], $args[1] ?: 0, intval(substr($method, 8)));
-      return;
-    }
-  }
-
-  /**
    * Affects a new view engine (if it is not null).
    *
    * @param \View\iView $_view View engine to affect
@@ -197,6 +195,78 @@ class Response {
     }
   }
 
+  public function getStatus() {
+    return $this->_status;
+  }
+
+  private function setStatus($_status) {
+    if ($this->isInvalid($_status)) {
+      throw new Exception('Bad code for response component');
+    }
+
+    $this->_status = $_status;
+  }
+
+  /**
+   * Magic method, catching the short cuts methods (like redirectXYZ)
+   *
+   * @param string $method Method name
+   * @param array $args
+   * @return mixed
+   */
+  public function __call($method, array $args) {
+    /*
+     * redirectXYZ methods
+     */
+    if (substr($method, 0, 8) == 'redirect') {
+      $this->redirect($args[0], $args[1] ?: 0, intval(substr($method, 8)));
+      return;
+    }
+
+    /*
+     * isXYZ methods
+     */
+    if (substr($method, 0, 2) == 'is') {
+      $code = substr($method, 0, 2);
+      $status = $args[0] ?: $this->getStatus();
+      $constant = strtoupper($code);
+
+      if (filter_var($code, FILTER_VALIDATE_INT) !== false && isset(self::$_status[$code])) {
+        $code = (int) $code;
+
+        if ($this->isInvalid($status)) {
+          throw new Exception('Code not valid');
+        }
+
+        return $status === $code;
+      }
+
+      switch ($code) {
+        case 'Invalid':
+          return $status < 100 || $status >= 600;
+
+        case 'Informational':
+          return $status >= 100 && $status < 200;
+
+        case 'Successful':
+          return $status >= 200 && $status < 300;
+
+        case 'Redirection':
+          return $status >= 300 && $status < 400;
+
+        case 'ClientError':
+          return $status >= 400 && $status < 500;
+
+        case 'ServerError':
+          return $status >= 500 && $status < 600;
+
+        default:
+          return defined(constant('self::' . $constant))
+                 ? $status === constant('self::' . $constant)
+                 : false;
+      }
+    }
+  }
 }
 
 /*
