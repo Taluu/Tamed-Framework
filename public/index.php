@@ -145,7 +145,8 @@ abstract class Front {
       $_view = new \View\Talus_TPL;
     }
 
-    // $router = new Router($_response);
+    $router = new Router($_response);
+
     // $_controller = \mb_convert_case($router->get('controller') ?: 'home', \MB_CASE_TITLE);
 
     // require sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);

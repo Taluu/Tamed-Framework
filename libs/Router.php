@@ -25,15 +25,17 @@ class Router {
   protected
     $_command = null,
     $_params = array(),
-    $_namedParams = array();
+    $_namedParams = array(),
+
+    $_routes = array();
 
   /**
    * @todo If it is not possible to work with REQUEST_URI, try to use the
    *       QUERY_STRING instead... And build another QUERY_STRING then.
    */
-  public function __construct() {
-    $p = strstr(trim(Obj::$httpResponse->server('request_uri')), '?', true);
-    $p = $p ?: trim(Obj::$httpResponse->server('request_uri'));
+  public function __construct($_response) {
+    $p = strstr(trim($_response->server('request_uri')), '?', true);
+    $p = $p ?: trim($_response->server('request_uri'));
 
     $this->_params = array_filter(explode('/', $p));
     $this->_command = implode('/', $this->_params);
@@ -71,6 +73,22 @@ class Router {
 
     $this->_command = implode('/', array_merge($commands, $this->_params));
     return $this;
+  }
+
+  /**
+   *
+   */
+  public function addRoute($_pattern) {
+    /*
+     * @todo
+     *
+     * /myController/myAction => class MyControllerController, method myActionAction
+     *
+     * params : /(?:[(name)(?:\:(default))?])?\:regex/
+     *
+     * if the name is present, it is an important parameter : else, we can simply
+     * ignore it.
+     */
   }
 
   /**
