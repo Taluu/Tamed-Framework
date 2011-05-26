@@ -4,6 +4,8 @@
 
 .ignore/
 
+logs/*.log
+
 # Netbeans Project directory
 nbproject/
 

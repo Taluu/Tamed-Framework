@@ -51,12 +51,12 @@ class Debug {
     $obj = $debug['type'] != '' ? $debug['class'] . $debug['type'] : '';
     $chrono = microtime(true) - self::$start;
 
-    $log = sprintf('%7$s - %1$s : %2$s - %3$s() (line %4$d) - command %5$s [[ %6$fs ]]',
+    $log = sprintf('%7$s {UTC} - %1$s : %2$s - %3$s() (line %4$d) - command %5$s [[ %6$fs ]]',
                    $lvlStr[$level], $msg, $obj . $debug['function'],
                    $debug['line'], $command, $chrono, $date->format('D, d M Y H:i:s'));
 
     self::$stack[] = $log;
-    return error_log($log . "\n", 3, __DIR__ . '/../logs/access_log');
+    return error_log($log . "\n", 3, __DIR__ . '/../logs/access.log');
   }
 
   public static function info($msg) {
