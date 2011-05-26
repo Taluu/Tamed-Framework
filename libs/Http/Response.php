@@ -253,7 +253,7 @@ class Response {
             break;
 
           default:
-            $code = self::SEE_OTHER;
+            $code = self::FOUND;
         }
       }
 
