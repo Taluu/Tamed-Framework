@@ -25,49 +25,48 @@ class Debug {
     LEVEL_INFO = 1,
     LEVEL_WARNING = 2,
     LEVEL_FATAL = 3;
-  
-  public static 
+
+  public static
     $start = 0,
     $stack = array();
-  
+
   public static function log($msg, $level = self::LEVEL_INFO) {
     static $lvlStr = array(
         self::LEVEL_FATAL => 'Fatal Error',
         self::LEVEL_WARNING => 'Warning',
         self::LEVEL_INFO => 'Information'
       );
-    
+
     $command = \Obj::$router->hasStarted() ? \Obj::$router->get('command') : '(not set yet)';
-    
+
     // -- $db[0] is this function... And we have no interest in it, do we ?
     foreach (debug_backtrace() as $debug) {
       if ($debug['class'] != 'Debug') {
         break;
       }
     }
-    
-    $date = new DateTime;
-    $date->setTimezone(new DateTimeZone('UTC'));
-    
-    $obj = $debug['type'] != '' ? $debug['class'] . $debug['type'] : ''; 
+
+    $date = new DateTime('now', new DateTimeZone('UTC'));
+
+    $obj = $debug['type'] != '' ? $debug['class'] . $debug['type'] : '';
     $chrono = microtime(true) - self::$start;
-    
-    $log = sprintf('%7$s - %1$s : %2$s - %3$s() (line %4$d) - command %5$s [[ %6$fs ]]', 
+
+    $log = sprintf('%7$s - %1$s : %2$s - %3$s() (line %4$d) - command %5$s [[ %6$fs ]]',
                    $lvlStr[$level], $msg, $obj . $debug['function'],
                    $debug['line'], $command, $chrono, $date->format('D, d M Y H:i:s'));
-    
+
     self::$stack[] = $log;
     return error_log($log . "\n", 3, __DIR__ . '/../logs/access_log');
   }
-  
+
   public static function info($msg) {
     return self::log($msg, self::LEVEL_INFO);
   }
-  
+
   public static function warning($msg) {
     return self::log($msg, self::LEVEL_WARNING);
   }
-  
+
   public static function fatal($msg) {
     return self::log($msg, self::LEVEL_FATAL);
   }
