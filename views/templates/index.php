@@ -6,7 +6,5 @@
   <body>
     <h1>Congratulations</h1>
     <p>You just installed your talus' framework with success :)</p>
-    <p>This is a test : <?php echo 1+1; ?></p>
-    <?php var_dump(\Obj::$controller, \Obj::$router); ?>
   </body>
 </html>
