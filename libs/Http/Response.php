@@ -99,9 +99,13 @@ class Response {
    * @param integer $code Status code to be sent
    * @throws Exception if the URL is empty
    */
-  public function redirect($url, $time = 0, $code = self::OK) {
+  public function redirect($url, $time = 0, $code = self::FOUND) {
     if (empty($url)) {
       throw new Exception('Can\'t redirect to an empty url');
+    }
+
+    if (!$this->isRedirect($code)) {
+      throw new Exception(sprintf('Bad HTTP status response (%1$s given)', $code));
     }
 
     if ($time === 0) {
@@ -115,7 +119,7 @@ class Response {
     \Debug::info('Redirecting...');
     $this->_redirect = true;
     $this->status($code);
-    $this->header($header, $value, true, self::SEE_OTHER);
+    $this->header($header, $value, true, $code);
     $this->sendHeaders();
   }
 
@@ -235,15 +239,26 @@ class Response {
      * Params :
      *  $url; URL to be redirected
      *  $time; Time to be redirected (0 : instant)
+     *  $code; Status code (default: See Other)
      */
     if (substr($method, 0, 8) == 'redirect') {
       $status = intval(substr($method, 8));
 
-      if ($this->isInvalid($status)) {
-        throw new Exception('Redirection Status not valid');
+      if (isset($args[2])) {
+        $code = $args[2];
+      } else {
+        switch ($status) {
+          case 404:
+            $code = self::MOVED_PERMANENTLY;
+            break;
+
+          default:
+            $code = self::SEE_OTHER;
+        }
       }
 
-      $this->redirect($args[0], isset($args[1]) ? $args[1] : 0, $status);
+      $this->redirect($args[0], isset($args[1]) ? $args[1] : 0, $code);
+
       return;
     }
 
