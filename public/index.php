@@ -219,8 +219,14 @@ abstract class Front {
   }
 }
 
+/**
+ * Like Capitaine Mousse said in his ShwaarkFramework...
+ * Let's rock !
+ *
+ * @todo Handle the exception
+ */
 try {
-  //$p = Front::getController(null, null, new \View\PHP); // \Debug ONLY
+  //$p = Front::getController(null, null, new \View\PHP); // Using PHP instead of Talus TPL
   $p = Front::getController();
 } catch (Exception $e) {
   echo $e;
