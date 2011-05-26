@@ -44,6 +44,7 @@ class Router {
     $this->name('controller', 'home');
     $this->name('action', 'index');
 
+    \Debug::info('Routing');
     // @todo analyze the URI, and get all the correct parameters
   }
 

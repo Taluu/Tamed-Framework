@@ -1,0 +1,12 @@
+Thu, 26 May 2011 00:05:23.000000 - Information : Routing - Router->route() (line 150) - command controller:home/action:index [[ 0.004602s ]]
+Thu, 26 May 2011 00:05:23.000000 - Information : Starting the subcontroller - Controller\Front::getController() (line 220) - command controller:home/action:index [[ 0.006865s ]]
+Thu, 26 May 2011 00:05:23.000000 - Information : Loading main content - Controller\Front->__construct() (line 167) - command controller:home/action:index [[ 0.008734s ]]
+Thu, 26 May 2011 00:05:23.000000 - Information : Sending the response to the user - Controller\Front->__construct() (line 167) - command controller:home/action:index [[ 0.010445s ]]
+Thu, 26 May 2011 00:05:24.000000 - Information : Routing - Router->route() (line 150) - command controller:favicon.ico/action:index [[ 0.003314s ]]
+
+
+Thu, 26 May 2011 00:06:19 - Information : Routing - Router->route() (line 150) - command controller:home/action:index [[ 0.003331s ]]
+Thu, 26 May 2011 00:06:19 - Information : Starting the subcontroller - Controller\Front::getController() (line 220) - command controller:home/action:index [[ 0.005530s ]]
+Thu, 26 May 2011 00:06:19 - Information : Loading main content - Controller\Front->__construct() (line 167) - command controller:home/action:index [[ 0.007555s ]]
+Thu, 26 May 2011 00:06:19 - Information : Sending the response to the user - Controller\Front->__construct() (line 167) - command controller:home/action:index [[ 0.009722s ]]
+Thu, 26 May 2011 00:06:20 - Information : Routing - Router->route() (line 150) - command controller:favicon.ico/action:index [[ 0.003403s ]]

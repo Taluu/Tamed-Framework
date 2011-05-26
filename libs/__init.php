@@ -20,6 +20,8 @@ if (!defined('SAFE')) exit;
 if (defined('ALREADY_STARTED')) exit;
 define('ALREADY_STARTED', true);
 
+$start = microtime(true);
+
 /**
  * @todo Make a better handling of this loader
  */
@@ -34,6 +36,8 @@ spl_autoload_register(function ($class) {
   require_once $file;
   return true;
  });
+ 
+ Debug::$start = $start;
  
 /**
  * Contains all the global objects needed for the project.

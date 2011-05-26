@@ -74,8 +74,10 @@ abstract class Front {
     $this->_response = $_response;
     $this->_view = $this->_response->view($_view);
 
+    \Debug::info('Loading main content');
     $this->_main();
 
+    \Debug::info('Sending the response to the user');
     $this->_response->render($this->_template);
   }
 
@@ -107,6 +109,7 @@ abstract class Front {
     $action = \Obj::$router->get('action');
 
     if (!method_exists($this, $action)) {
+      \Debug::warning('Action not existent');
       $this->_response->redirect404('/error/notfound_404');
       return;
     }
@@ -151,7 +154,6 @@ abstract class Front {
 
     // @todo handle correctly when the controller does not exist
     if (!\is_file($file)) {
-
       $_response->redirect404('/');
       return;
     }
@@ -161,6 +163,7 @@ abstract class Front {
     $_controller = \mb_convert_case($_controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
     
+    \Debug::info('Starting the subcontroller');
     return new $_controller($_request, $_response, $_view);
   }
 
@@ -214,8 +217,8 @@ abstract class Front {
   }
 }
 
-//$p = Front::getController(null, null, new \View\PHP); // DEBUG ONLY
-$p = Front::getController();
+$p = Front::getController(null, null, new \View\PHP); // \Debug ONLY
+//$p = Front::getController();
 
 /*
  * EOF
