@@ -10,3 +10,47 @@ Thu, 26 May 2011 00:06:19 - Information : Starting the subcontroller - Controlle
 Thu, 26 May 2011 00:06:19 - Information : Loading main content - Controller\Front->__construct() (line 167) - command controller:home/action:index [[ 0.007555s ]]
 Thu, 26 May 2011 00:06:19 - Information : Sending the response to the user - Controller\Front->__construct() (line 167) - command controller:home/action:index [[ 0.009722s ]]
 Thu, 26 May 2011 00:06:20 - Information : Routing - Router->route() (line 150) - command controller:favicon.ico/action:index [[ 0.003403s ]]
+
+
+
+Thu, 26 May 2011 00:12:02 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.006263s ]]
+Thu, 26 May 2011 00:12:02 - Information : Starting the subcontroller - Controller\Front::getController() (line 222) - command controller:home/action:index [[ 0.009704s ]]
+Thu, 26 May 2011 00:12:02 - Information : Loading main content - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.014154s ]]
+Thu, 26 May 2011 00:12:02 - Information : Sending the response to the user - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.018288s ]]
+Thu, 26 May 2011 00:12:03 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.005432s ]]
+Thu, 26 May 2011 00:12:03 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:favicon.ico/action:index [[ 0.008493s ]]
+
+Thu, 26 May 2011 00:12:47 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.005622s ]]
+Thu, 26 May 2011 00:12:48 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:c/action:index [[ 0.009346s ]]
+Thu, 26 May 2011 00:12:48 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.004556s ]]
+Thu, 26 May 2011 00:12:48 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:caca/action:index [[ 0.022987s ]]
+Thu, 26 May 2011 00:12:48 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.128265s ]]
+Thu, 26 May 2011 00:12:48 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:caca/action:index [[ 0.131992s ]]
+Thu, 26 May 2011 00:12:50 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.005677s ]]
+Thu, 26 May 2011 00:12:50 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:favicon.ico/action:index [[ 0.019363s ]]
+
+
+
+Thu, 26 May 2011 00:14:05 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.003377s ]]
+Thu, 26 May 2011 00:14:05 - Information : Starting the subcontroller - Controller\Front::getController() (line 222) - command controller:home/action:index [[ 0.007295s ]]
+Thu, 26 May 2011 00:14:05 - Information : Loading main content - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.013033s ]]
+Thu, 26 May 2011 00:14:05 - Information : Sending the response to the user - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.016864s ]]
+Thu, 26 May 2011 00:14:06 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.004372s ]]
+Thu, 26 May 2011 00:14:06 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:favicon.ico/action:index [[ 0.010574s ]]
+Thu, 26 May 2011 00:14:06 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.004462s ]]
+Thu, 26 May 2011 00:14:06 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:favicon.ico/action:index [[ 0.009638s ]]
+Thu, 26 May 2011 00:14:06 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.003268s ]]
+Thu, 26 May 2011 00:14:06 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:favicon.ico/action:index [[ 0.007437s ]]
+
+
+
+Thu, 26 May 2011 00:15:49 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.004588s ]]
+Thu, 26 May 2011 00:15:49 - Information : Starting the subcontroller - Controller\Front::getController() (line 222) - command controller:home/action:index [[ 0.036398s ]]
+Thu, 26 May 2011 00:15:49 - Information : Loading main content - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.044228s ]]
+Thu, 26 May 2011 00:15:49 - Information : Sending the response to the user - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.052186s ]]
+
+
+
+
+Thu, 26 May 2011 00:16:05 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.003916s ]]
+Thu, 26 May 2011 00:16:05 - Fatal Error : Controller not found - Controller\Front::getController() (line 222) - command controller:caca/action:index [[ 0.008200s ]]

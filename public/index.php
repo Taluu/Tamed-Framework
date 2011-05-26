@@ -147,6 +147,7 @@ abstract class Front {
       $_view = new \View\Talus_TPL;
     }
 
+    \Debug::info('Routing');
     \Obj::$router->route($_request);
     
     $_controller = \Obj::$router->get('controller');
@@ -154,6 +155,7 @@ abstract class Front {
 
     // @todo handle correctly when the controller does not exist
     if (!\is_file($file)) {
+      \Debug::fatal('Controller not found');
       $_response->redirect404('/');
       return;
     }
@@ -217,8 +219,8 @@ abstract class Front {
   }
 }
 
-$p = Front::getController(null, null, new \View\PHP); // \Debug ONLY
-//$p = Front::getController();
+//$p = Front::getController(null, null, new \View\PHP); // \Debug ONLY
+$p = Front::getController();
 
 /*
  * EOF

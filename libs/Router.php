@@ -28,6 +28,8 @@ class Router {
     $_namedParams = array(),
 
     $_routes = array();
+  
+  private $_started = false;
 
   /**
    * Route the current URI
@@ -44,7 +46,7 @@ class Router {
     $this->name('controller', 'home');
     $this->name('action', 'index');
 
-    \Debug::info('Routing');
+    $this->_started = true;
     // @todo analyze the URI, and get all the correct parameters
   }
 
@@ -137,6 +139,10 @@ class Router {
     }
 
     return null;
+  }
+  
+  public function hasStarted() {
+    return $this->_started;
   }
 }
 

@@ -37,12 +37,10 @@ class Debug {
         self::LEVEL_INFO => 'Information'
       );
     
-    $command = \Obj::$router->get('command') ?: 'not set yet';
+    $command = \Obj::$router->hasStarted() ? \Obj::$router->get('command') : '(not set yet)';
     
     // -- $db[0] is this function... And we have no interest in it, do we ?
-    $dbs = debug_backtrace();
-    
-    foreach ($dbs as &$debug) {
+    foreach (debug_backtrace() as $debug) {
       if ($debug['class'] != 'Debug') {
         break;
       }
