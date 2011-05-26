@@ -22,7 +22,8 @@ class Header {
     $_header = null,
     $_value = null,
     $_replace = false,
-    $_status = Response::CONTINU;
+    $_status = Response::CONTINU,
+    $_sent = false;
 
   /**
    * Construct this header
@@ -41,15 +42,22 @@ class Header {
 
     /**
      * Sends the header
+     *
+     * @param bool $force forces the header to be sent... even if it was already sent
      */
-  public function send() {
-    $header = $this->_header . ': ' . $this->_value;
+  public function send($force = false) {
+    if ($this->_sent === false || $force === true) {
+      $header = $this->_header . ': ' . $this->_value;
 
-    if ($this->_value === null) {
-      $header = $this->_header;
+      if ($this->_value === null) {
+        $header = $this->_header;
+      }
+
+      \Debug::info('Sending header (' . $header . ', ' . (int) $this->_replace . ', ' . $this->_status . ')');
+      \header($header, $this->_replace, $this->_status);
+
+      $this->_sent = true;
     }
-
-    \header($header, $this->_replace, $this->_status);
   }
 
   public function getHeader() {

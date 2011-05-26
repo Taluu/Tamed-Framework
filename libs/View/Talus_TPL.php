@@ -65,6 +65,6 @@ class Talus_TPL implements iView {
   }
 
   public function render($view) {
-    return $this->_engine->parse($view . '.html');
+    return $this->_engine->pparse($view . '.html');
   }
 }

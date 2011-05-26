@@ -49,7 +49,7 @@ interface iView {
   /**
    * Renders a view
    *
-   * @return void
+   * @return string
    */
   public function render($view);
 

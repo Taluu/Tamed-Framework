@@ -46,7 +46,7 @@ class Debug {
       }
     }
 
-    $date = new DateTime('now', new DateTimeZone('UTC'));
+    $date = new \DateTime('now', new \DateTimeZone('UTC'));
 
     $obj = $debug['type'] != '' ? $debug['class'] . $debug['type'] : '';
     $chrono = microtime(true) - self::$start;

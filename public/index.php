@@ -31,15 +31,9 @@ require __DIR__ . '/../libs/__init.' . PHP_EXT;
  */
 abstract class Front {
   protected
-    /**
-     * @var string
-     */
     $_template = null,
-
-    /**
-     * @var array
-     */
-    $_vars = array();
+    $_vars = array(),
+    $_status = \Http\Response::OK;
 
   protected
     /**
@@ -78,7 +72,8 @@ abstract class Front {
     $this->_main();
 
     \Debug::info('Sending the response to the user');
-    $this->_response->render($this->_template);
+    $this->_response->status($this->_status);
+    echo $this->_response->render($this->_template);
   }
 
   /**
@@ -104,16 +99,21 @@ abstract class Front {
 
   /**
    * Main function
+   *
+   * @return bool True if it si correct, false otherwise
    */
   final private function _main() {
     $action = \Obj::$router->get('action');
 
     if (!method_exists($this, $action)) {
-      \Debug::warning('Action not existent');
+      \Debug::warning(sprintf('Action %1$s nonexistent', $action));
       $this->_response->redirect404('/error/notfound_404');
-      return;
+      $this->_status = \Http\Response::NOT_FOUND;
+
+      exit;
     }
 
+    \Debug::info('Loading action "' . $action . '"');
     $this->_prepend();
     $this->$action();
     $this->_append();
@@ -156,7 +156,7 @@ abstract class Front {
     // @todo handle correctly when the controller does not exist
     if (!\is_file($file)) {
       \Debug::fatal('Controller not found');
-      $_response->redirect404('/');
+      $_response->redirect404('/error/notfound_404');
       return;
     }
 
@@ -219,8 +219,12 @@ abstract class Front {
   }
 }
 
-//$p = Front::getController(null, null, new \View\PHP); // \Debug ONLY
-$p = Front::getController();
+try {
+  //$p = Front::getController(null, null, new \View\PHP); // \Debug ONLY
+  $p = Front::getController();
+} catch (Exception $e) {
+  echo $e;
+}
 
 /*
  * EOF

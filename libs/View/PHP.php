@@ -54,7 +54,9 @@ class PHP implements iView {
   }
 
   public function render($view) {
+    ob_start();
     extract($this->_vars, EXTR_REFS | EXTR_OVERWRITE);
     include __DIR__ . '/../../views/templates/' . $view . '.' . \PHP_EXT;
+    return ob_get_clean();
   }
 }
