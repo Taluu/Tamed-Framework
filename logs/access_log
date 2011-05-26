@@ -140,3 +140,21 @@ Thu, 26 May 2011 08:25:45 - Information : Routing - Controller\Front::getControl
 Thu, 26 May 2011 08:25:45 - Information : Starting the subcontroller - Controller\Front::getController() (line 223) - command controller:home/action:index [[ 0.018125s ]]
 Thu, 26 May 2011 08:25:45 - Information : Loading main content - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.019717s ]]
 Thu, 26 May 2011 08:25:45 - Information : Sending the response to the user - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.020581s ]]
+
+
+
+
+
+Thu, 26 May 2011 08:33:13 - Information : Routing - Controller\Front::getController() (line 223) - command (not set yet) [[ 0.013027s ]]
+Thu, 26 May 2011 08:33:13 - Information : Starting the subcontroller - Controller\Front::getController() (line 223) - command controller:home/action:index [[ 0.022983s ]]
+Thu, 26 May 2011 08:33:13 - Information : Loading main content - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.024015s ]]
+Thu, 26 May 2011 08:33:13 - Information : Sending the response to the user - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.025532s ]]
+Thu, 26 May 2011 08:33:13 - Information : Rendering the template using Talus' TPL (version DEV) - Http\Response->render() (line 81) - command controller:home/action:index [[ 0.026646s ]]
+
+
+
+Thu, 26 May 2011 08:33:41 - Information : Routing - Controller\Front::getController() (line 222) - command (not set yet) [[ 0.004229s ]]
+Thu, 26 May 2011 08:33:41 - Information : Starting the subcontroller - Controller\Front::getController() (line 222) - command controller:home/action:index [[ 0.005562s ]]
+Thu, 26 May 2011 08:33:41 - Information : Loading main content - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.006141s ]]
+Thu, 26 May 2011 08:33:41 - Information : Sending the response to the user - Controller\Front->__construct() (line 169) - command controller:home/action:index [[ 0.006639s ]]
+Thu, 26 May 2011 08:33:41 - Information : Rendering the template using PHP (version 5.3.6) - Http\Response->render() (line 81) - command controller:home/action:index [[ 0.007203s ]]

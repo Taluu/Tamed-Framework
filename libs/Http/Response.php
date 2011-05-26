@@ -152,8 +152,10 @@ class Response {
   public function render($view) {
     //\ob_end_flush(); // ?
     $this->sendHeaders();
-    
+
     if (!$this->isRedirected()) {
+      list($engineName, $engineVersion) = $this->_view->getEngineInfos(\View\iView::INFO_NAME | \View\iView::INFO_VERSION);
+      \Debug::info('Rendering the template using ' . $engineName . ' (version ' . $engineVersion . ')');
       $this->_view->render($view);
       exit;
     }
@@ -280,7 +282,7 @@ class Response {
 
         case 'ServerError':
           return $status >= 500 && $status < 600;
-          
+
         case 'Redirected':
           return $this->isRedirection() || $this->_redirect === true;
 

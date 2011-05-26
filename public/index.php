@@ -69,7 +69,7 @@ abstract class Front {
    */
   final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\iView $_view) {
     \Obj::$controller = $this;
-    
+
     $this->_request = $_request;
     $this->_response = $_response;
     $this->_view = $this->_response->view($_view);
@@ -149,7 +149,7 @@ abstract class Front {
 
     \Debug::info('Routing');
     \Obj::$router->route($_request);
-    
+
     $_controller = \Obj::$router->get('controller');
     $file = sprintf('%1$s/../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
 
@@ -159,12 +159,12 @@ abstract class Front {
       $_response->redirect404('/');
       return;
     }
-    
+
     require $file;
 
     $_controller = \mb_convert_case($_controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
-    
+
     \Debug::info('Starting the subcontroller');
     return new $_controller($_request, $_response, $_view);
   }
@@ -199,20 +199,20 @@ abstract class Front {
   public function __isset($name) {
     return isset($this->_vars[$name]);
   }
-  
+
   /**
    * Returns the current HTTP Request object
-   * 
+   *
    * @return \Http\Request
    */
   public function getRequest() {
     return $this->_request;
   }
-  
+
   /**
    * Returns the current HTTP Response object
-   * 
-   * @return \Http\Request 
+   *
+   * @return \Http\Request
    */
   public function getResponse() {
     return $this->_response;
