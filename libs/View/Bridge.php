@@ -12,14 +12,12 @@
 namespace View;
 
 /**
- * Definition of the View Interface
- *
- * Handles all the actions needed for the view.
+ * Definition of the bridge between the framework & the selected view engine
  *
  * @package twk.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-interface iView {
+abstract class Bridge {
   const
     INFO_NAME = 1,
     INFO_VERSION = 2,
@@ -28,14 +26,14 @@ interface iView {
     /** Returning all the infos **/
     INFO_ALL = 7;
 
+  protected $_vars = array();
+
   /**
-   * Assigns a variable
+   * Send all the defined variables to the view engine
    *
-   * @param string $var Variable's name (tpl side)
-   * @param string $value Variable's value
    * @return void
    */
-  public function assign($var, $value);
+  protected function _assign() {}
 
   /**
    * Binds a variable
@@ -44,14 +42,28 @@ interface iView {
    * @param mixed &$value Variable references (php side)
    * @return void
    */
-  public function bind($var, &$value);
+  abstract public function bind($var, &$value);
 
   /**
    * Renders a view
    *
-   * @return string
+   * @param string $view View to be rendered
+   * @return string Result
    */
-  public function render($view);
+  final public function render($view) {
+    $this->_assign();
+    return $this->_render($view);
+  }
+
+  /**
+   * Renders a view
+   *
+   * Must be overriten.
+   * 
+   * @param string $view View to be rendered
+   * @return string Result
+   */
+  abstract protected function _render($view);
 
   /**
    * Gets information regarding the engine
@@ -59,5 +71,15 @@ interface iView {
    * @param int $info Level of information needed
    * @return mixed
    */
-  public function getEngineInfos($info = self::INFO_ALL);
+  abstract public function getEngineInfos($info = self::INFO_ALL);
+
+  /**
+   * Sets a variable to be sent to the view engine
+   *
+   * @param string $var variable's name
+   * @param mixed $value variable's value
+   */
+  public function __set($var, $value) {
+    $this->_vars[$var] = $value;
+  }
 }

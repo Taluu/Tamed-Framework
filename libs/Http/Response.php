@@ -64,7 +64,7 @@ class Response {
   /**
    * View
    *
-   * @var \View\iView
+   * @var \View\Bridge
    */
   private $_view = null;
 
@@ -165,7 +165,7 @@ class Response {
     $content = '';
 
     if (!$this->isRedirect() && $view !== null) {
-      list($engineName, $engineVersion) = $this->_view->getEngineInfos(\View\iView::INFO_NAME | \View\iView::INFO_VERSION);
+      list($engineName, $engineVersion) = $this->_view->getEngineInfos(\View\Bridge::INFO_NAME | \View\Bridge::INFO_VERSION);
       \Debug::info('Rendering the template using ' . $engineName . ' (version ' . $engineVersion . ')');
       $content = $this->_view->render($view);
     }
@@ -186,10 +186,10 @@ class Response {
   /**
    * Affects a new view engine (if it is not null).
    *
-   * @param \View\iView $_view View engine to affect
-   * @return \View\iView View engine affected
+   * @param \View\Bridge $_view View engine to affect
+   * @return \View\Bridge View engine affected
    */
-  public function view(\View\iView $_view = null) {
+  public function view(\View\Bridge $_view = null) {
     if ($_view !== null) {
       $this->_view = $_view;
     }
@@ -309,9 +309,7 @@ class Response {
           return in_array($status, array(201, 301, 302, 303, 307));
 
         default:
-          return defined(constant('self::' . $constant))
-                 ? $status === constant('self::' . $constant)
-                 : false;
+          return false;
       }
     }
   }

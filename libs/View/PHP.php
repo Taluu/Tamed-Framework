@@ -20,12 +20,8 @@ namespace View;
  * @package twk.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class PHP implements iView {
+class PHP extends Bridge {
   protected $_vars = array();
-
-  public function assign($var, $value){
-    $this->_vars[$var] = $value;
-  }
 
   public function bind($var, &$value){
     $this->_vars[$var] = &$value;
@@ -53,7 +49,7 @@ class PHP implements iView {
     return $return;
   }
 
-  public function render($view) {
+  protected function _render($view) {
     ob_start();
     extract($this->_vars, EXTR_REFS | EXTR_OVERWRITE);
     include __DIR__ . '/../../views/templates/' . $view . '.' . \PHP_EXT;

@@ -22,7 +22,7 @@ require __DIR__ . '/../Vendor/Talus-TPL/Talus_TPL/Talus_TPL.php';
  * @package twk.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Talus_TPL implements iView {
+class Talus_TPL extends Bridge {
   protected
     /**
      * @var \Talus_TPL
@@ -34,8 +34,8 @@ class Talus_TPL implements iView {
     $this->_engine = new \Talus_TPL($dir . 'templates', $dir . 'cache', array());
   }
 
-  public function assign($var, $value){
-    $this->_engine->set($var, $value);
+  protected function _assign(){
+    $this->_engine->set($this->_vars);
   }
 
   public function bind($var, &$value){
@@ -64,7 +64,7 @@ class Talus_TPL implements iView {
     return $return;
   }
 
-  public function render($view) {
+  protected function _render($view) {
     return $this->_engine->pparse($view . '.html');
   }
 }
