@@ -16,7 +16,7 @@ if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSI
 
 require __DIR__ . '/../libs/__init.' . PHP_EXT;
 
-/**
+/*
  * Like Capitaine Mousse said in his ShwaarkFramework...
  * Let's rock !
  *
