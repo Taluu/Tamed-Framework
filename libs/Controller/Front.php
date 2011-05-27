@@ -34,7 +34,7 @@ abstract class Front {
     /**
      * View Engine
      *
-     * @var \View\iView
+     * @var \View\Bridge
      */
     $_view = null,
 
@@ -108,7 +108,7 @@ abstract class Front {
       exit;
     }
 
-    \Debug::info('Loading action "' . $action . '"');
+    \Debug::info('Loading action "%1$s"', $action);
     $this->_prepend();
     $this->$action();
     $this->_append();
@@ -150,7 +150,7 @@ abstract class Front {
 
     // @todo handle correctly when the controller does not exist
     if (!\is_file($file)) {
-      \Debug::fatal(sprintf('Controller %1$s not found', $_controller));
+      \Debug::fatal('Controller %1$s not found', $_controller);
       $_response->redirect404('/error/notfound_404');
       return;
     }
@@ -160,8 +160,19 @@ abstract class Front {
     $_controller = \mb_convert_case($_controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
 
-    \Debug::info('Starting the subcontroller');
+    \Debug::info('Starting the subcontroller %1$s', $_controller);
     return new $_controller($_request, $_response, $_view);
+  }
+
+  /**
+   * Forwards to a new controller and a new action
+   *
+   * @param type $_controller Controller's name
+   * @param type $_action Action's name
+   * @todo Well... Todo.
+   */
+  final protected function forward($_controller, $_action) {
+
   }
 
   /**
@@ -172,27 +183,7 @@ abstract class Front {
    * @return void
    */
   final public function __set($var, $val) {
-    $this->_vars[$var] = $val;
-  }
-
-  /**
-   * Unsets the variable $name
-   *
-   * @param string $name Variable's name
-   * @return void
-   */
-  public function __unset($name) {
-    unset($this->_vars[$name]);
-  }
-
-  /**
-   * Checks if the variable $name is set
-   *
-   * @param string $name Variable's name
-   * @return boolean
-   */
-  public function __isset($name) {
-    return isset($this->_vars[$name]);
+    $this->_view->$var = $val;
   }
 
   /**

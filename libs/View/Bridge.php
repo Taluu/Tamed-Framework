@@ -59,7 +59,7 @@ abstract class Bridge {
    * Renders a view
    *
    * Must be overriten.
-   * 
+   *
    * @param string $view View to be rendered
    * @return string Result
    */
@@ -79,7 +79,7 @@ abstract class Bridge {
    * @param string $var variable's name
    * @param mixed $value variable's value
    */
-  public function __set($var, $value) {
+  final public function __set($var, $value) {
     $this->_vars[$var] = $value;
   }
 }

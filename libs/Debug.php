@@ -60,14 +60,34 @@ class Debug {
   }
 
   public static function info($msg) {
+    if (func_num_args() > 1) {
+      $args = func_get_args();
+      $msg = array_shift($args);
+      $msg = vsprintf($msg, $args);
+    }
+
     return self::log($msg, self::LEVEL_INFO);
   }
 
   public static function warning($msg) {
+    if (func_num_args() > 1) {
+      $args = func_get_args();
+      $msg = array_shift($args);
+      $msg = vsprintf($msg, $args);
+    }
+
+
     return self::log($msg, self::LEVEL_WARNING);
   }
 
   public static function fatal($msg) {
+    if (func_num_args() > 1) {
+      $args = func_get_args();
+      $msg = array_shift($args);
+      $msg = vsprintf($msg, $args);
+    }
+
+
     return self::log($msg, self::LEVEL_FATAL);
   }
 }
