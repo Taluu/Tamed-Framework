@@ -23,7 +23,7 @@ require __DIR__ . '/../libs/__init.' . PHP_EXT;
  * @todo Handle the exception
  */
 try {
-  $p = Front::getController(null, null, new \View\PHP); // Using PHP instead of Talus TPL
+  $p = Front::getController(null, array('view' => new \View\PHP)); // Using PHP instead of Talus TPL
   //$p = Front::getController();
 } catch (Exception $e) {
   echo $e;

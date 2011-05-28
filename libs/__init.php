@@ -60,7 +60,7 @@ abstract class Obj {
   static public $controller = null;
 
   /**
-   * @var \Router
+   * @var \Routing\Router
    */
   static public $router = null;
 }
@@ -68,7 +68,7 @@ abstract class Obj {
 abstract class Sys {}
 
 Obj::$config = new \Config;
-Obj::$router = new \Router;
+Obj::$router = new \Routing\Router;
 
 // @todo Load all the routes
 

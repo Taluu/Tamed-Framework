@@ -27,7 +27,6 @@ namespace Controller;
 abstract class Front {
   protected
     $_template = null,
-    $_vars = array(),
     $_status = \Http\Response::OK;
 
   protected
@@ -44,9 +43,14 @@ abstract class Front {
     $_request = null,
 
     /**
-     * @var Http\Response
+     * @var \Http\Response
      */
-    $_response = null;
+    $_response = null,
+     
+    /**
+     * @var \Routing\Route
+     */
+    $_route = null;
 
 
   /**
@@ -56,9 +60,10 @@ abstract class Front {
    * @param \Http\Response $_response HTTP Response handler
    * @param \View\Bridge $_view View engine
    */
-  final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\Bridge $_view) {
+  final protected function  __construct($route, \Http\Request $_request, \Http\Response $_response, \View\Bridge $_view) {
     \Obj::$controller = $this;
 
+    $this->_route = $route;
     $this->_request = $_request;
     $this->_response = $_response;
     $this->_view = $this->_response->view($_view);
@@ -98,7 +103,7 @@ abstract class Front {
    * @return bool True if it si correct, false otherwise
    */
   final private function _main() {
-    $action = \Obj::$router->get('action');
+    $action = $this->_route->get('action');
 
     if (!method_exists($this, $action)) {
       \Debug::warning(sprintf('Action %1$s nonexistent', $action));
@@ -117,35 +122,27 @@ abstract class Front {
   /**
    * Prepare the page, matching a route if any
    *
-   * @param \Http\Request $_request HTTP Request Object
-   * @param \Http\Response $_request HTTP Response Object
-   * @param \View\Bridge $_view View engine
-   * @param self $_controller Controller to be used. null if it has to guess it.
-   * @return self
+   * @param self $_controller Controller to be used. null if it has to be guessed.
+   * @param array $_options Options array (to define new http handlers, view bridges, ...)
+   * @return self Matched controller
    *
    * @todo Review the routing mechanism
    */
-  final public static function getController(\Http\Request $_request = null, \Http\Response $_response = null, \View\Bridge $_view = null, self $_controller = null) {
+  final public static function getController(self $_controller = null, array $_options = array()) {
+    $_options = array_merge(array(
+        'request' => new \Http\Request,
+        'response' => new \Http\Response,
+        'view' => new \View\Talus_TPL
+      ), $_options);
+    
     if ($_controller !== null) {
       return $_controller;
     }
 
-    if ($_request === null) {
-      $_request = new \Http\Request;
-    }
-
-    if ($_response === null) {
-      $_response = new \Http\Response;
-    }
-
-    if ($_view === null) {
-      $_view = new \View\Talus_TPL;
-    }
-
     \Debug::info('Routing');
-    \Obj::$router->route($_request);
+    $route = \Obj::$router->route($_options['request']);
 
-    $_controller = \Obj::$router->get('controller');
+    $_controller = $route->get('controller');
     $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
 
     // @todo handle correctly when the controller does not exist
@@ -161,7 +158,7 @@ abstract class Front {
     $_controller = '\Controller\Sub\\' . $_controller;
 
     \Debug::info('Starting the subcontroller %1$s', $_controller);
-    return new $_controller($_request, $_response, $_view);
+    return new $_controller($route, $_options['request'], $_options['response'], $_options['view']);
   }
 
   /**
@@ -185,22 +182,20 @@ abstract class Front {
   final public function __set($var, $val) {
     $this->_view->$var = $val;
   }
-
+  
   /**
-   * Returns the current HTTP Request object
-   *
-   * @return \Http\Request
+   * Magic method, gets one of the authorized method
+   * 
+   * @param $name Name of the attribute
+   * @return mixed
    */
-  public function getRequest() {
-    return $this->_request;
-  }
-
-  /**
-   * Returns the current HTTP Response object
-   *
-   * @return \Http\Request
-   */
-  public function getResponse() {
-    return $this->_response;
+  final public function __get($name) {
+    $name = ltrim($name, '_');
+    
+    if (in_array($name, array('view', 'request', 'response', 'route'))) {
+      return $name;
+    }
+    
+    return null;
   }
 }

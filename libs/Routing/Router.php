@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+namespace Routing;
+
 if (!defined('SAFE')) exit;
 
 /**
@@ -16,7 +18,7 @@ if (!defined('SAFE')) exit;
  *
  * Handles all the requests made towards the front controller.
  *
- * @package twk
+ * @package twk.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  *
  * @todo Review the routing mechanism
@@ -45,9 +47,14 @@ class Router {
 
     $this->name('controller', 'home');
     $this->name('action', 'index');
+    
+    $this->addPattern('default', '/');
 
     $this->_started = true;
     // @todo analyze the URI, and get all the correct parameters
+    
+    // temporary
+    return $this;
   }
 
   /**
@@ -91,24 +98,18 @@ class Router {
   /**
    * Adds a route to the stack
    *
-   * Must consider that the first two matches are destined to be the
+   * params : /[name:default]:regex/
+   * regex type : :any, :alpha, :alphanum, :num
+   *
+   * if the name is present, it is an important parameter : else, we can simply
+   * ignore it.
    *
    * @param string $_name Name of the route
    * @param string $_pattern Pattern of the road (including named parameters)
    * @return void
    */
-  public function addRoute($_pattern) {
-    /*
-     * @todo
-     *
-     * /myController/myAction => class MyController, method myAction
-     *
-     * params : /[name:default]:regex/
-     * regex type : :any, :alpha, :alphanum, :num
-     *
-     * if the name is present, it is an important parameter : else, we can simply
-     * ignore it.
-     */
+  public function addPattern($_name, $_pattern) {
+    
   }
 
   /**
