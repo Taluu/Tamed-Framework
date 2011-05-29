@@ -74,15 +74,16 @@ class Route {
     }
     
     $replace = array(
-      ':any' => '.*?',
-      ':alpha' => '[a-zA-Z]+?',
-      ':num' => '[0-9]+?',
-      ':alphanum' => '[a-zA-Z0-9]+?'
+      '\:any' => '.*?',
+      '\:alpha' => '[a-zA-Z]+?',
+      '\:num' => '[0-9]+?',
+      '\:alphanum' => '[a-zA-Z0-9]+?'
      );
     
-    $this->_pattern = preg_replace('`/\[(' . self::REGEX_PHP_ID . ')\]([^/]+?)`', '/(?P<$1>$2)', $this->_pattern);
+    $this->_pattern = preg_quote($this->_pattern, '`');
+    $this->_pattern = preg_replace('`/\\[(' . self::REGEX_PHP_ID . ')\\]([^/]+?)`', '/(?P<$1>$2)', $this->_pattern);
     $this->_pattern = str_replace(array_keys($replace), array_values($replace), $this->_pattern);
-    $this->_pattern = '`^' . $this->_pattern . '$`';
+    $this->_pattern = '`^' . $this->_pattern . '$`'; 
   }
     
   /**
@@ -94,14 +95,14 @@ class Route {
   public function match($_requestUri) {
     static $matched = array();
     
-    if (isset($matched[$_requestUri])) {
-      return $matched[$_requestUri];
+    if (isset($matched[$this->_pattern][$_requestUri])) {
+      return $matched[$this->_pattern][$_requestUri];
     }
     
     $matches = array();
-    $matched[$_requestUri] = preg_match($this->_pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
+    $matched[$this->_pattern][$_requestUri] = preg_match($this->_pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
     
-    if (!$matched[$_requestUri]) {
+    if (!$matched[$this->_pattern][$_requestUri]) {
       return false;
     }
     

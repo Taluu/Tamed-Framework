@@ -37,8 +37,6 @@ class Router {
      */
     $_matchedRoute = null;
 
-  private $_started = false;
-
   /**
    * Route the current URI
    *
@@ -51,7 +49,7 @@ class Router {
 
     $p = $_request->requestUri();
     $p = $p['URI'];
-
+    
     /**
      * Verifies for each route if it can be determined. If it can't, the default
      * will then be used.
