@@ -60,13 +60,13 @@ abstract class Front {
    * @param \Http\Response $_response HTTP Response handler
    * @param \View\Bridge $_view View engine
    */
-  final protected function  __construct($route, \Http\Request $_request, \Http\Response $_response, \View\Bridge $_view) {
+  final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\Bridge $_view) {
     \Obj::$controller = $this;
 
-    $this->_route = $route;
     $this->_request = $_request;
     $this->_response = $_response;
     $this->_view = $this->_response->view($_view);
+    $this->_route = \Obj::$router->route($_request);
 
     \Debug::info('Loading main content');
     $this->_main();
@@ -103,7 +103,7 @@ abstract class Front {
    * @return bool True if it si correct, false otherwise
    */
   final private function _main() {
-    $action = $this->_route->get('action');
+    $action = $this->_route->action;
 
     if (!method_exists($this, $action)) {
       \Debug::warning(sprintf('Action %1$s nonexistent', $action));
@@ -142,7 +142,7 @@ abstract class Front {
     \Debug::info('Routing');
     $route = \Obj::$router->route($_options['request']);
 
-    $_controller = $route->get('controller');
+    $_controller = $route->controller;
     $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
 
     // @todo handle correctly when the controller does not exist
@@ -158,7 +158,7 @@ abstract class Front {
     $_controller = '\Controller\Sub\\' . $_controller;
 
     \Debug::info('Starting the subcontroller %1$s', $_controller);
-    return new $_controller($route, $_options['request'], $_options['response'], $_options['view']);
+    return new $_controller($_options['request'], $_options['response'], $_options['view']);
   }
 
   /**
@@ -190,12 +190,11 @@ abstract class Front {
    * @return mixed
    */
   final public function __get($name) {
-    $name = ltrim($name, '_');
-    
     if (in_array($name, array('view', 'request', 'response', 'route'))) {
-      return $name;
+      $name = '_' . $name;
+      return $this->$name;
     }
     
-    return null;
+    throw new Exception($name . ' is not a recognized attribute for \Controller\Front');
   }
 }

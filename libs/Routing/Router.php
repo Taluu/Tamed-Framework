@@ -26,11 +26,17 @@ if (!defined('SAFE')) exit;
 class Router {
   protected
     $_command = null,
+
     $_params = array(),
     $_namedParams = array(),
 
-    $_routes = array();
-  
+    $_routes = array(),
+
+    /**
+     * @var Route
+     */
+    $_matchedRoute = null;
+
   private $_started = false;
 
   /**
@@ -39,77 +45,46 @@ class Router {
    * @param \Http\Request $_request Request object
    */
   public function route(\Http\Request $_request) {
-    $p = strstr(trim($_request->requestUri()), '?', true);
-    $p = $p ?: trim($_request->requestUri());
+    if ($this->hasStarted()) {
+      return $this->_matchedRoute;
+    }
 
-    $this->_params = array_filter(explode('/', $p));
-    $this->_command = implode('/', $this->_params);
+    $p = $_request->requestUri();
 
-    $this->name('controller', 'home');
-    $this->name('action', 'index');
+    /**
+     * Verifies for each route if it can be determined. If it can't, the default
+     * will then be used.
+     *
+     * @var &$route Route
+     */
+    foreach ($this->_routes as $name => &$route) {
+      if ($route->matches($p)) {
+        \Debug::info('Route %s matched', $name);
+        $this->_matchedRoute = $route;
+      }
+    }
+
+    if ($this->_matchedRoute === null) {
+      if (!isset($this->_routes['default'])) {
+        $this->addRoute('default', new Route('home', 'index', '/'));
+      }
+
+      \Debug::info('No route found : using the default');
+      $this->_matchedRoute = $this->_routes['default'];
+    }
     
-    $this->addPattern('default', '/');
-
-    $this->_started = true;
-    // @todo analyze the URI, and get all the correct parameters
-    
-    // temporary
-    return $this;
-  }
-
-  /**
-   * Give a name to the next parameter.
-   *
-   * If there is not enough parameters to give it a name, the names will have a
-   * the $default value. It names the parameters in the order they are presented
-   * in the URI.
-   *
-   * @param string $_name Name of this parameter
-   * @param mixed $_default Default Value
-   * @return Router
-   */
-  public function name($_name, $_default = null) {
-    $_name = strtolower($_name);
-
-    if ($_name == 'controller' && isset($this->_namedParams['controller'])) {
-      throw new Exception('controller is a special parameter and can not be used outside its context.');
-      continue;
-    }
-
-    if ($_name == 'action' && isset($this->_namedParams['action'])) {
-      throw new Exception('action is a special parameter and can not be used outside its context.');
-      continue;
-    }
-
-    $param = array_shift($this->_params);
-    $this->_namedParams[$_name] = empty($param) ? $_default : $param;
-
-    // -- Refreshing the command special parameter
-    $commands = array();
-
-    foreach ($this->_namedParams as $param => $val) {
-      $commands[] = $param . ':' . $val;
-    }
-
-    $this->_command = implode('/', array_merge($commands, $this->_params));
-    return $this;
+    return $this->_matchedRoute;
   }
 
   /**
    * Adds a route to the stack
    *
-   * params : /[name:default]:regex/
-   * regex type : :any, :alpha, :alphanum, :num
-   *
-   * if the name is present, it is an important parameter : else, we can simply
-   * ignore it.
-   *
    * @param string $_name Name of the route
-   * @param string $_pattern Pattern of the road (including named parameters)
+   * @param string $_route Route to add
    * @return void
    */
-  public function addPattern($_name, $_pattern) {
-    
+  public function addRoute($_name, Route $_route) {
+    $this->_routes[$_name] = $_route;
   }
 
   /**
@@ -120,30 +95,30 @@ class Router {
    *               was not found, or an array if multi-parameters.
    */
   public function get($p) {
-    if (func_num_args() > 1) {
-      $p = func_get_args();
-      $return = array();
+    if (!$this->hasStarted()) {
+      throw new Exception('The routing engine has not yet started !');
+    }
 
-      foreach ($p as &$n) {
-        $return[$n] = $this->get($n);
+    if (func_num_args() > 1) {
+      $p = array();
+
+      foreach (func_get_args() as $n) {
+        $p[$n] = $this->get($n);
       }
 
-      return $return;
+      return $p;
     }
 
-    if ($p == 'command') {
-      return $this->_command;
-    }
-
-    if (isset($this->_namedParams[$p])) {
-      return $this->_namedParams[$p];
-    }
-
-    return null;
+    return $this->_matchedRoute->get($p);
   }
-  
+
+  /**
+   * Checks whether if a route was determined or not
+   *
+   * @return bool true if the route was determined
+   */
   public function hasStarted() {
-    return $this->_started;
+    return $this->_matchedRoute !== null;
   }
 }
 

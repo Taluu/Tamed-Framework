@@ -1,6 +1,5 @@
 #.git files
-#.git
-#!.gitattributes
+!.gitignore
 
 .ignore/
 
@@ -16,3 +15,4 @@ nbproject/
 .cache/
 views/cache/*.php
 
+/.git-rewrite/

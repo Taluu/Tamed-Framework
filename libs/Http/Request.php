@@ -77,9 +77,21 @@ class Request {
 
     return null;
   }
-
+  
   public function requestUri() {
-    return $_SERVER['REQUEST_URI'];
+    $requestURI = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
+    $requestURI = $requestURI ?: trim($_SERVER['REQUEST_URI']);
+    
+    $return = array(
+      'URI' => $requestURI,
+      'query_string' => $_SERVER['QUERY_STRING']
+     );
+    
+    if (isset($_SERVER['REDIRECT_URL'])) {
+      $return['URI'] = $_SERVER['REDIRECT_URL'];
+    }
+    
+    return $return;
   }
 }
 

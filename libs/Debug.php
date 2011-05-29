@@ -38,6 +38,7 @@ class Debug {
       );
 
     $command = \Obj::$router->hasStarted() ? \Obj::$router->get('command') : '(not set yet)';
+    $command = $command ?: '/';
 
     // -- $db[0] is this function... And we have no interest in it, do we ?
     foreach (debug_backtrace() as $debug) {

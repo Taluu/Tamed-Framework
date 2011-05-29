@@ -22,9 +22,6 @@ define('ALREADY_STARTED', true);
 
 $start = microtime(true);
 
-/**
- * @todo Make a better handling of this loader
- */
 spl_autoload_register(function ($class) {
   $file = explode('\\', $class);  array_unshift($file, __DIR__);
   $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
@@ -37,7 +34,42 @@ spl_autoload_register(function ($class) {
   return true;
  });
  
- Debug::$start = $start;
+Debug::$start = $start;
+
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+  switch ($errno) {
+    case E_RECOVERABLE_ERROR:
+    case E_COMPILE_ERROR:
+    case E_CORE_ERROR:
+    case E_USER_ERROR:
+    case E_ERROR:
+    case E_PARSE:
+      $err = \Debug::LEVEL_FATAL;
+      break;
+    
+    case E_COMPILE_WARNING:
+    case E_CORE_WARNING:
+    case E_USER_WARNING:
+    case E_WARNING:
+      $err = \Debug::LEVEL_WARNING;
+      break;
+    
+    case E_USER_DEPRECATED:
+    case E_USER_NOTICE:
+    case E_DEPRECATED:
+    case E_NOTICE:
+    case E_STRICT:
+    default:
+      $err = \Debug::LEVEL_INFO;
+      break;
+  }
+  
+  $e = new ErrorException($errstr, 0, $errno, $errfile, $errline);
+  
+  \Debug::log('An error occurred (' . $e->__toString() . ')', $err);
+  throw $e;
+ });
+ 
  
 /**
  * Contains all the global objects needed for the project.
