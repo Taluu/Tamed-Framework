@@ -50,6 +50,7 @@ class Router {
     }
 
     $p = $_request->requestUri();
+    $p = $p['URI'];
 
     /**
      * Verifies for each route if it can be determined. If it can't, the default
@@ -58,9 +59,10 @@ class Router {
      * @var &$route Route
      */
     foreach ($this->_routes as $name => &$route) {
-      if ($route->matches($p)) {
+      if ($route->match($p)) {
         \Debug::info('Route %s matched', $name);
         $this->_matchedRoute = $route;
+        break;
       }
     }
 

@@ -57,6 +57,8 @@ class Route {
     $this->_action = $_action;
     $this->_controller = $_controller;
     $this->_pattern = $_pattern;
+    
+    $this->_parse();
   }
   
   /**
@@ -72,7 +74,7 @@ class Route {
     }
     
     $replace = array(
-      ':any' => '[^/]+?',
+      ':any' => '.*?',
       ':alpha' => '[a-zA-Z]+?',
       ':num' => '[0-9]+?',
       ':alphanum' => '[a-zA-Z0-9]+?'
@@ -96,9 +98,7 @@ class Route {
       return $matched[$_requestUri];
     }
     
-    $this->_parse();
     $matches = array();
-    
     $matched[$_requestUri] = preg_match($this->_pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
     
     if (!$matched[$_requestUri]) {

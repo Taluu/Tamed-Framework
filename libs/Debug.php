@@ -36,10 +36,15 @@ class Debug {
         self::LEVEL_WARNING => 'Warning',
         self::LEVEL_INFO => 'Information'
       );
-
-    $command = \Obj::$router->hasStarted() ? \Obj::$router->get('command') : '(not set yet)';
-    $command = $command ?: '/';
-
+    
+    $command = 'null';
+    
+    if (\Obj::$router->hasStarted()) {
+      $command = \Obj::$router->get('command') ?: '/';
+      $command .= ' controller:' . \Obj::$router->get('controller');
+      $command .= ' action:' . \Obj::$router->get('action');
+    }
+    
     // -- $db[0] is this function... And we have no interest in it, do we ?
     foreach (debug_backtrace() as $debug) {
       if ($debug['class'] != 'Debug') {
