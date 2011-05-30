@@ -1,8 +1,6 @@
-Talus Works ("Talus Framework" ?)
-=================================
-Destined to be a bug tracker in PHP. But, before becomming one, it may be
-independant and act as a lightweight framework for PHP 5.3 only... And then be
-used to create a Bug Tracker in PHP.
+Talus Works (Check for a new name ?)
+====================================
+A lightweight and fast MVC Framework in PHP, easily extensible.
 
 Features
 ========
@@ -12,7 +10,7 @@ Features
 - HTTP Request & Response support
 - Compatible with every View Engine... As long as the bridge implements correctly the interface (PHP & Talus' TPL bridges made)
 - Easily Extensible
-- Homemade ORM (not sure though ?)
+- Homemade ORM (not made yet)
 
 Requirements / Dependencies
 ===========================
@@ -21,5 +19,5 @@ Requirements / Dependencies
 
 Credits
 =======
-- The routing mechanism is built with the help of [Capitaine Mousse](https://github.com/CapMousse)
+- The routing mechanism is built with the help of [CapMousse](https://github.com/CapMousse)
 - The Response mechanism is greatly inspired from [Symfony 2](https://github.com/symfony/symfony)
