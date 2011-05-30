@@ -8,7 +8,7 @@ Features
 - Entirely OOP
 - Routing support
 - HTTP Request & Response support
-- Compatible with every View Engine... As long as the bridge implements correctly the interface (PHP & Talus' TPL bridges made)
+- Compatible with every View Engine... As long as the bridge implements correctly the interface (PHP & Talus' TPL bridges made and officialy supported)
 - Easily Extensible
 - Homemade ORM (not made yet)
 
