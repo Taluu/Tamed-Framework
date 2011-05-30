@@ -34,7 +34,7 @@ class Request {
    * @return mixed (null if the parameter was not found)
    */
   public function get($key) {
-    return $_GET[$key] ?: null;
+    return isset($_GET[$key]) ? $_GET[$key] : null;
   }
 
   /**
@@ -44,17 +44,27 @@ class Request {
    * @return mixed (null if the parameter was not found)
    */
   public function post($key) {
-    return $_POST[$key] ?: null;
+    return isset($_POST[$key]) ? $_POST[$key] : null;
   }
 
   /**
    * Gets a COOKIE
    *
    * @param string $key Cookie's name
-   * @return mixed
+   * @return mixed null (null if the cookie was not found)
    */
   public function cookie($key) {
-    return $_COOKIE[$key] ?: null;
+    return isset($_COOKIE[$key]) ? $_COOKIE[$key] : null;
+  }
+
+  /**
+   * Gets a FILE parameter
+   *
+   * @param string $key File's name
+   * @return mixed array if the file is found, null otherwise
+   */
+  public function file($key) {
+    return isset($_FILES[$key]) ? $_FILES[$key] : null;
   }
 
   /**
@@ -77,20 +87,20 @@ class Request {
 
     return null;
   }
-  
+
   public function requestUri() {
     $requestURI = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
     $requestURI = $requestURI ?: trim($_SERVER['REQUEST_URI']);
-    
+
     $return = array(
       'URI' => $requestURI,
       'query_string' => $_SERVER['QUERY_STRING']
      );
-    
+
     if (isset($_SERVER['REDIRECT_URL'])) {
       $return['URI'] = $_SERVER['REDIRECT_URL'];
     }
-    
+
     return $return;
   }
 }
