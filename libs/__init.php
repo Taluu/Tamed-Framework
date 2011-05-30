@@ -22,18 +22,26 @@ define('ALREADY_STARTED', true);
 
 $start = microtime(true);
 
-spl_autoload_register(function ($class) {
-  $file = explode('\\', $class);  array_unshift($file, __DIR__);
+spl_autoload_register(function ($_class) {
+  static $loaded = array();
+
+  if (isset($loaded[$_class])) {
+    return $loaded[$_class];
+  }
+
+  $file = explode('\\', $_class);  array_unshift($file, __DIR__);
   $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
 
   if (!is_file($file)) {
-    return false;
+    $loaded[$_class] = false;
+  } else {
+    require $file;
+    $loaded[$_class] = true;
   }
 
-  require_once $file;
-  return true;
+  return $loaded[$_class];
  });
- 
+
 Debug::$start = $start;
 
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
@@ -46,14 +54,14 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     case E_PARSE:
       $err = \Debug::LEVEL_FATAL;
       break;
-    
+
     case E_COMPILE_WARNING:
     case E_CORE_WARNING:
     case E_USER_WARNING:
     case E_WARNING:
       $err = \Debug::LEVEL_WARNING;
       break;
-    
+
     case E_USER_DEPRECATED:
     case E_USER_NOTICE:
     case E_DEPRECATED:
@@ -63,14 +71,14 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
       $err = \Debug::LEVEL_INFO;
       break;
   }
-  
+
   $e = new ErrorException($errstr, 0, $errno, $errfile, $errline);
-  
+
   \Debug::log('An error occurred (' . $e->__toString() . ')', $err);
   throw $e;
  });
- 
- 
+
+
 /**
  * Contains all the global objects needed for the project.
  */
