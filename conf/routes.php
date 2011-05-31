@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
+// -- The default route is automatically added by the routing system
 $routes = array(
-  '404' => new \Routing\Route('error', 'notfound_404', '/error/notfound_404'),
-  'default' => new \Routing\Route('home', 'index', '/:any')
+  '404' => new \Routing\Route('error', 'notfound_404', '/error/notfound_404')
  );
