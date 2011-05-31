@@ -27,9 +27,8 @@ namespace Controller;
 abstract class Front {
   protected
     $_template = null,
-    $_status = \Http\Response::OK;
-
-  protected
+    $_status = \Http\Response::OK,
+     
     /**
      * View Engine
      *
@@ -130,7 +129,7 @@ abstract class Front {
     if ($_controller !== null) {
       return $_controller;
     }
-    
+
     $options = array_replace(array(
         'request' => new \Http\Request,
         'response' => new \Http\Response,

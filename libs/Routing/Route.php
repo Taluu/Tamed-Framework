@@ -44,6 +44,7 @@ class Route {
 
     $_pattern = null,
 
+    $_vars = array(),
     $_params = array();
 
   /**
@@ -58,6 +59,11 @@ class Route {
     $this->_controller = $_controller;
     $this->_pattern = $_pattern;
 
+    $this->_addVar(':alphanum', '[a-zA-Z0-9]+?');
+    $this->_addVar(':alpha', '[a-zA-Z]+?');
+    $this->_addVar(':num', '[0-9]+?');
+    $this->_addVar(':any', '.+?');
+
     $this->_parse();
   }
 
@@ -67,16 +73,9 @@ class Route {
    * @return void
    */
   protected function _parse() {
-    static $replace = array(
-      '\:any' => '.+?',
-      '\:alphanum' => '[a-zA-Z0-9]+?',
-      '\:alpha' => '[a-zA-z]+?',
-      '\:num' => '[0-9]+?'
-     );
-
     $this->_pattern = preg_quote($this->_pattern, '`');
     $this->_pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $this->_pattern);
-    $this->_pattern = str_replace(array_keys($replace), array_values($replace), $this->_pattern);
+    $this->_pattern = str_replace(array_keys($this->_vars), array_values($this->_vars), $this->_pattern);
     $this->_pattern = '`^' . $this->_pattern . '$`';
   }
 
@@ -131,7 +130,7 @@ class Route {
    * @return string value of the parameter
    * @throws \Exception
    */
-  function __get($n) {
+  public function __get($n) {
     if (in_array($n, array('action', 'command', 'controller'))) {
       $n = '_' . $n;
       return $this->$n;
@@ -146,7 +145,7 @@ class Route {
    * @param string $n Parameter to fetch
    * @return mixed value of the parameter if set, null otherwise
    */
-  function get($n) {
+  public function get($n) {
     if (in_array($n, array('action', 'command', 'controller'))) {
       return $this->$n;
     }
@@ -156,6 +155,25 @@ class Route {
     }
 
     return null;
+  }
+
+  /**
+   * Adds a possibility to parse a parameter type :something in the pattern
+   *
+   * @param string $param Parameters name
+   * @param string $regex Regex interpreting this parameter
+   * @param boolean $force Declare this parameter with the new regex if it exists ?
+   */
+  private function _addVar($param, $regex, $force = false) {
+    if ($param[0] !== ':') {
+      $param = ':' . $param;
+    }
+
+    $param = preg_quote($param, '`');
+
+    if (!isset($this->_vars[$param]) || $force === true) {
+      $this->_vars[$param] = $regex;
+    }
   }
 }
 
