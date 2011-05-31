@@ -38,15 +38,13 @@ class Router {
   /**
    * Route the current URI
    *
-   * @param \Http\Request $_request Request object
+   * @param string $_requestURI Request URI
+   * @return Route matched route
    */
-  public function route(\Http\Request $_request) {
+  public function route($_requestURI) {
     if ($this->hasStarted()) {
       return $this->_matchedRoute;
     }
-
-    $p = $_request->requestUri();
-    $p = $p['URI'];
 
     /**
      * Verifies for each route if it can be determined. If it can't, the default
@@ -55,7 +53,7 @@ class Router {
      * @var &$route Route
      */
     foreach ($this->_routes as $name => &$route) {
-      if ($route->match($p)) {
+      if ($route->match($_requestURI)) {
         \Debug::info('Route %s matched', $name);
         $this->_matchedRoute = $route;
         break;

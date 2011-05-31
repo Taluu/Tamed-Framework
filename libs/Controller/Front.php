@@ -138,20 +138,20 @@ abstract class Front {
     }
 
     \Debug::info('Routing');
-    $route = \Obj::$router->route($_options['request']);
+    $requestURI = $_options['request']->requestUri();
 
-    $_controller = $route->controller;
-    $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
+    $route = \Obj::$router->route($requestURI['URI']);
+    $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $route->controller, PHP_EXT);
 
     if (!\is_file($file)) {
-      \Debug::fatal('Controller %1$s not found', $_controller);
+      \Debug::fatal('Controller %1$s not found', $route->controller);
       $_response->redirect404('/error/notfound_404');
       return;
     }
 
     require $file;
 
-    $_controller = \mb_convert_case($_controller, \MB_CASE_TITLE);
+    $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
 
     \Debug::info('Starting the subcontroller %1$s', $_controller);
