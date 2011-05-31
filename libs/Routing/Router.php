@@ -20,8 +20,6 @@ if (!defined('SAFE')) exit;
  *
  * @package twk.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
- *
- * @todo Review the routing mechanism
  */
 class Router {
   protected
@@ -49,7 +47,7 @@ class Router {
 
     $p = $_request->requestUri();
     $p = $p['URI'];
-    
+
     /**
      * Verifies for each route if it can be determined. If it can't, the default
      * will then be used.
@@ -72,7 +70,7 @@ class Router {
       \Debug::info('No route found : using the default');
       $this->_matchedRoute = $this->_routes['default'];
     }
-    
+
     return $this->_matchedRoute;
   }
 

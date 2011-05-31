@@ -156,7 +156,6 @@ class Response {
    *
    * @param string $view File to be rendered
    * @return void
-   * @todo well... todo.
    */
   public function render($view = null) {
     //\ob_end_flush(); // ?

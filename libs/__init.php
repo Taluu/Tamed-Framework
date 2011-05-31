@@ -110,7 +110,6 @@ abstract class Sys {}
 Obj::$config = new \Config;
 Obj::$router = new \Routing\Router;
 
-// @todo Load all the routes
 require __DIR__ . '/../conf/routes.php';
 
 foreach ($routes as $name => &$route) {

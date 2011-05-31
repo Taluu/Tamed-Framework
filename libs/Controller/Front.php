@@ -46,7 +46,7 @@ abstract class Front {
      * @var \Http\Response
      */
     $_response = null,
-     
+
     /**
      * @var \Routing\Route
      */
@@ -125,8 +125,6 @@ abstract class Front {
    * @param self $_controller Controller to be used. null if it has to be guessed.
    * @param array $_options Options array (to define new http handlers, view bridges, ...)
    * @return self Matched controller
-   *
-   * @todo Review the routing mechanism
    */
   final public static function getController(self $_controller = null, array $_options = array()) {
     $_options = array_merge(array(
@@ -134,7 +132,7 @@ abstract class Front {
         'response' => new \Http\Response,
         'view' => new \View\Talus_TPL
       ), $_options);
-    
+
     if ($_controller !== null) {
       return $_controller;
     }
@@ -145,7 +143,6 @@ abstract class Front {
     $_controller = $route->controller;
     $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $_controller, PHP_EXT);
 
-    // @todo handle correctly when the controller does not exist
     if (!\is_file($file)) {
       \Debug::fatal('Controller %1$s not found', $_controller);
       $_response->redirect404('/error/notfound_404');
@@ -182,10 +179,10 @@ abstract class Front {
   final public function __set($var, $val) {
     $this->_view->$var = $val;
   }
-  
+
   /**
    * Magic method, gets one of the authorized method
-   * 
+   *
    * @param $name Name of the attribute
    * @return mixed
    */
@@ -194,7 +191,7 @@ abstract class Front {
       $name = '_' . $name;
       return $this->$name;
     }
-    
+
     throw new Exception($name . ' is not a recognized attribute for \Controller\Front');
   }
 }
