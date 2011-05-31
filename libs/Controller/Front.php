@@ -123,22 +123,22 @@ abstract class Front {
    * Prepare the page, matching a route if any
    *
    * @param self $_controller Controller to be used. null if it has to be guessed.
-   * @param array $_options Options array (to define new http handlers, view bridges, ...)
+   * @param array $options Options array (to define new http handlers, view bridges, ...)
    * @return self Matched controller
    */
   final public static function getController(self $_controller = null, array $_options = array()) {
-    $_options = array_merge(array(
+    if ($_controller !== null) {
+      return $_controller;
+    }
+    
+    $options = array_replace(array(
         'request' => new \Http\Request,
         'response' => new \Http\Response,
         'view' => new \View\Talus_TPL
       ), $_options);
 
-    if ($_controller !== null) {
-      return $_controller;
-    }
-
     \Debug::info('Routing');
-    $requestURI = $_options['request']->requestUri();
+    $requestURI = $options['request']->requestUri();
 
     $route = \Obj::$router->route($requestURI['URI']);
     $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $route->controller, PHP_EXT);
@@ -155,7 +155,7 @@ abstract class Front {
     $_controller = '\Controller\Sub\\' . $_controller;
 
     \Debug::info('Starting the subcontroller %1$s', $_controller);
-    return new $_controller($_options['request'], $_options['response'], $_options['view']);
+    return new $_controller($options['request'], $options['response'], $options['view']);
   }
 
   /**
