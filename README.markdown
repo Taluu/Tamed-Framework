@@ -1,6 +1,6 @@
-Talus Works (Check for a new name ?)
-====================================
-A lightweight and fast MVC Framework in PHP, easily extensible.
+Talus Works
+===========
+TODO : Check for a new name ? Talus' Works being the example application that will be using that framework (a bug tracker)...
 
 Features
 ========
