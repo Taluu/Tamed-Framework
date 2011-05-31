@@ -67,18 +67,12 @@ class Route {
    * @return void
    */
   protected function _parse() {
-    static
-      $parsed = false,
-      $replace = array(
-        '\:any' => '.+?',
-        '\:alphanum' => '[a-zA-Z0-9]+?',
-        '\:alpha' => '[a-zA-z]+?',
-        '\:num' => '[0-9]+?'
-       );
-
-    if ($parsed === true) {
-      return;
-    }
+    static $replace = array(
+      '\:any' => '.+?',
+      '\:alphanum' => '[a-zA-Z0-9]+?',
+      '\:alpha' => '[a-zA-z]+?',
+      '\:num' => '[0-9]+?'
+     );
 
     $this->_pattern = preg_quote($this->_pattern, '`');
     $this->_pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $this->_pattern);
