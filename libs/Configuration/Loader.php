@@ -9,16 +9,23 @@
  * @version $Id$
  */
 
+namespace Configuration;
+
 /**
- * Definition of the Config Class
+ * Definition of the Loader Class
  *
- * Config Handler.
+ * Loads config files (from /conf/ directory), and for each returns a new
+ * Config object
+ * 
+ * Each config file must be in JSON format.
  *
- * @package twk
+ * @package twk.configuration
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Config {
-  //put your code here
+class Loader {
+  function __construct($_dir) {
+    
+  }
 }
 
 /*

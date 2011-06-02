@@ -84,7 +84,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
  */
 abstract class Obj {
   /**
-   * @var \Config
+   * @var \Configuration\Loader
    */
   static public $config = null;
 
@@ -107,7 +107,7 @@ abstract class Obj {
 
 abstract class Sys {}
 
-Obj::$config = new \Config;
+Obj::$config = new \Configuration\Loader(__DIR__ . '/../conf/');
 Obj::$router = new \Routing\Router;
 
 require __DIR__ . '/../conf/routes.php';
