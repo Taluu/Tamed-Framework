@@ -17,6 +17,11 @@ Requirements / Dependencies
 - PHP 5.3+
 - [Talus TPL](https://github.com/Taluu/Talus-TPL), if it is used as the view engine
 
+HOWTO (Installation)
+====================
+TODO
+
+
 Credits
 =======
 - The routing mechanism is built with the help of [CapMousse](https://github.com/CapMousse)
