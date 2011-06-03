@@ -88,14 +88,10 @@ class Config {
    * Applies a callback on the datas
    * 
    * @param \Closure $_callback callback to be applied
+   * @todo check how to verify that this callback is used only once ?
    */
   public function applyCallback(\Closure $_callback) {
-    if (in_array($_callback, $this->_appliedCallbacks)) {
-      return;
-    }
-    
     array_walk($this->_datas, $_callback);
-    $this->_appliedCallbacks[] = $_callback;
   }
   
   public function save() {
