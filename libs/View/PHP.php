@@ -21,7 +21,7 @@ namespace View;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class PHP extends Bridge {
-  protected $_vars = array();
+  private $_view = null;
 
   public function bind($var, &$value){
     $this->_vars[$var] = &$value;
@@ -49,10 +49,15 @@ class PHP extends Bridge {
     return $return;
   }
 
-  protected function _render($view) {
+  protected function _render($_view) {
+    $this->_view = __DIR__ . '/../../views/templates/' . $_view . '.' . \PHP_EXT;
+
     ob_start();
     extract($this->_vars, EXTR_REFS | EXTR_OVERWRITE);
-    include __DIR__ . '/../../views/templates/' . $view . '.' . \PHP_EXT;
-    return ob_get_clean();
+    include $this->_view;
+    $content = ob_get_clean();
+
+    $this->_view = null;
+    return $content;
   }
 }

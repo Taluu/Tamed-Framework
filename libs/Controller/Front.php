@@ -28,7 +28,7 @@ abstract class Front {
   protected
     $_template = null,
     $_status = \Http\Response::OK,
-     
+
     /**
      * View Engine
      *
@@ -133,7 +133,7 @@ abstract class Front {
     $options = array_replace(array(
         'request' => new \Http\Request,
         'response' => new \Http\Response,
-        'view' => new \View\Talus_TPL
+        'view' => new \View\PHP
       ), $_options);
 
     \Debug::info('Routing');
