@@ -20,6 +20,7 @@ if (!defined('SAFE')) exit;
  *  :alpha represents a parameter allowing only alpha (a-zA-Z) values
  *  :num represents a parameter allowing only numeric (0-9) values
  *  :alphanum represents a parameter allowing only alphanumeric (a-zA-Z0-9) values
+ *  :slug represents a slug (this-is-a-slug) ; note, a slug is __always__ in lower case
  *  :any represents a parameter allowing all possible values
  *
  * Each part (/...) of the pattern must be in one of the following form :
@@ -45,6 +46,7 @@ class Route {
     $_pattern = null,
 
     $_vars = array(),
+    $_matchResult = array(),
     $_params = array();
 
   /**
@@ -59,10 +61,11 @@ class Route {
     $this->_controller = $_controller;
     $this->_pattern = $_pattern;
 
-    $this->_addVar(':alphanum', '[a-zA-Z0-9]+?');
-    $this->_addVar(':alpha', '[a-zA-Z]+?');
-    $this->_addVar(':num', '[0-9]+?');
-    $this->_addVar(':any', '.+?');
+    $this->_addVar(':alphanum', '[a-zA-Z0-9]+');
+    $this->_addVar(':alpha', '[a-zA-Z]+');
+    $this->_addVar(':slug', '[a-z0-9-]+');
+    $this->_addVar(':num', '[0-9]+');
+    $this->_addVar(':any', '.+');
 
     $this->_parse();
   }
@@ -76,6 +79,12 @@ class Route {
     $this->_pattern = preg_quote($this->_pattern, '`');
     $this->_pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $this->_pattern);
     $this->_pattern = str_replace(array_keys($this->_vars), array_values($this->_vars), $this->_pattern);
+
+    // -- If the action has to be guessed, trying to replace a :action parameter
+    if ($this->_action === null) {
+      $this->_pattern = str_replace('/:action', '/(?P<action>' . self::REGEX_PHP_ID . ')', $this->_pattern);
+    }
+    
     $this->_pattern = '`^' . $this->_pattern . '$`';
   }
 
@@ -86,16 +95,14 @@ class Route {
    * @return bool true if the uri is matching the route
    */
   public function match($_requestUri) {
-    static $matched = array();
-
-    if (isset($matched[$_requestUri][$this->_pattern])) {
-      return $matched[$_requestUri][$this->_pattern];
+    if (isset($this->_matchResult[$_requestUri])) {
+      return $this->_matchResult[$_requestUri];
     }
 
     $matches = array();
-    $matched[$_requestUri][$this->_pattern] = preg_match($this->_pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
+    $this->_matchResult[$_requestUri] = preg_match($this->_pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
 
-    if (!$matched[$_requestUri][$this->_pattern]) {
+    if (!$this->_matchResult[$_requestUri]) {
       return false;
     }
 
@@ -116,8 +123,22 @@ class Route {
       }
 
       $previous = $val;
-      $this->_matches[$key] = $val[0];
+      $this->_params[$key] = $val[0];
       $this->_command .= $tmp;
+    }
+
+    /*
+     * If the action has to be guessed, and exists, we can fill it
+     * If it doesn't exists, and still has to be guessed, we're throwing a new
+     * exception.
+     */
+    if ($this->_action === null) {
+      if (!isset($this->_params['action'])) {
+        throw new \Exception('No action defined');
+      }
+
+      $this->_action = $this->_params['action'];
+      unset($this->_params['action']);
     }
 
     return true;
