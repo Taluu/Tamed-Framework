@@ -13,130 +13,138 @@ namespace Configuration;
 
 /**
  * Definition of Config class
- * 
+ *
  * Represents a Configuration file, extracted from a JSON file in /conf/
- * 
+ *
  * @package twk.configuration
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Config {
-  protected 
+  protected
     $_file = null,
-     
+
     $_datas = array(),
-    $_appliedCallbacks = array(),
-     
+
     $_const = false,
     $_loaded = false;
-     
+
   /**
-   * @param string $_file Filename to be loaded
-   * @param bool $_isConst Can we modify the configuration values ?
-   */
-  public function __construct($_file, $_isConst = false) {
-    $this->_file = $_file;
-    $this->_const = (bool) $_isConst;
-  }
-  
-  /**
-   * Loads from the configuration file
+   * Constructor
    *
-   * @param \Closure $_callback Callback to be applied (if any)
-   * @return void
+   * @param string $_file Filename to be loaded
    */
-  public function load(\Closure $_callback = null) {
-    if ($this->_loaded === true) {
-      return;
-    }
-    
-    if (!is_file($this->_file)) {
-      throw new \Exception('Configuration file ' . $this->_file . ' not found');
-    }
-    
-    $this->_datas = json_decode(file_get_contents($this->_file), true);
-    
-    $ex = $this->_checkJson();
-    
-    if ($ex !== null) {
-      throw new \Exception('Bad JSON (' . $ex . ') in configuration file ' . $this->_file);
-    }
-    
-    if ($_callback !== null) {
-      $this->_applyCallback($_callback);
-    }
-    
-    $this->_loaded = true;
+  public function __construct($_file) {
+    $this->_file = $_file;
+    $this->_load();
   }
-  
+
+  public function __clone() {
+    $this->_datas = $this->_datas;
+    $this->_loaded = true;
+    $this->_const = true;
+  }
+
   public function __get($var) {
     if (!isset($this->_datas[$var])) {
       throw new Exception('Unknown configuration value for ' . $var);
     }
-    
+
     return $this->_datas[$var];
   }
-  
+
   public function __set($var, $val) {
     if ($this->_const === true) {
       throw new Exception('Unable to modify a constant configuration !');
     }
 
-    $this->_datas[$var] = $val; 
+    $this->_datas[$var] = $val;
   }
-  
-  /**
-   * Applies a callback on the datas
-   * 
-   * @param \Closure $_callback callback to be applied
-   * @todo check how to verify that this callback is used only once ?
-   */
+
   public function applyCallback(\Closure $_callback) {
-    array_walk($this->_datas, $_callback);
+    if ($this->_loaded === false) {
+      throw new \Exception('Applying a callback on something not loaded is merely impossible !');
+      return null;
+    }
+
+    $config = clone $this;
+    $config->_datas = array_map($_callback, $this->_datas);
+
+    return $config;
   }
-  
+
   public function save() {
     if ($this->_const) {
       throw new Exception('Can\'t save into configuration file ' . $this->_file . ', because it is constant');
     }
-    
+
     $data = json_encode($this->_datas);
-    
     $ex = $this->_checkJson();
-    
+
     if ($ex !== null) {
       throw new \Exception('Bad JSON (' . $ex . ') in configuration file ' . $this->_file);
     }
-    
+
     file_put_contents($this->_file, $data);
   }
-  
+
+  /**
+   * Loads from the configuration file
+   *
+   * @return void
+   */
+  protected function _load() {
+    if ($this->_loaded === true) {
+      return;
+    }
+
+    if (!is_file($this->_file)) {
+      throw new \Exception('Configuration file ' . $this->_file . ' not found');
+    }
+
+    $this->_datas = json_decode(file_get_contents($this->_file), true);
+
+    $ex = $this->_checkJson();
+
+    if ($ex !== null) {
+      throw new \Exception('Bad JSON (' . $ex . ') in configuration file ' . $this->_file);
+    }
+
+    // -- checking for special parameters, at the top of the json file
+    if (isset($this->_datas['_isConst'])) {
+      $this->_const = (bool) $this->_datas['_isConst'];
+      unset($this->_datas['_isConst']);
+    }
+
+    $this->_loaded = true;
+  }
+
   private function _checkJson() {
     switch (json_last_error()) {
       case JSON_ERROR_DEPTH:
         $ex = 'Maximum stack depth exceeded';
         break;
-      
+
       case JSON_ERROR_STATE_MISMATCH:
         $ex = 'Invalid or malformed JSON';
         break;
-      
+
       case JSON_ERROR_CTRL_CHAR:
         $ex = 'Control character error, possibly incorrectly encoded';
         break;
-      
+
       case JSON_ERROR_SYNTAX:
         $ex = 'Syntax error';
         break;
-      
+
       case JSON_ERROR_UTF8:
         $ex = 'Malformed UTF-8 characters, possibly incorrectly encoded';
         break;
-      
+
       default:
       case JSON_ERROR_NONE:
         $ex = null;
     }
-    
+
     return $ex;
   }
 }
