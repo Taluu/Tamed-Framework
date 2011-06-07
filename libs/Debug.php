@@ -46,17 +46,14 @@ class Debug {
     }
 
     // -- $db[0] is this function... And we have no interest in it, do we ?
-    foreach (debug_backtrace() as $debug) {
-      if ($debug['class'] != 'Debug') {
+    foreach (debug_backtrace(true, 3) as $debug) {
+      if (isset($debug['class']) && $debug['class'] != 'Debug') {
         break;
       }
     }
 
     $date = new \DateTime('now', new \DateTimeZone('UTC'));
-
-    var_dump($debug);
-
-    $obj = $debug['type'] != '' ? $debug['class'] . $debug['type'] : '';
+    $obj = isset($debug['type']) ? $debug['class'] . $debug['type'] : '';
     $chrono = microtime(true) - self::$start;
 
     $log = sprintf('%7$s {UTC} - %1$s : %2$s - %3$s() (line %4$d) - command %5$s [[ %6$fs ]]',

@@ -204,7 +204,7 @@ class Response {
   public function sendHeaders($force = false) {
     if (\headers_sent()) {
       // @todo Manage correctly exceptions
-      throw new Exception('The header have already been sent');
+      throw new \Exception('The header have already been sent');
     }
 
     foreach ($this->_headers as &$header) {
@@ -218,7 +218,7 @@ class Response {
 
   private function setStatus($_status) {
     if ($this->isInvalid($_status)) {
-      throw new Exception('Bad code for response component');
+      throw new \Exception('Bad code for response component');
     }
 
     $this->_statusCode = $_status;

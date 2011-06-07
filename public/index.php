@@ -14,7 +14,6 @@ namespace Controller;
 define('SAFE', true);
 if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSION));
 
-require __DIR__ . '/../libs/__init.' . PHP_EXT;
 
 /*
  * Like Capitaine Mousse said in his ShwaarkFramework...
@@ -23,9 +22,11 @@ require __DIR__ . '/../libs/__init.' . PHP_EXT;
  * @todo Handle the exception
  */
 try {
+  require __DIR__ . '/../libs/__init.' . PHP_EXT;
+
   //$p = Front::getController(null, array('view' => new \View\Talus_TPL)); // Using Talus TPL instead of PHP
   $p = Front::getController(); // By default, use PHP as the templating engine
-} catch (Exception $e) {
+} catch (\Exception $e) {
   echo $e;
 }
 
