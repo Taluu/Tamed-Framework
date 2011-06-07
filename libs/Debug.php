@@ -36,15 +36,15 @@ class Debug {
         self::LEVEL_WARNING => 'Warning',
         self::LEVEL_INFO => 'Information'
       );
-    
+
     $command = 'null';
-    
+
     if (\Obj::$router->hasStarted()) {
       $command = \Obj::$router->get('command') ?: '/';
       $command .= ' controller:' . \Obj::$router->get('controller');
       $command .= ' action:' . \Obj::$router->get('action');
     }
-    
+
     // -- $db[0] is this function... And we have no interest in it, do we ?
     foreach (debug_backtrace() as $debug) {
       if ($debug['class'] != 'Debug') {
@@ -53,6 +53,8 @@ class Debug {
     }
 
     $date = new \DateTime('now', new \DateTimeZone('UTC'));
+
+    var_dump($debug);
 
     $obj = $debug['type'] != '' ? $debug['class'] . $debug['type'] : '';
     $chrono = microtime(true) - self::$start;

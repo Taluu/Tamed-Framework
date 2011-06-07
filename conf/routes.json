@@ -1,4 +1,5 @@
 {
+  "_isConst": true,
   "404" : {
     "controller" : "error",
     "action" : "notfound_404",

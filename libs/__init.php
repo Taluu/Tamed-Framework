@@ -110,9 +110,12 @@ abstract class Sys {}
 Obj::$config = new \Configuration\Loader(__DIR__ . '/../conf/');
 Obj::$router = new \Routing\Router;
 
-require __DIR__ . '/../conf/routes.php';
+$routes = Obj::$config->get('routes', function ($v) {
+  return new Routing\Route($v['controller'], $v['action'], $v['pattern']);
+ });
 
 foreach ($routes as $name => &$route) {
+  Debug::info('Adding route %s', (string) $name);
   Obj::$router->addRoute($name, $route);
 }
 

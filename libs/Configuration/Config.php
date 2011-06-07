@@ -19,7 +19,7 @@ namespace Configuration;
  * @package twk.configuration
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Config {
+class Config implements \IteratorAggregate, \ArrayAccess {
   protected
     $_file = null,
 
@@ -60,6 +60,14 @@ class Config {
     $this->_datas[$var] = $val;
   }
 
+  public function __isset($var) {
+    return isset($this->_datas[$var]);
+  }
+
+  public function __unset($name) {
+    unset($this->_datas[$name]);
+  }
+
   public function applyCallback(\Closure $_callback) {
     if ($this->_loaded === false) {
       throw new \Exception('Applying a callback on something not loaded is merely impossible !');
@@ -68,6 +76,7 @@ class Config {
 
     $config = clone $this;
     $config->_datas = array_map($_callback, $this->_datas);
+    $config->_const = true;
 
     return $config;
   }
@@ -146,6 +155,45 @@ class Config {
     }
 
     return $ex;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetExists($offset) {
+    return isset($this->$offset);
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetGet($offset) {
+    return $this->$offset;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetSet($offset, $value) {
+    $this->$offset = $value;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetUnset($offset) {
+    unset($this->$offset);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator() {
+    return new \ArrayObject($this->_datas);
   }
 }
 
