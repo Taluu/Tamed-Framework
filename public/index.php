@@ -19,13 +19,11 @@ if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSI
  * Like Capitaine Mousse said in his ShwaarkFramework...
  * Let's rock !
  *
- * @todo Handle the exception
+ * @todo Handle correctly the exception
  */
 try {
   require __DIR__ . '/../libs/__init.' . PHP_EXT;
-
-  //$p = Front::getController(null, array('view' => new \View\Talus_TPL)); // Using Talus TPL instead of PHP
-  $p = Front::getController(); // By default, use PHP as the templating engine
+  $p = Front::getController();
 } catch (\Exception $e) {
   echo $e;
 }
