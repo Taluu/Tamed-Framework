@@ -140,30 +140,35 @@ abstract class Front {
     $route = \Obj::$router->route($requestURI['URI']);
 
     if (!isset($options['apploader'])) {
-      $options['apploader'] = function($controller) {
-        // -- Verifying that this is a controller
-        $parts = \explode('\\', $controller);
-
-        // -- controllers must have a \Controller\Sub\MyController form
-        if (\count($parts) === 3) {
-          if ($parts[0] !== 'Controller' || $parts[1] !== 'Sub' || !\is_scalar($parts[2])) {
-            return false;
-          }
-
-          $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
-          $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
-
-          if (\is_file($file)) {
-            require $file;
-            return true;
-          }
-        }
-
-        return false;
-       };
+      $options['apploader'] = array();
+    } elseif (!is_array($options['apploader'])) {
+      $options['apploader'] = array($options['apploader']);
     }
 
-    spl_autoload_register($options['apploader']);
+    $options['apploader'][] = function($controller) {
+      // -- Verifying that this is a controller : it must have a \Controller\Sub\Name form
+      $parts = \explode('\\', $controller);
+
+      if (\count($parts) === 3) {
+        if ($parts[0] !== 'Controller' || $parts[1] !== 'Sub' || !\is_scalar($parts[2])) {
+          return false;
+        }
+
+        $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
+        $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
+
+        if (\is_file($file)) {
+          require $file;
+          return true;
+        }
+      }
+
+      return false;
+     };
+
+    foreach ($options['apploader'] as &$apploader) {
+      spl_autoload_register($apploader);
+    }
 
     $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
