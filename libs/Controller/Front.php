@@ -102,19 +102,17 @@ abstract class Front {
    * @return bool True if it si correct, false otherwise
    */
   final private function _main() {
-    $action = $this->_route->action;
-
-    if (!method_exists($this, $action)) {
-      \Debug::warning(sprintf('Action %1$s nonexistent', $action));
+    if (!\method_exists($this, $this->_route->action)) {
+      \Debug::warning('Action %1$s nonexistent', $this->_route->action);
       $this->_response->redirect404('/error/notfound_404');
       $this->_status = \Http\Response::NOT_FOUND;
 
       exit;
     }
 
-    \Debug::info('Loading action "%1$s"', $action);
+    \Debug::info('Loading action "%1$s"', $this->_route->action);
     $this->_prepend();
-    $this->$action();
+    $this->{$this->_route->action}();
     $this->_append();
   }
 
@@ -130,30 +128,47 @@ abstract class Front {
       return $_controller;
     }
 
-    $options = array_replace(array(
-        'request' => new \Http\Request,
-        'response' => new \Http\Response,
-        'view' => new \View\PHP
-      ), $_options);
+    $options = \array_replace(array(
+      'request' => new \Http\Request,
+      'response' => new \Http\Response,
+      'view' => new \View\PHP
+     ), $_options);
 
     \Debug::info('Routing');
     $requestURI = $options['request']->requestUri();
 
     $route = \Obj::$router->route($requestURI['URI']);
-    $file = sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $route->controller, PHP_EXT);
 
-    if (!\is_file($file)) {
-      \Debug::fatal('Controller %1$s not found', $route->controller);
-      $_response->redirect404('/error/notfound_404');
-      return;
+    if (!isset($options['apploader'])) {
+      $options['apploader'] = function($controller) {
+        // -- Verifying that this is a controller
+        $parts = \explode('\\', $controller);
+
+        // -- controllers must have a \Controller\Sub\MyController form
+        if (\count($parts) === 3) {
+          if ($parts[0] !== 'Controller' || $parts[1] !== 'Sub' || !\is_scalar($parts[2])) {
+            return false;
+          }
+
+          $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
+          $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
+
+          if (\is_file($file)) {
+            require $file;
+            return true;
+          }
+        }
+
+        return false;
+       };
     }
 
-    require $file;
+    spl_autoload_register($options['apploader']);
 
     $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
 
-    \Debug::info('Starting the subcontroller %1$s', $_controller);
+    \Debug::info('Trying to start the subcontroller %1$s', $_controller);
     return new $_controller($options['request'], $options['response'], $options['view']);
   }
 
@@ -186,11 +201,11 @@ abstract class Front {
    * @return mixed
    */
   final public function __get($name) {
-    if (in_array($name, array('view', 'request', 'response', 'route'))) {
+    if (\in_array($name, array('view', 'request', 'response', 'route'))) {
       $name = '_' . $name;
       return $this->$name;
     }
 
-    throw new Exception($name . ' is not a recognized attribute for \Controller\Front');
+    throw new \Exception($name . ' is not a recognized attribute for \Controller\Front');
   }
 }
