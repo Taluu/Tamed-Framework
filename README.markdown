@@ -1,6 +1,6 @@
 Talus Framework
 ===============
-*TODO :* "Talus Framework" is a **temporary** name.
+**TODO :** "Talus Framework" is a *temporary* name.
 
 Features
 ========
@@ -14,7 +14,7 @@ Features
 
 Requirements / Dependencies
 ===========================
-- PHP 5.3+ (**Maybe** 5.3.6)
+- PHP 5.3+ (*Should be* 5.3.6)
 - [Talus TPL](https://github.com/Taluu/Talus-TPL), if it is used as the view engine
 
 HOWTO (Installation)
