@@ -1,6 +1,6 @@
-Talus Works
-===========
-TODO : Check for a new name ? Talus' Works being the example application that will be using that framework (a bug tracker)...
+Talus Framework
+===============
+*TODO :* "Talus Framework" is a **temporary** name.
 
 Features
 ========
@@ -8,19 +8,18 @@ Features
 - Entirely OOP
 - Routing support
 - HTTP Request & Response support
-- Compatible with every View Engine... As long as the bridge implements correctly the interface (PHP & Talus' TPL bridges made and officialy supported)
+- Compatible with every View Engine... As long as the bridge implements correctly the interface (PHP & Talus' TPL bridges made and officially supported)
 - Easily Extensible
 - Homemade ORM (not made yet)
 
 Requirements / Dependencies
 ===========================
-- PHP 5.3+
+- PHP 5.3+ (**Maybe** 5.3.6)
 - [Talus TPL](https://github.com/Taluu/Talus-TPL), if it is used as the view engine
 
 HOWTO (Installation)
 ====================
 TODO
-
 
 Credits
 =======
