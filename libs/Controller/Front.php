@@ -140,10 +140,10 @@ abstract class Front {
     $route = \Obj::$router->route($requestURI['URI']);
 
     if (isset($options['apploader']) && \is_callable($options['apploader'])) {
-      spl_autoloader_register($options['apploader']);
+      \spl_autoloader_register($options['apploader']);
     }
 
-    spl_autoload_register(function($controller) {
+    \spl_autoload_register(function($controller) {
       // -- Verifying that this is a controller : it must have a \Controller\Sub\Name form
       $parts = \array_values(\array_filter(\explode('\\', $controller)));
 
@@ -151,10 +151,10 @@ abstract class Front {
         return false;
       }
       
-      if ($parts[0] !== 'Controller' || $parts[1] !== 'Sub') {
+      if ($parts[0] !== __NAMESAPCE__ || $parts[1] !== 'Sub') {
         return false;
       }
-
+      
       $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
       $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
 
@@ -167,7 +167,7 @@ abstract class Front {
      });
 
     $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
-    $_controller = '\Controller\Sub\\' . $_controller;
+    $_controller = __NAMESPACE__ . '\Sub\\' . $_controller;
 
     \Debug::info('Trying to start the subcontroller %1$s', $_controller);
     return new $_controller($options['request'], $options['response'], $options['view']);
