@@ -89,12 +89,6 @@ abstract class Obj {
   static public $config = null;
 
   /**
-   * @var \ORM
-   * @todo Develop the ORM...
-   */
-  static public $orm = null;
-
-  /**
    * @var \Controller\Front
    */
   static public $controller = null;

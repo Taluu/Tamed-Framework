@@ -139,36 +139,32 @@ abstract class Front {
 
     $route = \Obj::$router->route($requestURI['URI']);
 
-    if (!isset($options['apploader'])) {
-      $options['apploader'] = array();
-    } elseif (!is_array($options['apploader'])) {
-      $options['apploader'] = array($options['apploader']);
+    if (isset($options['apploader']) && \is_callable($options['apploader'])) {
+      spl_autoloader_register($options['apploader']);
     }
 
-    $options['apploader'][] = function($controller) {
+    spl_autoload_register(function($controller) {
       // -- Verifying that this is a controller : it must have a \Controller\Sub\Name form
-      $parts = \explode('\\', $controller);
+      $parts = \array_values(\array_filter(\explode('\\', $controller)));
 
-      if (\count($parts) === 3) {
-        if ($parts[0] !== 'Controller' || $parts[1] !== 'Sub' || !\is_scalar($parts[2])) {
-          return false;
-        }
-
-        $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
-        $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
-
-        if (\is_file($file)) {
-          require $file;
-          return true;
-        }
+      if (\count($parts) !== 3) {
+        return false;
+      }
+      
+      if ($parts[0] !== 'Controller' || $parts[1] !== 'Sub') {
+        return false;
       }
 
-      return false;
-     };
+      $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
+      $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
 
-    foreach ($options['apploader'] as &$apploader) {
-      spl_autoload_register($apploader);
-    }
+      if (\is_file($file)) {
+        require $file;
+        return true;
+      }
+      
+      return false;
+     });
 
     $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
     $_controller = '\Controller\Sub\\' . $_controller;
