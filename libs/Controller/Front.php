@@ -150,11 +150,11 @@ abstract class Front {
       if (\count($parts) !== 3) {
         return false;
       }
-      
-      if ($parts[0] !== __NAMESAPCE__ || $parts[1] !== 'Sub') {
+
+      if ($parts[0] !== __NAMESPACE__ || $parts[1] !== 'Sub') {
         return false;
       }
-      
+
       $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
       $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
 
@@ -162,7 +162,7 @@ abstract class Front {
         require $file;
         return true;
       }
-      
+
       return false;
      });
 
