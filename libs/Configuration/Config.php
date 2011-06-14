@@ -75,8 +75,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
     }
 
     $config = clone $this;
-    $config->_datas = array_map($_callback, $this->_datas);
-    $config->_const = true;
+    array_walk($config->_datas, $_callback);
 
     return $config;
   }

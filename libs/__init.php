@@ -104,8 +104,8 @@ abstract class Sys {}
 Obj::$config = new \Configuration\Loader(__DIR__ . '/../conf/');
 Obj::$router = new \Routing\Router;
 
-$routes = Obj::$config->get('routes', function ($v) {
-  return new Routing\Route($v['controller'], $v['action'], $v['pattern']);
+$routes = Obj::$config->get('routes', function (&$v, $k) {
+  $v = new Routing\Route($v['controller'], $v['action'], $v['pattern']);
  });
 
 foreach ($routes as $name => &$route) {
