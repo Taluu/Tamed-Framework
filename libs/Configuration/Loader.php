@@ -23,15 +23,26 @@ namespace Configuration;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Loader {
+  const
+    ENV_DEV = 0,
+    ENV_TEST = 1,
+    ENV_PROD = 2;
+
   protected
     $_dir = null,
+    $_env = self::ENV_DEV,
     $_loadedConfig = array();
 
-  public function __construct($_dir = './conf') {
+  public function __construct($_dir = './conf', $_env = self::ENV_DEV) {
     if (!is_dir($_dir)) {
       throw new \Exception('Config directory ' . $_dir . ' doesn\'t exists !');
     }
 
+    if (!in_array($_env, array(self::ENV_DEV, self::ENV_TEST, self::ENV_PROD))) {
+      throw new \Exception('Environnement not recognized');
+    }
+
+    $this->_env = $_env;
     $this->_dir = rtrim($_dir, '/') . '/';
   }
 
@@ -45,12 +56,15 @@ class Loader {
    *
    * @return Config Config object.
    */
-  public function get($_file, \Closure $_callback = null) {
-    if (!isset($this->_loadedConfig[$_file])) {
-      $this->_loadedConfig[$_file] = new Config($this->_dir . $_file . '.json');
+  public function get($_file, \Closure $_callback = null, $_dir = null) {
+    $dir = $_dir ?: $this->_dir;
+    $file = sha1(rtrim($_dir, '/') . '/' . $_file);
+
+    if (!isset($this->_loadedConfig[$file])) {
+      $this->_loadedConfig[$file] = new Config($dir . $_file . '.json', $this->_env);
     }
 
-    $c = $this->_loadedConfig[$_file];
+    $c = $this->_loadedConfig[$file];
 
     if ($_callback !== null) {
       $c = $c->applyCallback($_callback);

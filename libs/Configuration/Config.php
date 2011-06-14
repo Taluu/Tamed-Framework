@@ -24,6 +24,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
     $_file = null,
 
     $_datas = array(),
+    $_env = Loader::ENV_DEV,
 
     $_const = false,
     $_loaded = false;
@@ -33,66 +34,92 @@ class Config implements \IteratorAggregate, \ArrayAccess {
    *
    * @param string $_file Filename to be loaded
    */
-  public function __construct($_file) {
+  public function __construct($_file, $_env = Loader::ENV_DEV) {
+    if (!in_array($_env, array(Loader::ENV_DEV, Loader::ENV_TEST, Loader::ENV_PROD))) {
+      throw new \Exception('Environnement not recognized');
+    }
+
+    $env = array('development', 'test', 'production');
+
     $this->_file = $_file;
+    $this->_env = $env[$_env];
     $this->_load();
   }
 
   public function __clone() {
     $this->_datas = $this->_datas;
+    $this->_env = $this->_env;
     $this->_loaded = true;
     $this->_const = true;
   }
 
   public function __get($var) {
-    if (!isset($this->_datas[$var])) {
+    $datas = $this->_datas;
+
+    if (isset($datas[$this->_env])) {
+      $datas =  $datas[$this->_env];
+    }
+
+    if (!isset($datas[$var])) {
       throw new Exception('Unknown configuration value for ' . $var);
     }
 
-    return $this->_datas[$var];
+    return $datas[$var];
   }
 
   public function __set($var, $val) {
-    if ($this->_const === true) {
-      throw new Exception('Unable to modify a constant configuration !');
+    $datas = &$this->_datas;
+
+    if (isset($datas[$this->_env])) {
+      $datas = &$datas[$this->_env];
     }
 
-    $this->_datas[$var] = $val;
+    $datas[$var] = $val;
   }
 
   public function __isset($var) {
     return isset($this->_datas[$var]);
   }
 
-  public function __unset($name) {
-    unset($this->_datas[$name]);
-  }
-
-  public function applyCallback(\Closure $_callback) {
+  /**
+   * Applies a callback on the configuration's data.
+   *
+   * The callback must be compatible with array_walk (the first argument is the
+   * value, the second the key... and if there is a third argument, it should be
+   * filled within `$_userdata`)
+   *
+   * @param \Closure $_callback Callback to be called
+   * @param mixed $_userdata Datas to be sent to the callback
+   * @return type
+   */
+  public function applyCallback(\Closure $_callback, $_userdata = null) {
     if ($this->_loaded === false) {
       throw new \Exception('Applying a callback on something not loaded is merely impossible !');
       return null;
     }
 
     $config = clone $this;
-    array_walk($config->_datas, $_callback);
+    array_walk($config->_datas, $_callback, $_userdata);
 
     return $config;
   }
 
+  /**
+   * Saves the configuration into the file.. If it is not constant.
+   */
   public function save() {
     if ($this->_const) {
       throw new Exception('Can\'t save into configuration file ' . $this->_file . ', because it is constant');
     }
 
-    $data = json_encode($this->_datas);
+    $datas = json_encode($this->_datas);
     $ex = $this->_checkJson();
 
     if ($ex !== null) {
       throw new \Exception('Bad JSON (' . $ex . ') in configuration file ' . $this->_file);
     }
 
-    file_put_contents($this->_file, $data);
+    file_put_contents($this->_file, $datas);
   }
 
   /**
@@ -185,7 +212,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
    * {@inheritdoc}
    */
   public function offsetUnset($offset) {
-    unset($this->$offset);
+    throw new \Exception('Unsupported operation');
   }
 
   /**
