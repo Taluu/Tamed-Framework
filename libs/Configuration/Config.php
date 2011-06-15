@@ -46,28 +46,66 @@ class Config implements \IteratorAggregate, \ArrayAccess {
     $this->_load();
   }
 
-  public function __clone() {
+  /**
+   * {@inheritdoc}
+   */
+ public function __clone() {
     $this->_datas = $this->_datas;
     $this->_env = $this->_env;
     $this->_loaded = true;
     $this->_const = true;
   }
 
-  public function __get($var) {
-    $datas = $this->_datas;
+  /**
+   * {@inheritdoc}
+   */
+ public function __get($var) {
+    $val = '';
 
-    if (isset($datas[$this->_env])) {
-      $datas =  $datas[$this->_env];
-    }
-
-    if (!isset($datas[$var])) {
+    if ($this->get($var, $val) === false) {
       throw new Exception('Unknown configuration value for ' . $var);
     }
 
-    return $datas[$var];
+    return $val;
   }
 
-  public function __set($var, $val) {
+  /**
+   * {@inheritdoc}
+   */
+ public function __set($var, $val) {
+    $this->set($var, $val);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+ public function __isset($var) {
+    return isset($this->_datas[$var]);
+  }
+
+  /**
+   * Gets the `$cfg` prop from the config file
+   *
+   * @param string $cfg Property to fetch
+   * @param mixed &$ret The returning value (null if this method must return the result)
+   * @return mixed the data or null if it doesn't exists... Or a bool if `&$ret` is set
+   */
+ public function get($cfg, &$ret = null) {
+    $datas = &$this->_datas;
+
+    if (isset($datas[$this->_env])) {
+      $datas = &$datas[$this->_env];
+    }
+
+    if ($ret !== null) {
+      $ret = &$datas[$var];
+      return (bool) $ret;
+    }
+
+    return isset($datas[$var]) ? $datas[$var] : null;
+  }
+
+  public function set($var, $val) {
     $datas = &$this->_datas;
 
     if (isset($datas[$this->_env])) {
@@ -75,10 +113,6 @@ class Config implements \IteratorAggregate, \ArrayAccess {
     }
 
     $datas[$var] = $val;
-  }
-
-  public function __isset($var) {
-    return isset($this->_datas[$var]);
   }
 
   /**
@@ -196,7 +230,14 @@ class Config implements \IteratorAggregate, \ArrayAccess {
    * {@inheritdoc}
    */
   public function offsetGet($offset) {
-    return $this->$offset;
+    $data = '';
+
+    if ($this->get($offset, $data) === false) {
+      trigger_error('Unknown configuration value for ' . $offset, E_USER_NOTICE);
+      return null;
+    }
+
+    return $data;
   }
 
 
@@ -204,7 +245,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
    * {@inheritdoc}
    */
   public function offsetSet($offset, $value) {
-    $this->$offset = $value;
+    $this->set($offset, $value);
   }
 
 
