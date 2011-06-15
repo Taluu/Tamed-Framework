@@ -43,7 +43,7 @@ class Route {
     $_controller = null,
     $_command = null,
 
-    $_pattern = null,
+    $_patterns = null,
 
     $_vars = array(),
     $_matchResult = array(),
@@ -57,9 +57,13 @@ class Route {
    * @param string $_pattern Pattern matching this route
    */
   function __construct($_controller, $_action, $_pattern) {
+    if (!is_array($_pattern)) {
+      $_pattern = array($_pattern);
+    }
+
     $this->_action = $_action;
     $this->_controller = $_controller;
-    $this->_pattern = $_pattern;
+    $this->_patterns = $_pattern;
 
     $this->_addVar(':alphanum', '[a-zA-Z0-9]+');
     $this->_addVar(':alpha', '[a-zA-Z]+');
@@ -76,16 +80,18 @@ class Route {
    * @return void
    */
   protected function _parse() {
-    $this->_pattern = preg_quote($this->_pattern, '`');
-    $this->_pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $this->_pattern);
-    $this->_pattern = str_replace(array_keys($this->_vars), array_values($this->_vars), $this->_pattern);
+    foreach ($this->_patterns as &$pattern) {
+      $pattern = preg_quote($pattern, '`');
+      $pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $pattern);
+      $pattern = str_replace(array_keys($this->_vars), array_values($this->_vars), $pattern);
 
-    // -- If the action has to be guessed, trying to replace a :action parameter
-    if ($this->_action === null) {
-      $this->_pattern = str_replace('/:action', '/(?P<action>' . self::REGEX_PHP_ID . ')', $this->_pattern);
+      // -- If the action has to be guessed, trying to replace a :action parameter
+      if ($this->_action === null) {
+        $pattern = str_replace('/:action', '/(?P<action>' . self::REGEX_PHP_ID . ')', $pattern);
+      }
+
+      $pattern = '`^' . $pattern . '$`';
     }
-    
-    $this->_pattern = '`^' . $this->_pattern . '$`';
   }
 
   /**
@@ -99,13 +105,21 @@ class Route {
       return $this->_matchResult[$_requestUri];
     }
 
-    $matches = array();
-    $this->_matchResult[$_requestUri] = preg_match($this->_pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
+    $this->_matchResult[$_requestUri] = false;
+
+    // -- Testing every patterns
+    foreach ($this->_patterns as &$pattern) {
+      $matches = array();
+      $this->_matchResult[$_requestUri] = preg_match($pattern, $_requestUri, $matches, PREG_OFFSET_CAPTURE);
+
+      if ($this->_matchResult[$_requestUri]) {
+        break;
+      }
+    }
 
     if (!$this->_matchResult[$_requestUri]) {
       return false;
     }
-
 
     // -- Removing the first "match" (which is everything, in fact)
     array_shift($matches);
