@@ -1,8 +1,15 @@
 {
   "_isConst": true,
+  
   "404" : {
     "controller" : "error",
     "action" : "notfound_404",
     "pattern" : "/error/notfound_404"
-   }
+   },
+
+  "homepage" : {
+    "controller" : "home",
+    "action" : "index",
+    "pattern" : "/"
+  }
 }

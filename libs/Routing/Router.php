@@ -61,12 +61,12 @@ class Router {
     }
 
     if ($this->_matchedRoute === null) {
-      if (!isset($this->_routes['default'])) {
-        $this->addRoute('default', new Route('home', 'index', '/'));
+      if (!isset($this->_routes['404'])) {
+        throw new \Exception('No route to match');
       }
 
-      \Debug::info('No route found : using the default');
-      $this->_matchedRoute = $this->_routes['default'];
+      \Debug::info('No route found : using 404');
+      $this->_matchedRoute = $this->_routes['404'];
     }
 
     return $this->_matchedRoute;
@@ -92,7 +92,7 @@ class Router {
    */
   public function get($p) {
     if (!$this->hasStarted()) {
-      throw new Exception('The routing engine has not yet started !');
+      throw new \Exception('The routing engine has not yet started !');
     }
 
     if (func_num_args() > 1) {
