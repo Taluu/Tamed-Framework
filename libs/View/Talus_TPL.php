@@ -11,7 +11,7 @@
 
 namespace View;
 
-require __DIR__ . '/../Vendor/Talus-TPL/Talus_TPL/Talus_TPL.php';
+require __DIR__ . '/../Vendor/Talus-TPL/lib/Talus_TPL/Main.php';
 
 /**
  * Definition of a view written in Talus TPL syntax
