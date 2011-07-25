@@ -24,7 +24,7 @@ class Response {
    * Headers
    *
    * @todo check how to write CONTINUE for CONTINU...
-   * @todo complete these lists
+   * @todo complete this list
    */
   const
     CONTINU = 100, SWITCHING_PROTOCOL = 101,
@@ -60,13 +60,6 @@ class Response {
       self::SERVICE_UNAVAILABLE => 'Service Unavailable',
       self::VERSION_NOT_SUPPORTED => 'Version Not Supported'
      );
-
-  /**
-   * View
-   *
-   * @var \View\Bridge
-   */
-  private $_view = null;
 
   protected
     $_statusCode = self::OK,
@@ -164,9 +157,9 @@ class Response {
     $content = '';
 
     if (!$this->isRedirect() && $view !== null) {
-      list($engineName, $engineVersion) = $this->_view->getEngineInfos(\View\Bridge::INFO_NAME | \View\Bridge::INFO_VERSION);
+      list($engineName, $engineVersion) = \Obj::$controller->view->getEngineInfos(\View\Bridge::INFO_NAME | \View\Bridge::INFO_VERSION);
       \Debug::info('Rendering the template using ' . $engineName . ' (version ' . $engineVersion . ')');
-      $content = $this->_view->render($view);
+      $content = \Obj::$controller->view->render($view);
     }
 
     return $content;
@@ -180,20 +173,6 @@ class Response {
    */
   public function server($key) {
     return $_SERVER[\strtoupper($key)] ?: null;
-  }
-
-  /**
-   * Affects a new view engine (if it is not null).
-   *
-   * @param \View\Bridge $_view View engine to affect
-   * @return \View\Bridge View engine affected
-   */
-  public function view(\View\Bridge $_view = null) {
-    if ($_view !== null) {
-      $this->_view = $_view;
-    }
-
-    return $this->_view;
   }
 
   /**

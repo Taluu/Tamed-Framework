@@ -24,6 +24,7 @@ if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSI
 try {
   require __DIR__ . '/../libs/__init.' . PHP_EXT;
   $p = Front::getController();
+  $p->render();
 } catch (\Exception $e) {
   echo $e;
 }

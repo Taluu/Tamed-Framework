@@ -18,7 +18,7 @@ namespace Controller\Sub;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Error extends \Controller\Front {
-  public function notfound_404() {
+  public function notfound_404Action() {
     $this->_status = \Http\Response::NOT_FOUND;
     $this->_template = 'index';
   }

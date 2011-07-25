@@ -11,6 +11,8 @@
 
 namespace Controller;
 
+use \Http\Response, Http\Request;
+
 /**
  * Main Controller
  *
@@ -62,17 +64,33 @@ abstract class Front {
   final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\Bridge $_view) {
     \Obj::$controller = $this;
 
+    $this->_view = $_view;
     $this->_request = $_request;
     $this->_response = $_response;
-    $this->_view = $this->_response->view($_view);
     $this->_route = \Obj::$router->route($_request);
+  }
 
-    \Debug::info('Loading main content');
-    $this->_main();
+  /**
+   * Renders the controller
+   *
+   * @param string $_action action to load. if null, tries to load it from the router component
+   * @return void
+   */
+  final public function render($_action = null) {
+    if ($_action === null) {
+      $_action = $this->_route->action;
+    }
+
+    try {
+      \Debug::info('Loading main content');
+      $this->_main($_action);
+    } catch (Exception $e) {
+
+    }
 
     \Debug::info('Sending the response to the user');
-    $this->_response->status($this->_status);
-    echo $this->_response->render($this->_template);
+    $this->_response->status(\Obj::$controller->_status);
+    echo $this->_response->render(\Obj::$controller->_template);
   }
 
   /**
@@ -99,20 +117,20 @@ abstract class Front {
   /**
    * Main function
    *
-   * @return bool True if it si correct, false otherwise
+   * @param string $_action action to be called
+   * @throws Exception if the action is not found
    */
-  final private function _main() {
-    if (!\method_exists($this, $this->_route->action)) {
-      \Debug::warning('Action %1$s nonexistent', $this->_route->action);
-      $this->_response->redirect404('/error/notfound_404');
-      $this->_status = \Http\Response::NOT_FOUND;
+  final private function _main($_action) {
+    $action = $_action . 'Action';
 
-      exit;
+    if (!\method_exists($this, $action)) {
+      \Debug::warning('Action %1$s nonexistent', $_action);
+      throw new Exception(sprintf('%1$s->%2$s Not found', get_class($this), $action));
     }
 
-    \Debug::info('Loading action "%1$s"', $this->_route->action);
+    \Debug::info('Loading "%1$s->%2$s"', get_class($this), $action);
     $this->_prepend();
-    $this->{$this->_route->action}();
+    $this->{$action}();
     $this->_append();
   }
 
@@ -176,12 +194,16 @@ abstract class Front {
   /**
    * Forwards to a new controller and a new action
    *
-   * @param type $_controller Controller's name
-   * @param type $_action Action's name
-   * @todo Well... Todo.
+   * @param string $_controller Controller's name
+   * @param string $_action Action's name
    */
   final protected function forward($_controller, $_action) {
+    \Debug::info('Forwarding to a new controller:action : %1$s->%2$s', $_controller, $_action);
 
+    $_controller = __NAMESPACE__ . '\Sub\\' . \mb_convert_case($_controller, \MB_CASE_TITLE);
+    $controller = new $_controller($this->_request, $this->_response, $this->_view);
+
+    $controller->_main($_action);
   }
 
   /**
