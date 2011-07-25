@@ -12,6 +12,7 @@
 namespace Controller;
 
 use \Http\Response, Http\Request;
+use \View\Bridge;
 
 /**
  * Main Controller
@@ -30,6 +31,7 @@ abstract class Front {
   protected
     $_template = null,
     $_status = \Http\Response::OK,
+    $_isForwarded = false,
 
     /**
      * View Engine
@@ -61,7 +63,7 @@ abstract class Front {
    * @param \Http\Response $_response HTTP Response handler
    * @param \View\Bridge $_view View engine
    */
-  final protected function  __construct(\Http\Request $_request, \Http\Response $_response, \View\Bridge $_view) {
+  final protected function  __construct(Request $_request, Response $_response, Bridge $_view) {
     \Obj::$controller = $this;
 
     $this->_view = $_view;
@@ -91,6 +93,8 @@ abstract class Front {
     \Debug::info('Sending the response to the user');
     $this->_response->status(\Obj::$controller->_status);
     echo $this->_response->render(\Obj::$controller->_template);
+
+    return $this;
   }
 
   /**
@@ -147,8 +151,8 @@ abstract class Front {
     }
 
     $options = \array_replace(array(
-      'request' => new \Http\Request,
-      'response' => new \Http\Response,
+      'request' => new Request,
+      'response' => new Response,
       'view' => new \View\PHP
      ), $_options);
 
@@ -197,12 +201,16 @@ abstract class Front {
    * @param string $_controller Controller's name
    * @param string $_action Action's name
    */
-  final protected function forward($_controller, $_action) {
-    \Debug::info('Forwarding to a new controller:action : %1$s->%2$s', $_controller, $_action);
+  final protected function _forward($_controller, $_action) {
+    \Debug::info('Forwarding to "%1$s->%2$s"', $_controller, $_action);
+    $controller = __NAMESPACE__ . '\Sub\\' . \mb_convert_case($_controller, \MB_CASE_TITLE);
 
-    $_controller = __NAMESPACE__ . '\Sub\\' . \mb_convert_case($_controller, \MB_CASE_TITLE);
-    $controller = new $_controller($this->_request, $this->_response, $this->_view);
+    /**
+     * @var \Controller\Front
+     */
+    $controller = new $controller($this->_request, $this->_response, $this->_view);
 
+    $controller->_isForwarded = true;
     $controller->_main($_action);
   }
 
