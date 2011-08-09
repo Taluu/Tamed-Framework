@@ -29,19 +29,31 @@ class Talus_TPL extends Bridge {
      */
     $_engine = null;
 
+  /**
+   * @inheritdoc
+   */
   public function __construct() {
     $dir = __DIR__ . '/../../views/';
     $this->_engine = new \Talus_TPL($dir . 'templates', $dir . 'cache', array());
   }
 
+  /**
+   * @inheritdoc
+   */
   protected function _assign(){
     $this->_engine->set($this->_vars);
   }
 
+  /**
+   * @inheritdoc
+   */
   public function bind($var, &$value){
     $this->_engine->bind($var, $value);
   }
 
+  /**
+   * @inheritdoc
+   */
   public function getEngineInfos($info = self::INFO_ALL) {
     $return = array();
 
@@ -64,6 +76,9 @@ class Talus_TPL extends Bridge {
     return $return;
   }
 
+  /**
+   * @inheritdoc
+   */
   protected function _render($view) {
     return $this->_engine->pparse($view . '.html');
   }

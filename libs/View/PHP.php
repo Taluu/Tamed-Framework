@@ -23,10 +23,16 @@ namespace View;
 class PHP extends Bridge {
   private $_view = null;
 
+  /**
+   * @inheritdoc
+   */
   public function bind($var, &$value){
     $this->_vars[$var] = &$value;
   }
 
+  /**
+   * @inheritdoc
+   */
   public function getEngineInfos($info = self::INFO_ALL) {
     $return = array();
 
@@ -49,6 +55,9 @@ class PHP extends Bridge {
     return $return;
   }
 
+  /**
+   * @inheritdoc
+   */
   protected function _render($_view) {
     $this->_view = __DIR__ . '/../../views/templates/' . $_view . '.' . \PHP_EXT;
 

@@ -47,9 +47,9 @@ class Config implements \IteratorAggregate, \ArrayAccess {
   }
 
   /**
-   * {@inheritdoc}
+   * @ignore
    */
- public function __clone() {
+ private function __clone() {
     $this->_datas = $this->_datas;
     $this->_env = $this->_env;
     $this->_loaded = true;
@@ -57,7 +57,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
   }
 
   /**
-   * {@inheritdoc}
+   * @ignore
    */
  public function __get($var) {
     $val = '';
@@ -70,14 +70,14 @@ class Config implements \IteratorAggregate, \ArrayAccess {
   }
 
   /**
-   * {@inheritdoc}
+   * @ignore
    */
  public function __set($var, $val) {
     $this->set($var, $val);
   }
 
   /**
-   * {@inheritdoc}
+   * @ignore
    */
  public function __isset($var) {
     return isset($this->_datas[$var]);
@@ -124,7 +124,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
    *
    * @param \Closure $_callback Callback to be called
    * @param mixed $_userdata Datas to be sent to the callback
-   * @return type
+   * @return Config
    */
   public function applyCallback(\Closure $_callback, $_userdata = null) {
     if ($this->_loaded === false) {
@@ -219,7 +219,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function offsetExists($offset) {
     return isset($this->$offset);
@@ -227,7 +227,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function offsetGet($offset) {
     $data = '';
@@ -242,7 +242,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function offsetSet($offset, $value) {
     $this->set($offset, $value);
@@ -250,14 +250,14 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function offsetUnset($offset) {
     throw new \Exception('Unsupported operation');
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function getIterator() {
     return new \ArrayObject($this->_datas);

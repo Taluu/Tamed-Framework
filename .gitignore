@@ -8,8 +8,8 @@ logs/*.log
 # Netbeans Project directory
 nbproject/
 
-# Merise
-*.mwb
+# Docs
+docs/
 
 #cache
 .cache/
