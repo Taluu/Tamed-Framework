@@ -11,15 +11,18 @@
 
 namespace Controller\Sub;
 
+use \Controller\Front;
+use \Http\Response;
+
 /**
  * Error Controller
  *
  * @package twk.controller.sub
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Error extends \Controller\Front {
+class Error extends Front {
   public function notfound_404Action() {
-    $this->_status = \Http\Response::NOT_FOUND;
+    $this->_status = Response::NOT_FOUND;
     $this->_template = 'index';
   }
 }

@@ -18,6 +18,8 @@ namespace Http;
  *
  * @package twk.http
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ *
+ * @todo Redo this class
  */
 class Request {
   const
@@ -88,6 +90,13 @@ class Request {
     return null;
   }
 
+  /**
+   * Gets the requested url
+   *
+   * @return array Returns an array with the requested url stripped of its query
+   *               string, and its query string.
+   *
+   */
   public function requestUri() {
     $requestURI = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
     $requestURI = $requestURI ?: trim($_SERVER['REQUEST_URI']);

@@ -18,6 +18,19 @@ namespace Http;
  *
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @package twk.http
+ *
+ * @method void redirect404(string $url, int $time = 0) Redirects the user to $url in $time seconds, with a 404 status.
+ *
+ * @method bool isInvalid(int $status) checks if the http response is an invalid type (code < 100 or >= 600)
+ * @method bool isInformational(int $status) checks if the http response is an informational type (code 1XX)
+ * @method bool isSuccessful(int $status) checks if the http response is a successful type (code 2XX)
+ * @method bool isRedirection(int $status) checks if the http response is a redirection type (code 3XX)
+ * @method bool isRedirected(int $status) checks if the client was redirected
+ * @method bool isRedirect(int $status) checks if this was a redirection
+ * @method bool isClientError(int $status) checks if there was a client error (code 4XX)
+ * @method bool isServerError(int $status) checks if there was a server error (code 5XX)
+ * @method bool isError(int $status) checks if there was an error coming from the server (code 5XX) or the client (4XX)
+ * @method bool isPartial(int $status) checks if this is a partial content
  */
 class Response {
   /**
@@ -67,6 +80,11 @@ class Response {
     $_headers = array(),
     $_cookies = array();
 
+  /**
+   * Construct the Response Object
+   *
+   * @param string $_code Status Response Code
+   */
   function __construct($_code = self::OK) {
     $this->_statusCode = $_code;
   }
@@ -77,6 +95,7 @@ class Response {
    * @param string $header Header's name
    * @param boolean $replace Replace an existing header ?
    * @param integer $code
+   *
    * @return Header
    */
   public function header($header, $value = null, $replace = true, $code = self::OK) {
@@ -91,6 +110,8 @@ class Response {
    * @param integer $time The time before being redirected
    * @param integer $code Status code to be sent
    * @throws Exception if the URL is empty
+   *
+   * @return void
    */
   public function redirect($url, $time = 0, $code = self::FOUND) {
     if (empty($url)) {
@@ -191,10 +212,16 @@ class Response {
     }
   }
 
+  /**
+   * @ignore
+   */
   public function getStatus() {
     return $this->_statusCode;
   }
 
+  /**
+   * @ignore
+   */
   private function setStatus($_status) {
     if ($this->isInvalid($_status)) {
       throw new \Exception('Bad code for response component');
@@ -204,11 +231,9 @@ class Response {
   }
 
   /**
-   * Magic method, catching the short cuts methods (like redirectXYZ)
-   *
-   * @param string $method Method name
-   * @param array $args
-   * @return mixed
+   * @ignore
+   * @todo Limit the use of this magic method
+   * @todo for isXYZ methods : if it is an int, control which status can be used
    */
   public function __call($method, array $args) {
     /*
@@ -220,19 +245,13 @@ class Response {
      *  $code; Status code (default: See Other)
      */
     if (substr($method, 0, 8) == 'redirect') {
-      $status = intval(substr($method, 8));
+      switch (intval(substr($method, 8))) {
+        case 404:
+          $code = self::MOVED_PERMANENTLY;
+          break;
 
-      if (isset($args[2])) {
-        $code = $args[2];
-      } else {
-        switch ($status) {
-          case 404:
-            $code = self::MOVED_PERMANENTLY;
-            break;
-
-          default:
-            $code = self::FOUND;
-        }
+        default:
+          $code = self::FOUND;
       }
 
       $this->redirect($args[0], isset($args[1]) ? $args[1] : 0, $code);
@@ -251,40 +270,45 @@ class Response {
       $status = isset($args[0]) ? $args[0] : $this->getStatus();
       $constant = strtoupper($code);
 
-      if (filter_var($code, FILTER_VALIDATE_INT) !== false) {
-        $code = (int) $code;
-
-        if ($this->isInvalid($status)) {
-          throw new Exception('Code not valid');
-        }
-
-        return $status === $code;
-      }
-
       switch ($code) {
         case 'Invalid':
           return $status < 100 || $status >= 600;
+          break;
 
         case 'Informational':
           return $status >= 100 && $status < 200;
+          break;
 
         case 'Successful':
           return $status >= 200 && $status < 300;
+          break;
 
         case 'Redirection':
           return $status >= 300 && $status < 400;
+          break;
 
         case 'ClientError':
           return $status >= 400 && $status < 500;
+          break;
 
         case 'ServerError':
           return $status >= 500 && $status < 600;
+          break;
+
+        case 'Error':
+          return $this->isClientError() || $this->isServerError();
+          break;
 
         case 'Redirected':
           return $this->isRedirect() || $this->_redirect === true;
+          break;
 
         case 'Redirect':
           return in_array($status, array(201, 301, 302, 303, 307));
+          break;
+
+        case 'Partial':
+          return $status === 206;
 
         default:
           return false;

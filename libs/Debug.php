@@ -30,6 +30,13 @@ class Debug {
     $start = 0,
     $stack = array();
 
+  /**
+   * Write a message into the access log
+   *
+   * @param string $msg to be written
+   * @param int $level error's level
+   * @return Returns TRUE on success or FALSE on failure.
+   */
   public static function log($msg, $level = self::LEVEL_INFO) {
     static $lvlStr = array(
         self::LEVEL_FATAL => 'Fatal Error',
@@ -64,6 +71,13 @@ class Debug {
     return error_log($log . "\n", 3, __DIR__ . '/../logs/access.log');
   }
 
+  /**
+   * Shortcut for \Debug::log($msg, self::LEVEL_INFO)
+   *
+   * @param string $msg message to be written
+   * @return Returns TRUE on success or FALSE on failure.
+   * @see \Debug::log();
+   */
   public static function info($msg) {
     if (func_num_args() > 1) {
       $args = func_get_args();
@@ -74,6 +88,13 @@ class Debug {
     return self::log($msg, self::LEVEL_INFO);
   }
 
+  /**
+   * Shortcut for \Debug::log($msg, self::LEVEL_WARNING)
+   *
+   * @param string $msg message to be written
+   * @return Returns TRUE on success or FALSE on failure.
+   * @see \Debug::log();
+   */
   public static function warning($msg) {
     if (func_num_args() > 1) {
       $args = func_get_args();
@@ -85,6 +106,13 @@ class Debug {
     return self::log($msg, self::LEVEL_WARNING);
   }
 
+  /**
+   * Shortcut for \Debug::log($msg, self::LEVEL_FATAL)
+   *
+   * @param string $msg message to be written
+   * @return Returns TRUE on success or FALSE on failure.
+   * @see \Debug::log();
+   */
   public static function fatal($msg) {
     if (func_num_args() > 1) {
       $args = func_get_args();

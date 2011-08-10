@@ -187,6 +187,9 @@ class Config implements \IteratorAggregate, \ArrayAccess {
     $this->_loaded = true;
   }
 
+  /**
+   * @ignore
+   */
   private function _checkJson() {
     switch (json_last_error()) {
       case JSON_ERROR_DEPTH:
@@ -219,7 +222,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * @inheritdoc
+   * @ignore
    */
   public function offsetExists($offset) {
     return isset($this->$offset);
@@ -227,7 +230,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * @inheritdoc
+   * @ignore
    */
   public function offsetGet($offset) {
     $data = '';
@@ -242,7 +245,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * @inheritdoc
+   * @ignore
    */
   public function offsetSet($offset, $value) {
     $this->set($offset, $value);
@@ -250,14 +253,14 @@ class Config implements \IteratorAggregate, \ArrayAccess {
 
 
   /**
-   * @inheritdoc
+   * @ignore
    */
   public function offsetUnset($offset) {
     throw new \Exception('Unsupported operation');
   }
 
   /**
-   * @inheritdoc
+   * @ignore
    */
   public function getIterator() {
     return new \ArrayObject($this->_datas);

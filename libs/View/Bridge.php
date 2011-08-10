@@ -74,10 +74,7 @@ abstract class Bridge {
   abstract public function getEngineInfos($info = self::INFO_ALL);
 
   /**
-   * Sets a variable to be sent to the view engine
-   *
-   * @param string $var variable's name
-   * @param mixed $value variable's value
+   * @ignore
    */
   final public function __set($var, $value) {
     $this->_vars[$var] = $value;

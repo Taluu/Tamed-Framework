@@ -24,13 +24,18 @@ use \View\Bridge;
  * To make it simple, this is the basis of all the sub-controllers ; in order to
  * make them work, they MUST extend this class.
  *
+ * @property-read \View\Bridge $view View engine
+ * @property-read \Http\Request $request Request Handler
+ * @property-read \Http\Response $response Response Handler
+ * @property-read \Routing\Route $route Route used
+ *
  * @package twk.controller
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 abstract class Front {
   protected
     $_template = null,
-    $_status = \Http\Response::OK,
+    $_status = Response::OK,
     $_isForwarded = false,
 
     /**
@@ -226,7 +231,7 @@ abstract class Front {
   }
 
   /**
-   * Magic method, gets one of the authorized method
+   * Magic method, gets one of the authorized properties
    *
    * @param $name Name of the attribute
    * @return mixed

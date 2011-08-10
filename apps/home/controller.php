@@ -11,13 +11,15 @@
 
 namespace Controller\Sub;
 
+use \Controller\Front;
+
 /**
  * Home Controller
  *
  * @package twk.controller.sub
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Home extends \Controller\Front {
+class Home extends Front {
   public function indexAction() {
     $this->_template = 'index';
   }

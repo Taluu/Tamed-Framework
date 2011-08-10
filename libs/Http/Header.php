@@ -60,18 +60,30 @@ class Header {
     }
   }
 
+  /**
+   * @ignore
+   */
   public function getHeader() {
     return $this->_header;
   }
 
+  /**
+   * @ignore
+   */
   public function getReplace() {
     return $this->_replace;
   }
 
+  /**
+   * @ignore
+   */
   public function getStatus() {
     return $this->_status;
   }
 
+  /**
+   * @ignore
+   */
   public function getValue() {
     return $this->_value;
   }

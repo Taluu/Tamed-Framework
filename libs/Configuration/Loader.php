@@ -73,6 +73,9 @@ class Loader {
     return $c;
   }
 
+  /**
+   * @ignore
+   */
   public function __get($_config) {
     return $this->get($_config);
   }

@@ -31,6 +31,10 @@ if (!defined('SAFE')) exit;
  *
  * @package twk.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
+ *
+ * @property-read string $controller The requested controller
+ * @property-read string $action The requested action
+ * @property-read string $command The requested command
  */
 class Route {
   /**
@@ -159,11 +163,7 @@ class Route {
   }
 
   /**
-   * Magic method, gets one of the special attributes (controller, command, action)
-   *
-   * @param string $n parameter to be fetched
-   * @return string value of the parameter
-   * @throws \Exception
+   * @ignore
    */
   public function __get($n) {
     if (in_array($n, array('action', 'command', 'controller'))) {
