@@ -16,6 +16,10 @@
  * @version $Id$
  */
 
+use \Configuration\Loader as Configuration_Loader;
+use \Routing\Router;
+use \Routing\Route;
+
 if (!defined('SAFE')) exit;
 if (defined('ALREADY_STARTED')) exit;
 define('ALREADY_STARTED', true);
@@ -101,11 +105,11 @@ abstract class Obj {
 
 abstract class Sys {}
 
-Obj::$config = new \Configuration\Loader(__DIR__ . '/../conf/');
-Obj::$router = new \Routing\Router;
+Obj::$config = new Configuration_Loader(__DIR__ . '/../conf/');
+Obj::$router = new Router;
 
 $routes = Obj::$config->get('routes', function (&$v, $k) {
-  $v = new Routing\Route($v['controller'], $v['action'], $v['pattern']);
+  $v = new Route($v['controller'], $v['action'], $v['pattern']);
  });
 
 foreach ($routes as $name => &$route) {

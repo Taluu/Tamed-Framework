@@ -9,8 +9,6 @@
  * @version $Id$
  */
 
-namespace Controller;
-
 define('SAFE', true);
 if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSION));
 
