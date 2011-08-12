@@ -53,7 +53,7 @@ class Header {
         $header = $this->_header;
       }
 
-      \Debug::info('Sending header (' . $header . ', ' . (int) $this->_replace . ', ' . $this->_status . ')');
+      \Debug::info('Sending header (%1$s, code %2$d)', $header, $this->_status);
       \header($header, $this->_replace, $this->_status);
 
       $this->_sent = true;

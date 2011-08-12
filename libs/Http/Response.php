@@ -11,6 +11,8 @@
 
 namespace Http;
 
+use \View\Bridge;
+
 /**
  * Definition of the HttpResponse class
  *
@@ -76,6 +78,7 @@ class Response {
 
   protected
     $_statusCode = self::OK,
+    $_content = null,
     $_redirect = false,
     $_headers = array(),
     $_cookies = array();
@@ -165,25 +168,16 @@ class Response {
   }
 
   /**
-   * Render the current page
-   * Sends all the headers (cookie, session, ...), and render the $view file.
+   * Render the current content
    *
-   * @param string $view File to be rendered
+   * Sends all the headers (cookie, session, ...), and returns the content.
+   *
    * @return void
    */
-  public function render($view = null) {
+  public function render() {
     //\ob_end_flush(); // ?
     $this->sendHeaders();
-
-    $content = '';
-
-    if (!$this->isRedirect() && $view !== null) {
-      list($engineName, $engineVersion) = \Obj::$controller->view->getEngineInfos(\View\Bridge::INFO_NAME | \View\Bridge::INFO_VERSION);
-      \Debug::info('Rendering the template using ' . $engineName . ' (version ' . $engineVersion . ')');
-      $content = \Obj::$controller->view->render($view);
-    }
-
-    return $content;
+    return !$this->isRedirect() ? $this->_content : '';
   }
 
   /**
@@ -228,6 +222,15 @@ class Response {
     }
 
     $this->_statusCode = $_status;
+  }
+
+  /**
+   * Sets the content of this page
+   *
+   * @param type $_content the content to be returned
+   */
+  public function setContent($_content = null) {
+    $this->_content = $_content;
   }
 
   /**

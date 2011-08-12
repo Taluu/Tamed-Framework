@@ -13,6 +13,7 @@ namespace Controller;
 
 use \Http\Response, Http\Request;
 use \View\Bridge;
+use \Obj, \Debug, \Exception;
 
 /**
  * Main Controller
@@ -69,12 +70,12 @@ abstract class Front {
    * @param \View\Bridge $_view View engine
    */
   final protected function  __construct(Request $_request, Response $_response, Bridge $_view) {
-    \Obj::$controller = $this;
+    Obj::$controller = $this;
 
     $this->_view = $_view;
     $this->_request = $_request;
     $this->_response = $_response;
-    $this->_route = \Obj::$router->route($_request);
+    $this->_route = Obj::$router->route($_request);
   }
 
   /**
@@ -89,35 +90,35 @@ abstract class Front {
     }
 
     try {
-      \Debug::info('Loading main content');
+      Debug::info('Loading main content');
       $this->_main($_action);
     } catch (Exception $e) {
 
     }
 
-    \Debug::info('Sending the response to the user');
-    $this->_response->status(\Obj::$controller->_status);
-    echo $this->_response->render(\Obj::$controller->_template);
+    list($engineName, $engineVersion) = $this->_view->getEngineInfos(Bridge::INFO_NAME | Bridge::INFO_VERSION);
+
+    Debug::info('Rendering the view %1$s using %2$s (version %3$s)', Obj::$controller->_template, $engineName, $engineVersion);
+    $content = $this->_view->render(Obj::$controller->_template);
+
+    Debug::info('Sending the response to the user');
+    $this->_response->status(Obj::$controller->_status);
+    $this->_response->setContent($content);
+
+    echo $this->_response->render();
 
     return $this;
   }
 
   /**
-   * Will be runned before the treatment
-   *
-   * If it has to be overridden, don't forget to call __this__ method !
-   * <code>protected function _prepend() { parent::_prepend(); }</code>
-   * ... Or at least, do the gist of what it is doing.
+   * Actions to be runned before the treatment
    *
    * @return void
    */
   protected function _prepend() {}
 
   /**
-   * Will be runned after the treatment
-   * If it has to be overridden, don't forget to call __this__ method !
-   * <code>protected function _append() { parent::_append(); }</code>
-   * ... Or at least, do the gist of what it is doing.
+   * Actions to be runned after the treatment
    *
    * @return void
    */
@@ -133,11 +134,11 @@ abstract class Front {
     $action = $_action . 'Action';
 
     if (!\method_exists($this, $action)) {
-      \Debug::warning('Action %1$s nonexistent', $_action);
+      Debug::warning('Action %1$s nonexistent', $_action);
       throw new Exception(sprintf('%1$s->%2$s Not found', get_class($this), $action));
     }
 
-    \Debug::info('Loading "%1$s->%2$s"', get_class($this), $action);
+    Debug::info('Loading "%1$s->%2$s"', get_class($this), $_action);
     $this->_prepend();
     $this->{$action}();
     $this->_append();
@@ -161,10 +162,10 @@ abstract class Front {
       'view' => new \View\PHP
      ), $_options);
 
-    \Debug::info('Routing');
+    Debug::info('Routing');
     $requestURI = $options['request']->requestUri();
 
-    $route = \Obj::$router->route($requestURI['URI']);
+    $route = Obj::$router->route($requestURI['URI']);
 
     if (isset($options['apploader']) && \is_callable($options['apploader'])) {
       \spl_autoloader_register($options['apploader']);
@@ -196,7 +197,7 @@ abstract class Front {
     $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
     $_controller = __NAMESPACE__ . '\Sub\\' . $_controller;
 
-    \Debug::info('Trying to start the subcontroller %1$s', $_controller);
+    Debug::info('Trying to start the subcontroller %1$s', $_controller);
     return new $_controller($options['request'], $options['response'], $options['view']);
   }
 
@@ -207,7 +208,7 @@ abstract class Front {
    * @param string $_action Action's name
    */
   final protected function _forward($_controller, $_action) {
-    \Debug::info('Forwarding to "%1$s->%2$s"', $_controller, $_action);
+    Debug::info('Forwarding to "%1$s->%2$s"', $_controller, $_action);
     $controller = __NAMESPACE__ . '\Sub\\' . \mb_convert_case($_controller, \MB_CASE_TITLE);
 
     /**
