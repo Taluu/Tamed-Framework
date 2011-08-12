@@ -12,7 +12,7 @@
  * @copyright Copyleft (c) 2010+, Baptiste Clavié, Talus' Works
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  * @link http://www.talus-works.net Talus' Works
- * @license http://creativecommons.org/licenses/by-sa/3.0/ CC-BY-SA 3.0+
+ * @license http://www.opensource.org/licenses/BSD-3-Clause Modified BSD License
  * @version $Id$
  */
 
@@ -81,29 +81,6 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
   \Debug::log('An error occurred (' . $e->__toString() . ')', $err);
   throw $e;
  });
-
-
-/**
- * Contains all the global objects needed for the project.
- */
-abstract class Obj {
-  /**
-   * @var \Configuration\Loader
-   */
-  static public $config = null;
-
-  /**
-   * @var \Controller\Front
-   */
-  static public $controller = null;
-
-  /**
-   * @var \Routing\Router
-   */
-  static public $router = null;
-}
-
-abstract class Sys {}
 
 Obj::$config = new Configuration_Loader(__DIR__ . '/../conf/');
 Obj::$router = new Router;
