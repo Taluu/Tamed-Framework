@@ -163,7 +163,7 @@ class Route {
    */
   public function get($n) {
     if (in_array($n, array('action', 'command', 'controller'))) {
-      return $this->${'_' . $n};
+      return $this->{'_' . $n};
     }
 
     if (isset($this->_params[$n])) {

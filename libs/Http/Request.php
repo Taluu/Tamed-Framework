@@ -29,6 +29,11 @@ class Request {
 
       ALL = 7;
 
+  private
+    $_requestURI = null,
+    $_queryString = null,
+    $_root = null;
+
   /**
    * Gets a GET parameter
    *
@@ -96,30 +101,60 @@ class Request {
    * @return array Returns an array with the real requested url, stripped of its
    *               query string and of its root part, and its query string.
    *
+   * @todo if a htaccess (or equivalent) can not be cast, use the query string to
+   *       analyse the url (?/part/to/somehting?a=b&c=d)
    */
   public function requestUri() {
-    $requestURI = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
-    $requestURI = $requestURI ?: trim($_SERVER['REQUEST_URI']);
+    if ($this->_requestURI === null) {
+      $requestURI = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
+      $requestURI = $requestURI ?: trim($_SERVER['REQUEST_URI']);
 
-    $return = array(
-      'URI' => $requestURI,
-      'query_string' => $_SERVER['QUERY_STRING']
-     );
+      $this->_requestURI = $requestURI;
 
-    if (isset($_SERVER['REDIRECT_URL'])) {
-      $return['URI'] = $_SERVER['REDIRECT_URL'];
+      if (isset($_SERVER['REDIRECT_URL'])) {
+        $this->_requestURI = $_SERVER['REDIRECT_URL'];
+      }
+
+      // -- stripping the root part
+      if (strpos($this->_requestURI, $this->getRoot()) === 0) {
+        $this->_requestURI = substr($this->_requestURI, strlen($this->getRoot()));
+      }
+
+      $this->_requestURI = preg_replace('`/{2,}`', '/', '/' . $this->_requestURI);
     }
 
-    // -- stripping the root part
-    $phpSelf = substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
+    return $this->_requestURI;
+  }
 
-    if (strpos($return['URI'], $phpSelf) === 0) {
-      $return['URI'] = substr($return['URI'], strlen($phpSelf));
+  /**
+   * Gets the query string of the current script
+   *
+   * @return string the query string (?a=b&c=d)
+   * @todo if a htaccess (or equivalent) can not be cast, use the query string to
+   *       analyse the url (?/part/to/somehting?a=b&c=d)
+   */
+  public function getQueryString() {
+    if ($this->_queryString === null) {
+      $this->_queryString = $_SERVER['QUERY_STRING'];
     }
 
-    $return['URI'] = preg_replace('`/{2,}`', '/', '/' . $return['URI']);
+    return $this->_queryString;
+  }
 
-    return $return;
+  /**
+   * Gets the root of the current script
+   *
+   * Example : if you're running on / (as it is recommanded...), you'll just have
+   * '/', but if you're running on /whatever/, you'll get '/whatever/'.
+   *
+   * @return string the root part
+   */
+  public function getRoot() {
+    if ($this->_root === null) {
+      $this->_root = substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
+    }
+
+    return $this->_root;
   }
 }
 

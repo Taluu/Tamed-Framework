@@ -163,9 +163,7 @@ abstract class Front {
      ), $_options);
 
     Debug::info('Routing');
-    $requestURI = $options['request']->requestUri();
-
-    $route = Obj::$router->route($requestURI['URI']);
+    $route = Obj::$router->route($options['request']->requestUri());
 
     if (isset($options['apploader']) && \is_callable($options['apploader'])) {
       \spl_autoloader_register($options['apploader']);
@@ -239,8 +237,7 @@ abstract class Front {
    */
   final public function __get($name) {
     if (\in_array($name, array('view', 'request', 'response', 'route'))) {
-      $name = '_' . $name;
-      return $this->$name;
+      return $this->{'_' . $name};
     }
 
     throw new \Exception($name . ' is not a recognized attribute for \Controller\Front');
