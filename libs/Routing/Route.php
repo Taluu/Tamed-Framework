@@ -89,11 +89,6 @@ class Route {
       $pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $pattern);
       $pattern = str_replace(array_keys($this->_vars), array_values($this->_vars), $pattern);
 
-      // -- If the action has to be guessed, trying to replace a :action parameter
-      if ($this->_action === null) {
-        $pattern = str_replace('/:action', '/(?P<action>' . self::REGEX_PHP_ID . ')', $pattern);
-      }
-
       $pattern = '`^' . $pattern . '$`';
     }
   }
@@ -145,20 +140,6 @@ class Route {
       $this->_command .= $tmp;
     }
 
-    /*
-     * If the action has to be guessed, and exists, we can fill it
-     * If it doesn't exists, and still has to be guessed, we're throwing a new
-     * exception.
-     */
-    if ($this->_action === null) {
-      if (!isset($this->_params['action'])) {
-        throw new \Exception('No action defined');
-      }
-
-      $this->_action = $this->_params['action'];
-      unset($this->_params['action']);
-    }
-
     return true;
   }
 
@@ -182,7 +163,7 @@ class Route {
    */
   public function get($n) {
     if (in_array($n, array('action', 'command', 'controller'))) {
-      return $this->$n;
+      return $this->${'_' . $n};
     }
 
     if (isset($this->_params[$n])) {
