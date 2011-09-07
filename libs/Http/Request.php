@@ -93,8 +93,8 @@ class Request {
   /**
    * Gets the requested url
    *
-   * @return array Returns an array with the requested url stripped of its query
-   *               string, and its query string.
+   * @return array Returns an array with the real requested url, stripped of its
+   *               query string and of its root part, and its query string.
    *
    */
   public function requestUri() {
@@ -109,6 +109,15 @@ class Request {
     if (isset($_SERVER['REDIRECT_URL'])) {
       $return['URI'] = $_SERVER['REDIRECT_URL'];
     }
+
+    // -- stripping the root part
+    $phpSelf = substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/') + 1);
+
+    if (strpos($return['URI'], $phpSelf) === 0) {
+      $return['URI'] = substr($return['URI'], strlen($phpSelf));
+    }
+
+    $return['URI'] = preg_replace('`/{2,}`', '/', '/' . $return['URI']);
 
     return $return;
   }

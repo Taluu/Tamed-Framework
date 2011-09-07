@@ -22,5 +22,6 @@ use \Controller\Front;
 class Home extends Front {
   public function indexAction() {
     $this->_template = 'index';
+    $this->test = $_SERVER['DOCUMENT_ROOT'];
   }
 }
