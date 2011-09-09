@@ -144,10 +144,14 @@ class Config implements \IteratorAggregate, \ArrayAccess {
    * @param string $file file to be merged
    */
   public function merge($file) {
+    if (!$this->_loaded) {
+      throw new \Exception('You should first load the file before merging it with another file');
+    }
+
     $child = new Config($file, $this->_env);
     $datas = $this->_datas;
 
-    array_replace_recursive($datas, $child->_load()->_datas);
+    array_replace_recursive($datas, $child->_datas);
 
     $child->_datas = $datas;
 

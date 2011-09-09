@@ -60,10 +60,10 @@ class Loader {
    */
   public function get($_file, \Closure $_callback = null, $_dir = null) {
     $dir = $_dir ?: $this->_dir;
-    $file = sha1(rtrim($_dir, '/') . '/' . $_file);
+    $file = sha1($dir . $_file);
 
     if (!isset($this->_loadedConfig[$file])) {
-      $this->_loadedConfig[$file] = $this->_base !== null
+      $this->_loadedConfig[$file] = $this->_base !== null && $this->_base->hasConfig($_file, $dir)
          ? $this->_base->get($file)->merge($dir . $_file . '.json')
          : new Config($dir . $_file . '.json', $this->_env);
     }
@@ -75,6 +75,12 @@ class Loader {
     }
 
     return $c;
+  }
+
+  public function hasConfig($_file, $_dir = null) {
+    $dir = $_dir ?: $this->_dir;
+
+    return is_file($dir . $_file);
   }
 
   /**
