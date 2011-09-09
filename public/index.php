@@ -16,7 +16,7 @@ define('SAFE', true);
 if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSION));
 
 /*
- * Like Capitaine Mousse said in his ShwaarkFramework...
+ * Like Capitaine Mousse said in Jet...
  * Let's rock !
  *
  * @todo Handle correctly the exception
