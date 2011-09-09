@@ -22,7 +22,7 @@ require __DIR__ . '/../Vendor/Talus-TPL/lib/Talus_TPL/Main.php';
  * @package tamed.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Talus_TPL extends Bridge {
+class TalusTPL extends Bridge {
   protected
     /**
      * @var \Talus_TPL
