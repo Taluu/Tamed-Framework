@@ -1,6 +1,6 @@
-Talus Framework
+Tamed Framework
 ===============
-**TODO :** "Talus Framework" is a *temporary* name.
+A lightweight yet complete MVC framework for your php web-applications. Tamed as powerful yet domesticated for your uses. :)
 
 Features
 ========
