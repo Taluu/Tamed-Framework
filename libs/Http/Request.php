@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace Http;
+namespace Tamed\Http;
 
 /**
  * Definition of the HttpRequest class

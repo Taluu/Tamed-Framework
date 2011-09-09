@@ -9,12 +9,12 @@
  * @version $Id$
  */
 
-namespace Controller;
+namespace Tamed\Controller;
 
-use \Http\Response, Http\Request;
-use \View\Bridge;
-use \Configuration\Loader;
-use \Obj, \Debug, \Exception;
+use Tamed\Http\Response, Tamed\Http\Request;
+use Tamed\View\Bridge;
+use Tamed\Configuration\Loader;
+use Tamed\Debug, Tamed\Obj;
 
 /**
  * Main Controller
@@ -160,6 +160,8 @@ abstract class Front {
   /**
    * Prepare the page, matching a route if any
    *
+   * Note that the controller must be in its full qualified name form
+   *
    * @param self $_controller Controller to be used. null if it has to be guessed.
    * @param array $options Options array (to define new http handlers, view bridges, ...)
    * @return self Matched controller
@@ -172,7 +174,7 @@ abstract class Front {
     $options = \array_replace(array(
       'request' => new Request,
       'response' => new Response,
-      'view' => new \View\PHP
+      'view' => new \Tamed\View\PHP
      ), $_options);
 
     Debug::info('Routing');
@@ -183,19 +185,16 @@ abstract class Front {
     }
 
     \spl_autoload_register(function($controller) {
-      // -- Verifying that this is a controller : it must have a \Controller\Sub\Name form
+      // -- Verifying that this is a controller : it must have a \...\Controller\Name form
       $parts = \array_values(\array_filter(\explode('\\', $controller)));
+      $count = count($parts);
 
-      if (\count($parts) !== 3) {
-        return false;
-      }
-
-      if ($parts[0] !== __NAMESPACE__ || $parts[1] !== 'Sub') {
+      if ($parts[$count - 2] !== 'Controller') {
         return false;
       }
 
       $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
-      $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
+      $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $parts[$count - 1], \PHP_EXT);
 
       if (\is_file($file)) {
         require $file;
@@ -205,27 +204,25 @@ abstract class Front {
       return false;
      });
 
-    $_controller = \mb_convert_case($route->controller, \MB_CASE_TITLE);
-    $_controller = __NAMESPACE__ . '\Sub\\' . $_controller;
-
     Debug::info('Trying to start the subcontroller %1$s', $_controller);
-    return new $_controller($options['request'], $options['response'], $options['view']);
+    return new $route->controller($options['request'], $options['response'], $options['view']);
   }
 
   /**
    * Forwards to a new controller and a new action
+   *
+   * Note : the controller should be in in full qualified form (namespaces included)
    *
    * @param string $_controller Controller's name
    * @param string $_action Action's name
    */
   final protected function _forward($_controller, $_action) {
     Debug::info('Forwarding to "%1$s->%2$s"', $_controller, $_action);
-    $controller = __NAMESPACE__ . '\Sub\\' . \mb_convert_case($_controller, \MB_CASE_TITLE);
 
     /**
-     * @var \Controller\Front
+     * @var Front
      */
-    $controller = new $controller($this->_request, $this->_response, $this->_view);
+    $controller = new $_controller($this->_request, $this->_response, $this->_view);
 
     $controller->_isForwarded = true;
     $controller->_main($_action);

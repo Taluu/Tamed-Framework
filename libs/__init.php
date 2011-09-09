@@ -16,9 +16,11 @@
  * @version $Id$
  */
 
-use \Configuration\Loader as Configuration_Loader;
-use \Routing\Router;
-use \Routing\Route;
+namespace Tamed;
+
+use Tamed\Configuration\Loader as Configuration_Loader;
+use Tamed\Routing\Router;
+use Tamed\Routing\Route;
 
 if (!defined('SAFE')) exit;
 if (defined('ALREADY_STARTED')) exit;
@@ -26,6 +28,11 @@ define('ALREADY_STARTED', true);
 
 $start = microtime(true);
 
+/**
+ * @todo Render this autoloader compliant with PSR-0
+ *
+ * @link http://groups.google.com/group/php-standards/web/psr-0-final-proposal
+ */
 spl_autoload_register(function ($_class) {
   static $loaded = array();
 
@@ -33,7 +40,13 @@ spl_autoload_register(function ($_class) {
     return $loaded[$_class];
   }
 
-  $file = explode('\\', $_class);  array_unshift($file, __DIR__);
+  $file = explode('\\', $_class);
+
+  if ($file[0] !== __NAMESPACE__) {
+    return false;
+  }
+
+  array_shift($file); array_unshift($file, __DIR__);
   $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
 
   if (!is_file($file)) {
@@ -56,14 +69,14 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     case E_USER_ERROR:
     case E_ERROR:
     case E_PARSE:
-      $err = \Debug::LEVEL_FATAL;
+      $err = Debug::LEVEL_FATAL;
       break;
 
     case E_COMPILE_WARNING:
     case E_CORE_WARNING:
     case E_USER_WARNING:
     case E_WARNING:
-      $err = \Debug::LEVEL_WARNING;
+      $err = Debug::LEVEL_WARNING;
       break;
 
     case E_USER_DEPRECATED:
@@ -72,13 +85,13 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     case E_NOTICE:
     case E_STRICT:
     default:
-      $err = \Debug::LEVEL_INFO;
+      $err = Debug::LEVEL_INFO;
       break;
   }
 
   $e = new ErrorException($errstr, 0, $errno, $errfile, $errline);
 
-  \Debug::log('An error occurred (' . $e->__toString() . ')', $err);
+  Debug::log('An error occurred (' . $e->__toString() . ')', $err);
   throw $e;
  });
 

@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace Http;
+namespace Tamed\Http;
 
 /**
  * Represents a Cookie
@@ -48,7 +48,7 @@ class Cookie extends Header {
   function __construct($_name, $_value, $_timeout = 0, $_path = './', $_domain = null, $_secure = false, $_httpOnly = false) {
     if (!filter_var ($_timeout, FILTER_VALIDATE_INT)) {
       if (!$_timeout instanceof \DateTime) {
-        $_timeout = new DateTime($_timeout);
+        $_timeout = new \DateTime($_timeout);
       }
 
       $_timeout = $_timeout->format('U');

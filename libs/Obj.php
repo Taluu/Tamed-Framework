@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+namespace Tamed;
+
 if (!defined('SAFE')) exit;
 
 /**

@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace Routing;
+namespace Tamed\Routing;
 
 if (!defined('SAFE')) exit;
 

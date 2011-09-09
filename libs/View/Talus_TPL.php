@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace View;
+namespace Tamed\View;
 
 require __DIR__ . '/../Vendor/Talus-TPL/lib/Talus_TPL/Main.php';
 

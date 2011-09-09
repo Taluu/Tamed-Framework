@@ -9,15 +9,15 @@
  * @version $Id$
  */
 
-namespace Controller\Sub;
+namespace Tamed\Example\Controller;
 
-use \Controller\Front;
-use \Http\Response;
+use \Tamed\Controller\Front;
+use \Tamed\Http\Response;
 
 /**
  * Error Controller
  *
- * @package tamed.controller.sub
+ * @package tamedexample.example.controller
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Error extends Front {

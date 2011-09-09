@@ -9,14 +9,14 @@
  * @version $Id$
  */
 
-namespace Controller\Sub;
+namespace Tamed\Example\Controller;
 
-use \Controller\Front;
+use \Tamed\Controller\Front;
 
 /**
  * Home Controller
  *
- * @package tamed.controller.sub
+ * @package tamedexampled.controller.sub
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Home extends Front {

@@ -9,9 +9,11 @@
  * @version $Id$
  */
 
-namespace Routing;
+namespace Tamed\Routing;
 
 if (!defined('SAFE')) exit;
+
+use Tamed\Debug;
 
 /**
  * Definition of the Router Class
@@ -54,7 +56,7 @@ class Router {
      */
     foreach ($this->_routes as $name => &$route) {
       if ($route->match($_requestURI)) {
-        \Debug::info('Route %s matched', $name);
+        Debug::info('Route %s matched', $name);
         $this->_matchedRoute = $route;
         break;
       }
@@ -65,7 +67,7 @@ class Router {
         throw new \Exception('No route to match');
       }
 
-      \Debug::info('No route found : using 404');
+      Debug::info('No route found : using 404');
       $this->_matchedRoute = $this->_routes['404'];
     }
 

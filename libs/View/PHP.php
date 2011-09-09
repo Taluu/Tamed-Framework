@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace View;
+namespace Tamed\View;
 
 /**
  * Definition of a view written in PHP syntax

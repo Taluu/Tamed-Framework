@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace View;
+namespace Tamed\View;
 
 /**
  * Definition of the bridge between the framework & the selected view engine

@@ -9,7 +9,7 @@
  * @version $Id$
  */
 
-namespace Configuration;
+namespace Tamed\Configuration;
 
 /**
  * Definition of Config class

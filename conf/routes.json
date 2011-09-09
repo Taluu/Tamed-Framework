@@ -1,14 +1,14 @@
 {
   "_isConst": true,
-  
+
   "404" : {
-    "controller" : "error",
+    "controller" : "\\Tamed\\Example\\Controller\\Error",
     "action" : "notfound_404",
     "pattern" : "/error/notfound_404"
    },
 
   "homepage" : {
-    "controller" : "home",
+    "controller" : "\\Tamed\\Example\\Controller\\Home",
     "action" : "index",
     "pattern" : "/"
   }

@@ -9,9 +9,9 @@
  * @version $Id$
  */
 
-namespace Http;
+namespace Tamed\Http;
 
-use \View\Bridge;
+use \Tamed\View\Bridge;
 
 /**
  * Definition of the HttpResponse class
@@ -133,7 +133,7 @@ class Response {
       $value = $time . ';url=' . $url;
     }
 
-    \Debug::info('Redirecting...');
+    Debug::info('Redirecting...');
     $this->_redirect = true;
     $this->status($code);
     $this->header($header, $value, true, $code);

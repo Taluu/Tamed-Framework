@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+namespace Tamed;
+
 if (!defined('SAFE')) exit;
 
 /**
@@ -46,10 +48,10 @@ class Debug {
 
     $command = 'null';
 
-    if (\Obj::$router->hasStarted()) {
-      $command = \Obj::$router->get('command') ?: '/';
-      $command .= ' controller:' . \Obj::$router->get('controller');
-      $command .= ' action:' . \Obj::$router->get('action');
+    if (Obj::$router->hasStarted()) {
+      $command = Obj::$router->get('command') ?: '/';
+      $command .= ' controller:' . Obj::$router->get('controller');
+      $command .= ' action:' . Obj::$router->get('action');
     }
 
     // -- $db[0] is this function... And we have no interest in it, do we ?
@@ -72,11 +74,11 @@ class Debug {
   }
 
   /**
-   * Shortcut for \Debug::log($msg, self::LEVEL_INFO)
+   * Shortcut for Debug::log($msg, self::LEVEL_INFO)
    *
    * @param string $msg message to be written
    * @return Returns TRUE on success or FALSE on failure.
-   * @see \Debug::log();
+   * @see Debug::log();
    */
   public static function info($msg) {
     if (func_num_args() > 1) {
@@ -89,11 +91,11 @@ class Debug {
   }
 
   /**
-   * Shortcut for \Debug::log($msg, self::LEVEL_WARNING)
+   * Shortcut for Debug::log($msg, self::LEVEL_WARNING)
    *
    * @param string $msg message to be written
    * @return Returns TRUE on success or FALSE on failure.
-   * @see \Debug::log();
+   * @see Debug::log();
    */
   public static function warning($msg) {
     if (func_num_args() > 1) {
@@ -107,11 +109,11 @@ class Debug {
   }
 
   /**
-   * Shortcut for \Debug::log($msg, self::LEVEL_FATAL)
+   * Shortcut for Debug::log($msg, self::LEVEL_FATAL)
    *
    * @param string $msg message to be written
    * @return Returns TRUE on success or FALSE on failure.
-   * @see \Debug::log();
+   * @see Debug::log();
    */
   public static function fatal($msg) {
     if (func_num_args() > 1) {
