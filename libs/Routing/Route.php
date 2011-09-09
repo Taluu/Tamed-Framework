@@ -29,7 +29,7 @@ if (!defined('SAFE')) exit;
  *  /[name]random-text (random(text is something fix, so [name] will always have that value)
  *  /random-text (same as above, but will not be captured)
  *
- * @package twk.routing
+ * @package tamed.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  *
  * @property-read string $controller The requested controller

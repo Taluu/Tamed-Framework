@@ -19,7 +19,7 @@ namespace Configuration;
  *
  * Each config file must be in JSON format.
  *
- * @package twk.configuration
+ * @package tamed.configuration
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Loader {

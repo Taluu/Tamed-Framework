@@ -14,7 +14,7 @@ namespace View;
 /**
  * Definition of the bridge between the framework & the selected view engine
  *
- * @package twk.view
+ * @package tamed.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 abstract class Bridge {

@@ -17,7 +17,7 @@ namespace View;
  * Acts as a bridge between PHP and Talus' Works, letting PHP acts as the templating
  * engine
  *
- * @package twk.view
+ * @package tamed.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class PHP extends Bridge {

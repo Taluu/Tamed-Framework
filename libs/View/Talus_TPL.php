@@ -19,7 +19,7 @@ require __DIR__ . '/../Vendor/Talus-TPL/lib/Talus_TPL/Main.php';
  * Acts as a bridge between Talus' TPL and Talus' Works, allowing to use Talus TPL
  * in the views
  *
- * @package twk.view
+ * @package tamed.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Talus_TPL extends Bridge {

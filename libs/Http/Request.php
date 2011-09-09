@@ -16,7 +16,7 @@ namespace Http;
  *
  * Handles eveything sent by the client.
  *
- * @package twk.http
+ * @package tamed.http
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  *
  * @todo Redo this class
@@ -65,16 +65,6 @@ class Request {
   }
 
   /**
-   * Gets a FILE parameter
-   *
-   * @param string $key File's name
-   * @return mixed array if the file is found, null otherwise
-   */
-  public function file($key) {
-    return isset($_FILES[$key]) ? $_FILES[$key] : null;
-  }
-
-  /**
    * Fetch a Param (POST > GET > COOKIE)
    *
    * @param string $key Parameter to retrieve
@@ -83,8 +73,8 @@ class Request {
    */
   public function getParam($key, $filter = self::ALL) {
     foreach (array('post', 'get', 'cookie') as $method) {
-      if ($filter & \constant('self::' . \strtoupper($method))) {
-        $val = \call_user_func(array($this, $method), $key);
+      if ($filter & \constant('self::' . \mb_strtoupper($method))) {
+        $val = $this->$method($key);
 
         if ($val !== null) {
           return $val;
@@ -96,10 +86,9 @@ class Request {
   }
 
   /**
-   * Gets the requested url
+   * Gets the requested uri
    *
-   * @return array Returns an array with the real requested url, stripped of its
-   *               query string and of its root part, and its query string.
+   * @return string the requested uri
    *
    * @todo if a htaccess (or equivalent) can not be cast, use the query string to
    *       analyse the url (?/part/to/somehting?a=b&c=d)
@@ -144,7 +133,7 @@ class Request {
   /**
    * Gets the root of the current script
    *
-   * Example : if you're running on / (as it is recommanded...), you'll just have
+   * Example : if you're running on / (as it is recommended...), you'll just have
    * '/', but if you're running on /whatever/, you'll get '/whatever/'.
    *
    * @return string the root part

@@ -15,7 +15,7 @@ namespace Http;
  * Represents a Header
  *
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
- * @package twk.http
+ * @package tamed.http
  */
 class Header {
   protected

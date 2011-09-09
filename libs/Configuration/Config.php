@@ -16,7 +16,7 @@ namespace Configuration;
  *
  * Represents a Configuration file, extracted from a JSON file in /conf/
  *
- * @package twk.configuration
+ * @package tamed.configuration
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Config implements \IteratorAggregate, \ArrayAccess {

@@ -32,7 +32,7 @@ use \Obj, \Debug, \Exception;
  * @property-read \Routing\Route $route Route used
  * @property-read \Configuration\Loader $configuration Loaded configuration
  *
- * @package twk.controller
+ * @package tamed.controller
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 abstract class Front {

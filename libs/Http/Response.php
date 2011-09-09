@@ -19,7 +19,7 @@ use \View\Bridge;
  * Handles eveything sent by the server.
  *
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
- * @package twk.http
+ * @package tamed.http
  *
  * @method void redirect404(string $url, int $time = 0) Redirects the user to $url in $time seconds, with a 404 status.
  *
@@ -150,7 +150,7 @@ class Response {
       throw new \Exception('Unknown status');
     }
 
-    $header = sprintf('%1$s %2$d %3$s', $this->server('server_protocol'), $_status, self::$_status[$_status]);
+    $header = sprintf('%1$s %2$d %3$s', $_SERVER['SERVER_PROTOCOL'], $_status, self::$_status[$_status]);
     $this->header($header, null, true, $_status);
     $this->setStatus($_status);
   }
@@ -178,16 +178,6 @@ class Response {
     //\ob_end_flush(); // ?
     $this->sendHeaders();
     return !$this->isRedirect() ? $this->_content : '';
-  }
-
-  /**
-   * Gets an item sent by the server
-   *
-   * @param string $key Key of the parameter to be sent
-   * @return mixed
-   */
-  public function server($key) {
-    return $_SERVER[\strtoupper($key)] ?: null;
   }
 
   /**

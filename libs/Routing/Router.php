@@ -18,7 +18,7 @@ if (!defined('SAFE')) exit;
  *
  * Handles all the requests made towards the front controller.
  *
- * @package twk.routing
+ * @package tamed.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Router {
