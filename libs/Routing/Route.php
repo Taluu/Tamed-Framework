@@ -148,8 +148,7 @@ class Route {
    */
   public function __get($n) {
     if (in_array($n, array('action', 'command', 'controller'))) {
-      $n = '_' . $n;
-      return $this->$n;
+      return $this->{'_' . $n};
     }
 
     throw new \Exception('Fetching an unknown attribute (%s)', $n);
