@@ -139,6 +139,22 @@ class Config implements \IteratorAggregate, \ArrayAccess {
   }
 
   /**
+   * Merges the $file into a clone of this configuration
+   *
+   * @param string $file file to be merged
+   */
+  public function merge($file) {
+    $child = new Config($file, $this->_env);
+    $datas = $this->_datas;
+
+    array_replace_recursive($datas, $child->_load()->_datas);
+
+    $child->_datas = $datas;
+
+    return $child;
+  }
+
+  /**
    * Saves the configuration into the file.. If it is not constant.
    */
   public function save() {
@@ -159,7 +175,7 @@ class Config implements \IteratorAggregate, \ArrayAccess {
   /**
    * Loads from the configuration file
    *
-   * @return void
+   * @return Config
    */
   protected function _load() {
     if ($this->_loaded === true) {
@@ -185,6 +201,8 @@ class Config implements \IteratorAggregate, \ArrayAccess {
     }
 
     $this->_loaded = true;
+
+    return $this;
   }
 
   /**

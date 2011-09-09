@@ -104,7 +104,7 @@ class Request {
    * @todo if a htaccess (or equivalent) can not be cast, use the query string to
    *       analyse the url (?/part/to/somehting?a=b&c=d)
    */
-  public function requestUri() {
+  public function getRequestUri() {
     if ($this->_requestURI === null) {
       $requestURI = strstr(trim($_SERVER['REQUEST_URI']), '?', true);
       $requestURI = $requestURI ?: trim($_SERVER['REQUEST_URI']);

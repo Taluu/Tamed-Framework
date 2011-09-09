@@ -9,6 +9,9 @@
  * @version $Id$
  */
 
+use \Configuration\Loader;
+use \Controller\Front;
+
 define('SAFE', true);
 if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSION));
 
@@ -21,7 +24,9 @@ if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSI
 try {
   require __DIR__ . '/../libs/__init.' . PHP_EXT;
 
-  $p = \Controller\Front::getController()->render();
+  Obj::$config->setEnv(Loader::ENV_DEV);
+
+  $p = Front::getController()->render();
 } catch (\Exception $e) {
   echo $e;
 }

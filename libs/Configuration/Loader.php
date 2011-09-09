@@ -31,19 +31,21 @@ class Loader {
   protected
     $_dir = null,
     $_env = self::ENV_DEV,
+
+    /**
+     * @var Loader
+     */
+    $_base = null,
     $_loadedConfig = array();
 
-  public function __construct($_dir = './conf', $_env = self::ENV_DEV) {
+  public function __construct($_dir = './conf', $_env = self::ENV_DEV, Loader $_base = null) {
     if (!is_dir($_dir)) {
       throw new \Exception('Config directory ' . $_dir . ' doesn\'t exists !');
     }
 
-    if (!in_array($_env, array(self::ENV_DEV, self::ENV_TEST, self::ENV_PROD))) {
-      throw new \Exception('Environnement not recognized');
-    }
-
-    $this->_env = $_env;
+    $this->setEnv($_env);
     $this->_dir = rtrim($_dir, '/') . '/';
+    $this->_base = $_base;
   }
 
   /**
@@ -61,7 +63,9 @@ class Loader {
     $file = sha1(rtrim($_dir, '/') . '/' . $_file);
 
     if (!isset($this->_loadedConfig[$file])) {
-      $this->_loadedConfig[$file] = new Config($dir . $_file . '.json', $this->_env);
+      $this->_loadedConfig[$file] = $this->_base !== null
+         ? $this->_base->get($file)->merge($dir . $_file . '.json')
+         : new Config($dir . $_file . '.json', $this->_env);
     }
 
     $c = $this->_loadedConfig[$file];
@@ -74,10 +78,25 @@ class Loader {
   }
 
   /**
-   * @ignore
+   * Getter for $this->_env
+   *
+   * @internal
    */
-  public function __get($_config) {
-    return $this->get($_config);
+  public function getEnv() {
+    return $this->_env;
+  }
+
+  /*
+   * Setter for $this->_env
+   *
+   * @internal
+   */
+  public function setEnv($_env = self::ENV_DEV) {
+    if (!in_array($_env, array(self::ENV_DEV, self::ENV_TEST, self::ENV_PROD))) {
+      throw new \Exception('Environnement not recognized');
+    }
+
+    $this->_env = $_env;
   }
 }
 

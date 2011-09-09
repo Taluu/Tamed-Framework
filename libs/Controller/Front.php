@@ -13,6 +13,7 @@ namespace Controller;
 
 use \Http\Response, Http\Request;
 use \View\Bridge;
+use \Configuration\Loader;
 use \Obj, \Debug, \Exception;
 
 /**
@@ -29,6 +30,7 @@ use \Obj, \Debug, \Exception;
  * @property-read \Http\Request $request Request Handler
  * @property-read \Http\Response $response Response Handler
  * @property-read \Routing\Route $route Route used
+ * @property-read \Configuration\Loader $configuration Loaded configuration
  *
  * @package twk.controller
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
@@ -38,6 +40,7 @@ abstract class Front {
     $_template = null,
     $_status = Response::OK,
     $_isForwarded = false,
+    $_appDir = null,
 
     /**
      * View Engine
@@ -59,7 +62,12 @@ abstract class Front {
     /**
      * @var \Routing\Route
      */
-    $_route = null;
+    $_route = null,
+
+    /**
+     * @var \Configuration\Loader
+     */
+    $_config = null;
 
 
   /**
@@ -75,7 +83,12 @@ abstract class Front {
     $this->_view = $_view;
     $this->_request = $_request;
     $this->_response = $_response;
-    $this->_route = Obj::$router->route($_request);
+    $this->_route = Obj::$router->route($_request->getRequestUri());
+
+    $this->_appDir = sprintf('%1$s/../../apps/%2$s', __DIR__, mb_strtolower($this->_route->controller));
+    $this->_config = is_dir($this->_appDir . '/conf')
+       ? new Loader($this->_appDir . '/conf', Obj::$config->getEnv(), Obj::$config)
+       : Obj::$config;
   }
 
   /**
@@ -163,7 +176,7 @@ abstract class Front {
      ), $_options);
 
     Debug::info('Routing');
-    $route = Obj::$router->route($options['request']->requestUri());
+    $route = Obj::$router->route($options['request']->getRequestUri());
 
     if (isset($options['apploader']) && \is_callable($options['apploader'])) {
       \spl_autoloader_register($options['apploader']);
