@@ -16,7 +16,7 @@ use \Tamed\Controller\Front;
 /**
  * Home Controller
  *
- * @package tamedexampled.controller.sub
+ * @package tamed.example.controller.sub
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Home extends Front {

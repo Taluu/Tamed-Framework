@@ -17,7 +17,7 @@ use \Tamed\Http\Response;
 /**
  * Error Controller
  *
- * @package tamedexample.example.controller
+ * @package tamed.example.controller.sub
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Error extends Front {
