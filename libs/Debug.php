@@ -56,7 +56,7 @@ class Debug {
 
     // -- $db[0] is this function... And we have no interest in it, do we ?
     foreach (debug_backtrace(true) as $debug) {
-      if (isset($debug['class']) && $debug['class'] != 'Debug') {
+      if (isset($debug['class']) && $debug['class'] != __CLASS__) {
         break;
       }
     }
