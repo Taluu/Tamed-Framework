@@ -43,7 +43,9 @@ namespace Tamed\Loader;
  * @link http://groups.google.com/group/php-standards/web/psr-0-final-proposal
  */
 class ClassLoader {
-  protected $_prefixes = array();
+  protected
+    $_prefixes = array(),
+    $_registered = false;
 
   /**
    * Register a couple of prefixes for given classes.
@@ -82,6 +84,10 @@ class ClassLoader {
    * @param bool $_prepend Whether to prepend or not this autoloader on the stack
    */
   public function register($_prepend = false) {
+    if ($this->_registered === true) {
+      return;
+    }
+
     $self = &$this;
 
     spl_autoload_register(function ($class) use (&$self) {
@@ -92,6 +98,8 @@ class ClassLoader {
 
         return false;
       }, true, $_prepend);
+
+    $this->_registered = true;
   }
 
   /**
