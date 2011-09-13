@@ -11,7 +11,7 @@
 
 namespace Tamed\View;
 
-require __DIR__ . '/../../vendor/Talus-TPL/lib/Talus_TPL/Engine.php';
+require __DIR__ . '\..\..\vendor\Talus-TPL\lib\Talus_TPL\Main.php';
 
 /**
  * Definition of a view written in Talus TPL syntax
@@ -34,7 +34,7 @@ class TalusTPL extends Bridge {
    */
   public function __construct() {
     $dir = __DIR__ . '/../../views/';
-    $this->_engine = new \Talus_TPL_Engine($dir . 'templates', $dir . 'cache', array());
+    $this->_engine = new \Talus_TPL($dir . 'templates', $dir . 'cache', array());
   }
 
   /**
