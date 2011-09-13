@@ -110,23 +110,24 @@ class ClassLoader {
     // -- exploring each prefixes
     foreach ($this->_prefixes as $prefix => $dirs) {
       if (($pos = mb_strpos($class, $prefix)) === 0) {
-        $class = mb_substr($class, $pos + 1);
+        $class = trim(mb_substr($class, mb_strlen($prefix)), '\\');
+
+        $namespace = '';
+        $className = $class;
+        $classFile = '';
+
+        if (($pos = mb_strrpos($class, '\\')) !== false) {
+          $namespace = mb_substr($class, 0, $pos);
+          $className = mb_substr($class, $pos + 1);
+
+          $classFile .= str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+        }
+
+        $classFile .= str_replace('_', DIRECTORY_SEPARATOR, $className);
+        $classFile .= '.' . PHP_EXT;
 
         foreach ($dirs as &$dir) {
-          $file = $dir . DIRECTORY_SEPARATOR;
-
-          $namespace = '';
-          $className = $class;
-
-          if (($pos = mb_strrpos($class, '\\')) !== false) {
-            $namespace = mb_substr($class, 0, $pos);
-            $className = mb_substr($class, $pos + 1);
-
-            $file .= str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-          }
-
-          $file .= str_replace('_', DIRECTORY_SEPARATOR, $className);
-          $file .= '.' . PHP_EXT;
+          $file = $dir . DIRECTORY_SEPARATOR . $classFile;
 
           if (file_exists($file)) {
             return $file;
@@ -134,5 +135,7 @@ class ClassLoader {
         }
       }
     }
+
+    return null;
   }
 }
