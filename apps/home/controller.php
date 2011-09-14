@@ -9,17 +9,17 @@
  * @version $Id$
  */
 
-namespace Tamed\Example\Controller;
+namespace Tamed\Apps\Home;
 
-use \Tamed\Controller\Front;
+use \Tamed\Controller\Front as FrontController;
 
 /**
  * Home Controller
  *
- * @package tamed.example.controller.sub
+ * @package tamed.apps.home
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Home extends Front {
+class Controller extends FrontController {
   public function indexAction() {
     $this->_template = 'index';
     $this->test = $_SERVER['DOCUMENT_ROOT'];

@@ -9,18 +9,18 @@
  * @version $Id$
  */
 
-namespace Tamed\Example\Controller;
+namespace Tamed\Apps\Error;
 
-use \Tamed\Controller\Front;
+use \Tamed\Controller\Front as FrontController;
 use \Tamed\Http\Response;
 
 /**
  * Error Controller
  *
- * @package tamed.example.controller.sub
+ * @package tamed.apps.error
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class Error extends Front {
+class Controller extends FrontController {
   public function notfound_404Action() {
     $this->_status = Response::NOT_FOUND;
     $this->_template = 'index';

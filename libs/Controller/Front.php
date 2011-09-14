@@ -184,17 +184,17 @@ abstract class Front {
       \spl_autoloader_register($options['apploader']);
     }
 
+    /*
+     * NOTE : This will be removed when the ClassLoader will be effective.
+     */
     \spl_autoload_register(function($controller) {
       // -- Verifying that this is a controller : it must have a \...\Controller\Name form
       $parts = \array_values(\array_filter(\explode('\\', $controller)));
       $count = count($parts);
 
-      if ($parts[$count - 2] !== 'Controller') {
-        return false;
-      }
 
-      $controller = \mb_convert_case($parts[2], \MB_CASE_LOWER);
-      $file = \sprintf('%1$s/../../apps/%2$s/controller.%3$s', __DIR__, $parts[$count - 1], \PHP_EXT);
+      $controller = \mb_convert_case($parts[$count - 2], \MB_CASE_TITLE);
+      $file = \sprintf('%1$s/../../Apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
 
       if (\is_file($file)) {
         require $file;
@@ -204,7 +204,7 @@ abstract class Front {
       return false;
      });
 
-    Debug::info('Trying to start the subcontroller %1$s', $_controller);
+    Debug::info('Trying to start the subcontroller %1$s', $route->controller);
     return new $route->controller($options['request'], $options['response'], $options['view']);
   }
 
@@ -250,6 +250,6 @@ abstract class Front {
       return $this->{'_' . $name};
     }
 
-    throw new \Exception($name . ' is not a recognized attribute for \Controller\Front');
+    throw new \Exception($name . ' is not a recognized attribute for \Tamed\Controller\Front');
   }
 }
