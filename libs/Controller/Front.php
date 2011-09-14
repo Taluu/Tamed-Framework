@@ -83,9 +83,9 @@ abstract class Front {
     $this->_view = $_view;
     $this->_request = $_request;
     $this->_response = $_response;
-    $this->_route = Obj::$router->route($_request->getRequestUri());
+    $this->_route = Obj::$router->route($_request);
 
-    $this->_appDir = sprintf('%1$s/../../apps/%2$s', __DIR__, mb_strtolower($this->_route->controller));
+    $this->_appDir = sprintf('%1$s/../../apps/%2$s', __DIR__, mb_strtolower($this->_route->app));
     $this->_config = is_dir($this->_appDir . '/conf')
        ? new Loader($this->_appDir . '/conf', Obj::$config->getEnv(), Obj::$config)
        : Obj::$config;
@@ -178,7 +178,7 @@ abstract class Front {
      ), $_options);
 
     Debug::info('Routing');
-    $route = Obj::$router->route($options['request']->getRequestUri());
+    $route = Obj::$router->route($options['request']);
 
     if (isset($options['apploader']) && \is_callable($options['apploader'])) {
       \spl_autoloader_register($options['apploader']);
@@ -206,8 +206,10 @@ abstract class Front {
       return false;
      });
 
-    Debug::info('Trying to start the subcontroller %1$s', $route->controller);
-    return new $route->controller($options['request'], $options['response'], $options['view']);
+   $_controller = '\\Tamed\\Apps\\' . $route->app . '\\Controller';
+
+    Debug::info('Trying to start the subcontroller %1$s', $route->app);
+    return new $_controller($options['request'], $options['response'], $options['view']);
   }
 
   /**

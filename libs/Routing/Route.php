@@ -32,7 +32,7 @@ if (!defined('SAFE')) exit;
  * @package tamed.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  *
- * @property-read string $controller The requested controller
+ * @property-read string $app The requested controller
  * @property-read string $action The requested action
  * @property-read string $command The requested command
  */
@@ -44,7 +44,7 @@ class Route {
 
   protected
     $_action = null,
-    $_controller = null,
+    $_app = null,
     $_command = null,
 
     $_patterns = null,
@@ -56,17 +56,17 @@ class Route {
   /**
    * Constructor
    *
-   * @param string $_controller Controller's name
+   * @param string $_app App's name
    * @param string $_action Action's name
    * @param string $_pattern Pattern matching this route
    */
-  function __construct($_controller, $_action, $_pattern) {
+  function __construct($_app, $_action, $_pattern) {
     if (!is_array($_pattern)) {
       $_pattern = array($_pattern);
     }
 
     $this->_action = $_action;
-    $this->_controller = $_controller;
+    $this->_app = $_app;
     $this->_patterns = $_pattern;
 
     $this->_addVar(':alphanum', '[a-zA-Z0-9]+');
@@ -147,11 +147,11 @@ class Route {
    * @ignore
    */
   public function __get($n) {
-    if (in_array($n, array('action', 'command', 'controller'))) {
+    if (in_array($n, array('action', 'command', 'app'))) {
       return $this->{'_' . $n};
     }
 
-    throw new \Exception('Fetching an unknown attribute (%s)', $n);
+    throw new \Exception(sprintf('Fetching an unknown attribute (%s)', $n));
   }
 
   /**
@@ -161,7 +161,7 @@ class Route {
    * @return mixed value of the parameter if set, null otherwise
    */
   public function get($n) {
-    if (in_array($n, array('action', 'command', 'controller'))) {
+    if (in_array($n, array('action', 'command', 'app'))) {
       return $this->{'_' . $n};
     }
 

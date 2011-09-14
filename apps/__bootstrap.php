@@ -101,7 +101,7 @@ Obj::$config = new Configuration_Loader(__DIR__ . '/../conf/');
 Obj::$router = new Router;
 
 $routes = Obj::$config->get('routes', function (&$v, $k) {
-  $v = new Route($v['controller'], $v['action'], $v['pattern']);
+  $v = new Route($v['app'], $v['action'], $v['pattern']);
  });
 
 foreach ($routes as $name => &$route) {

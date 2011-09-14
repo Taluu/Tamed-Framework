@@ -14,6 +14,7 @@ namespace Tamed\Routing;
 if (!defined('SAFE')) exit;
 
 use Tamed\Debug;
+use Tamed\HTTP\Request;
 
 /**
  * Definition of the Router Class
@@ -40,12 +41,16 @@ class Router {
   /**
    * Route the current URI
    *
-   * @param string $_requestURI Request URI
+   * @param string|Tamed\HTTP\Request $_request Request
    * @return Route matched route
    */
-  public function route($_requestURI) {
+  public function route($_request) {
     if ($this->hasStarted()) {
       return $this->_matchedRoute;
+    }
+
+    if ($_request instanceof Request) {
+      $_request = $_request->getRequestUri();
     }
 
     /**
@@ -55,7 +60,7 @@ class Router {
      * @var &$route Route
      */
     foreach ($this->_routes as $name => &$route) {
-      if ($route->match($_requestURI)) {
+      if ($route->match($_request)) {
         Debug::info('Route %s matched', $name);
         $this->_matchedRoute = $route;
         break;
