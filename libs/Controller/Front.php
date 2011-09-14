@@ -192,9 +192,11 @@ abstract class Front {
       $parts = \array_values(\array_filter(\explode('\\', $controller)));
       $count = count($parts);
 
+      if ($parts[$count - 1] !== 'Controller') {
+        return false;
+      }
 
-      $controller = \mb_convert_case($parts[$count - 2], \MB_CASE_TITLE);
-      $file = \sprintf('%1$s/../../Apps/%2$s/controller.%3$s', __DIR__, $controller, \PHP_EXT);
+      $file = \sprintf('%1$s/../../Apps/%2$s/Controller.%3$s', __DIR__, $parts[$count - 2], \PHP_EXT);
 
       if (\is_file($file)) {
         require $file;
