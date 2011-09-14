@@ -21,6 +21,7 @@ namespace Tamed;
 use Tamed\Configuration\Loader as Configuration_Loader;
 use Tamed\Routing\Router;
 use Tamed\Routing\Route;
+use Tamed\Debug;
 
 if (!defined('SAFE')) exit;
 if (defined('ALREADY_STARTED')) exit;
@@ -46,7 +47,8 @@ spl_autoload_register(function ($_class) {
     return false;
   }
 
-  array_shift($file); array_unshift($file, __DIR__);
+
+  array_shift($file); array_unshift($file, __DIR__, '..', 'libs');
   $file = implode(DIRECTORY_SEPARATOR, $file) . '.' . PHP_EXT;
 
   if (!is_file($file)) {
@@ -89,7 +91,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
       break;
   }
 
-  $e = new ErrorException($errstr, 0, $errno, $errfile, $errline);
+  $e = new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 
   Debug::log('An error occurred (' . $e->__toString() . ')', $err);
   throw $e;

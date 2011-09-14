@@ -22,7 +22,7 @@ if (!defined('PHP_EXT')) define('PHP_EXT', \pathinfo(__FILE__, \PATHINFO_EXTENSI
  * @todo Handle correctly the exception
  */
 try {
-  require __DIR__ . '/../libs/__init.' . PHP_EXT;
+  require __DIR__ . '/../Apps/__bootstrap.' . PHP_EXT;
 
   Tamed\Obj::$config->setEnv(Loader::ENV_DEV);
 
