@@ -11,7 +11,8 @@
 
 namespace Tamed\View;
 
-require __DIR__ . '\..\..\vendor\Talus-TPL\lib\Talus_TPL\Main.php';
+// -- Note : to be replaced by the PSR-0 implementation
+require __DIR__ . '\..\..\vendor\Talus-TPL\lib\Talus_TPL\Engine.php';
 
 /**
  * Definition of a view written in Talus TPL syntax
@@ -34,7 +35,7 @@ class TalusTPL extends Bridge {
    */
   public function __construct() {
     $dir = __DIR__ . '/../../views/';
-    $this->_engine = new \Talus_TPL($dir . 'templates', $dir . 'cache', array());
+    $this->_engine = new \Talus_TPL_Engine($dir . 'templates', $dir . 'cache', array());
   }
 
   /**
@@ -62,7 +63,7 @@ class TalusTPL extends Bridge {
     }
 
     if ($info & self::INFO_VERSION) {
-      $return[] = \Talus_TPL::VERSION;
+      $return[] = \Talus_TPL_Engine::VERSION;
     }
 
     if ($info & self::INFO_ENGINE) {
