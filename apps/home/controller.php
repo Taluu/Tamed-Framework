@@ -20,7 +20,7 @@ use \Tamed\Controller\Front as FrontController;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Controller extends FrontController {
-  public function indexAction() {
+  public function index() {
     $this->_template = 'index';
     $this->test = $_SERVER['DOCUMENT_ROOT'];
   }

@@ -32,7 +32,8 @@ if (!defined('SAFE')) exit;
  * @package tamed.routing
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  *
- * @property-read string $app The requested controller
+ * @property-read string $app A string controller:action
+ * @property-read string $controller The requested controller
  * @property-read string $action The requested action
  * @property-read string $command The requested command
  */
@@ -43,7 +44,6 @@ class Route {
   const REGEX_PHP_ID = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
   protected
-    $_action = null,
     $_app = null,
     $_command = null,
 
@@ -57,15 +57,13 @@ class Route {
    * Constructor
    *
    * @param string $_app App's name
-   * @param string $_action Action's name
    * @param string $_pattern Pattern matching this route
    */
-  function __construct($_app, $_action, $_pattern) {
+  function __construct($_app, $_pattern) {
     if (!is_array($_pattern)) {
       $_pattern = array($_pattern);
     }
 
-    $this->_action = $_action;
     $this->_app = $_app;
     $this->_patterns = $_pattern;
 
@@ -86,7 +84,8 @@ class Route {
   protected function _parse() {
     foreach ($this->_patterns as &$pattern) {
       $pattern = preg_quote($pattern, '`');
-      $pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]?)`', '/(?P<$1>$2)', $pattern);
+      $pattern = preg_replace('`/\\\\\[(' . self::REGEX_PHP_ID . ')\\\\\]([^/]+)`', '/?P<$1>$2', $pattern);
+      $pattern = preg_replace('`/([^/]+)`', '/($1)', $pattern);
       $pattern = str_replace(array_keys($this->_vars), array_values($this->_vars), $pattern);
 
       $pattern = '`^' . $pattern . '$`';
@@ -119,7 +118,7 @@ class Route {
     if (!$this->_matchResult[$_requestUri]) {
       return false;
     }
-
+    
     // -- Removing the first "match" (which is everything, in fact)
     array_shift($matches);
     $previous = null;
@@ -139,7 +138,7 @@ class Route {
       $this->_params[$key] = $val[0];
       $this->_command .= $tmp;
     }
-
+    
     return true;
   }
 
@@ -147,8 +146,13 @@ class Route {
    * @ignore
    */
   public function __get($n) {
-    if (in_array($n, array('action', 'command', 'app'))) {
+    if (in_array($n, array('command', 'app'))) {
       return $this->{'_' . $n};
+    }
+    
+    if (in_array($n, array('action', 'controller'))) {
+      list($controller,$action) = explode(':', $this->_app);
+      return ${$n};
     }
 
     throw new \Exception(sprintf('Fetching an unknown attribute (%s)', $n));
@@ -161,8 +165,13 @@ class Route {
    * @return mixed value of the parameter if set, null otherwise
    */
   public function get($n) {
-    if (in_array($n, array('action', 'command', 'app'))) {
+    if (in_array($n, array('command', 'app'))) {
       return $this->{'_' . $n};
+    }
+    
+    if (in_array($n, array('action', 'controller'))) {
+      list($controller,$action) = explode(':', $this->_app);
+      return ${$n};
     }
 
     if (isset($this->_params[$n])) {

@@ -101,7 +101,16 @@ Obj::$config = new Configuration_Loader(__DIR__ . '/../conf/');
 Obj::$router = new Router;
 
 $routes = Obj::$config->get('routes', function (&$v, $k) {
-  $v = new Route($v['app'], $v['action'], $v['pattern']);
+  // -- if a 'app' part is not set, it has to be constructed
+  if (!isset($v['app'])) {
+    if (!isset($v['controller'], $v['action'])) {
+      throw new \Exception('The route does not have the required arguments');
+    }
+    
+    $v['app'] = $v['controller'] . ':' . $v['action'];
+  }
+  
+  $v = new Route($v['app'], $v['pattern']);
  });
 
 foreach ($routes as $name => &$route) {

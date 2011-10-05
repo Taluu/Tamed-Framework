@@ -144,16 +144,14 @@ abstract class Front {
    * @throws Exception if the action is not found
    */
   final private function _main($_action) {
-    $action = $_action . 'Action';
-
-    if (!\method_exists($this, $action)) {
+    if (!\method_exists($this, $_action)) {
       Debug::warning('Action %1$s nonexistent', $_action);
-      throw new Exception(sprintf('%1$s->%2$s Not found', get_class($this), $action));
+      throw new Exception(sprintf('%1$s->%2$s Not found', get_class($this), $_action));
     }
 
     Debug::info('Loading "%1$s->%2$s"', get_class($this), $_action);
     $this->_prepend();
-    $this->{$action}();
+    $this->{$_action}();
     $this->_append();
   }
 
@@ -188,7 +186,7 @@ abstract class Front {
      * NOTE : This will be removed when the ClassLoader will be effective.
      */
     \spl_autoload_register(function($controller) {
-      // -- Verifying that this is a controller : it must have a \...\Controller\Name form
+      // -- Verifying that this is a controller : it must have a \...\Controller form
       $parts = \array_values(\array_filter(\explode('\\', $controller)));
       $count = count($parts);
 
@@ -206,9 +204,9 @@ abstract class Front {
       return false;
      });
 
-   $_controller = '\\Tamed\\Apps\\' . $route->app . '\\Controller';
+   $_controller = $route->controller . '\\Controller';
 
-    Debug::info('Trying to start the subcontroller %1$s', $route->app);
+    Debug::info('Trying to start the application %1$s', $route->app);
     return new $_controller($options['request'], $options['response'], $options['view']);
   }
 

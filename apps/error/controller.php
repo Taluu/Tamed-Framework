@@ -21,7 +21,7 @@ use \Tamed\Http\Response;
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
 class Controller extends FrontController {
-  public function notfound_404Action() {
+  public function notFound() {
     $this->_status = Response::NOT_FOUND;
     $this->_template = 'index';
   }

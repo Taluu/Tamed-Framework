@@ -1,15 +1,13 @@
 {
   "_isConst": true,
 
-  "404" : {
-    "app" : "Error",
-    "action" : "notfound_404",
-    "pattern" : "/error/notfound_404"
-   },
-
   "homepage" : {
-    "app" : "Home",
-    "action" : "index",
+    "app" : "\\Tamed\\Apps\\Home:index",
     "pattern" : "/"
-  }
+  },
+
+  "404" : {
+    "app" : "\\Tamed\\Apps\\Error:notFound",
+    "pattern" : ["/error/notfound", "/:any"]
+   }
 }
