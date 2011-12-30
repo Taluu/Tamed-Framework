@@ -26,13 +26,6 @@ class PHP extends Bridge {
   /**
    * @inheritdoc
    */
-  public function bind($var, &$value){
-    $this->_vars[$var] = &$value;
-  }
-
-  /**
-   * @inheritdoc
-   */
   public function getEngineInfos($info = self::INFO_ALL) {
     $return = array();
 
@@ -58,11 +51,11 @@ class PHP extends Bridge {
   /**
    * @inheritdoc
    */
-  protected function _render($_view) {
+  protected function _render($_view, $_context = array()) {
     $this->_view = __DIR__ . '/../../views/templates/' . $_view . '.' . \PHP_EXT;
 
     ob_start();
-    extract($this->_vars, EXTR_REFS | EXTR_OVERWRITE);
+    extract($_context, EXTR_REFS | EXTR_OVERWRITE);
     include $this->_view;
     $content = ob_get_clean();
 

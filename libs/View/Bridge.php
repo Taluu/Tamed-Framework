@@ -29,30 +29,16 @@ abstract class Bridge {
   protected $_vars = array();
 
   /**
-   * Send all the defined variables to the view engine
-   *
-   * @return void
-   */
-  protected function _assign() {}
-
-  /**
-   * Binds a variable
-   *
-   * @param string $var Variable's name (tpl side)
-   * @param mixed &$value Variable references (php side)
-   * @return void
-   */
-  abstract public function bind($var, &$value);
-
-  /**
    * Renders a view
    *
    * @param string $view View to be rendered
    * @return string Result
    */
   final public function render($view) {
-    $this->_assign();
-    return $this->_render($view);
+    $result = $this->_render($view);
+    $this->_vars = array();
+    
+    return $result;
   }
 
   /**
@@ -60,10 +46,11 @@ abstract class Bridge {
    *
    * Must be overriten.
    *
-   * @param string $view View to be rendered
+   * @param string $_view View to be rendered
+   * @param array $_context local variables
    * @return string Result
    */
-  abstract protected function _render($view);
+  abstract protected function _render($_view, $_context = array());
 
   /**
    * Gets information regarding the engine
