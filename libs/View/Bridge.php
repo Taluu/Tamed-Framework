@@ -35,7 +35,7 @@ abstract class Bridge {
    * @return string Result
    */
   final public function render($view) {
-    $result = $this->_render($view);
+    $result = $this->_render($view, $this->_vars);
     $this->_vars = array();
     
     return $result;
