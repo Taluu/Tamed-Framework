@@ -27,15 +27,9 @@ use Tamed\HTTP\Request;
 class Router {
   protected
     $_command = null,
-
-    $_params = array(),
-    $_namedParams = array(),
-
     $_routes = array(),
 
-    /**
-     * @var Route
-     */
+    /** @var Route */
     $_matchedRoute = null;
 
   /**

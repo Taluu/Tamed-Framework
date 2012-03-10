@@ -165,20 +165,11 @@ class Route {
    * @return mixed value of the parameter if set, null otherwise
    */
   public function get($n) {
-    if (in_array($n, array('command', 'app'))) {
-      return $this->{'_' . $n};
+    try {
+      return $this->$n;
+    } catch (\Exception $e) {
+      return isset($this->_params[$n]) ? $this->_params[$n] : null;
     }
-    
-    if (in_array($n, array('action', 'controller'))) {
-      list($controller,$action) = explode(':', $this->_app);
-      return ${$n};
-    }
-
-    if (isset($this->_params[$n])) {
-      return $this->_params[$n];
-    }
-
-    return null;
   }
 
   /**
