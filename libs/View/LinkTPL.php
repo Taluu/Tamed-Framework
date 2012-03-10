@@ -11,22 +11,20 @@
 
 namespace Tamed\View;
 
-// -- Note : to be replaced by the PSR-0 implementation
-require __DIR__ . '\..\..\vendor\Talus-TPL\lib\Talus_TPL\Engine.php';
-
 /**
- * Definition of a view written in Talus TPL syntax
+ * Definition of a view written in Link TPL syntax
  *
- * Acts as a bridge between Talus' TPL and Talus' Works, allowing to use Talus TPL
- * in the views
+ * Acts as a bridge between Link TPL and Tamed Framework, allowing to use Link
+ * TPL in the views. Note, this bridge uses the Filesystem method for both the
+ * loader and the cache systems.
  *
  * @package tamed.view
  * @author Baptiste "Talus" Clavié <clavie.b@gmail.com>
  */
-class TalusTPL extends Bridge {
+class LinkTPL extends Bridge {
   protected
     /**
-     * @var \Talus_TPL
+     * @var \Link_Environnement
      */
     $_engine = null;
 
@@ -34,22 +32,17 @@ class TalusTPL extends Bridge {
    * @inheritdoc
    */
   public function __construct() {
-    $dir = __DIR__ . '/../../views/';
-    $this->_engine = new \Talus_TPL_Engine($dir . 'templates', $dir . 'cache', array());
-  }
-
-  /**
-   * @inheritdoc
-   */
-  protected function _assign(){
-    $this->_engine->set($this->_vars);
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function bind($var, &$value){
-    $this->_engine->bind($var, $value);
+    // -- Note : when the PSR-0 system will be put in place, these lines shall disappear
+    require __DIR__ . '/../../vendor/Link-TPL/lib/Link/Autoloader.php';
+    \Link_Autoloader::register();
+    
+    $dir = __DIR__ . '/../../views';
+    
+    // -- loaders
+    $loader = new \Link_Loader_Filesystem($dir . '/templates');
+    $cache = new \Link_Cache_Filesystem($dir . '/cache');
+    
+    $this->_engine = new \Link_Environnement($loader, $cache, array());
   }
 
   /**
@@ -59,11 +52,11 @@ class TalusTPL extends Bridge {
     $return = array();
 
     if ($info & self::INFO_NAME) {
-      $return[] = 'Talus\' TPL';
+      $return[] = 'Link\' TPL';
     }
 
     if ($info & self::INFO_VERSION) {
-      $return[] = \Talus_TPL_Engine::VERSION;
+      $return[] = \Link_Environnement::VERSION;
     }
 
     if ($info & self::INFO_ENGINE) {
@@ -80,7 +73,7 @@ class TalusTPL extends Bridge {
   /**
    * @inheritdoc
    */
-  protected function _render($view) {
-    return $this->_engine->pparse($view . '.html');
+  protected function _render($_view, $_context = array()) {
+    return $this->_engine->pparse($_view . '.html', $_context);
   }
 }

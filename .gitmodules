@@ -1,6 +1,6 @@
-[submodule "vendor/Talus-TPL"]
-	path = vendor/Talus-TPL
-	url = git@github.com:Taluu/Talus-TPL
-[submodule "vendor/Tamed-ORM"]
+[submodule "Tamed-ORM"]
 	path = vendor/Tamed-ORM
 	url = git@github.com:Taluu/Tamed-ORM
+[submodule "Link-TPL"]
+	path = vendor/Link-TPL
+	url = git@github.com:Taluu/Link-TPL
