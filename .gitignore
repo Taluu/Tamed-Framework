@@ -1,14 +1,11 @@
-#.git files
-!.gitignore
-
 .ignore/
 
 logs/*.log
 
-# Netbeans Project directory
-nbproject/
+vendor/
+.idea/
 
-# Docs
+nbproject/
 docs/
 
 #cache
