@@ -3,13 +3,15 @@
 logs/*.log
 
 vendor/
-.idea/
 
+.idea/
 nbproject/
+
 docs/
 
-#cache
-.cache/
-views/cache/*.php
+.cache/*
 
 /.git-rewrite/
+composer.lock
+composer.phar
+

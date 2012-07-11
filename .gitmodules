@@ -1,6 +1,0 @@
-[submodule "Tamed-ORM"]
-	path = vendor/Tamed-ORM
-	url = git@github.com:Taluu/Tamed-ORM
-[submodule "Link-TPL"]
-	path = vendor/Link-TPL
-	url = git@github.com:Taluu/Link-TPL
