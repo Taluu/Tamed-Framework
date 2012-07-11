@@ -1,0 +1,27 @@
+{
+    "name": "tamed/framework",
+    "description": "A lightweight PHP 5.4 framework",
+    "license": "BSD-3-Clause",
+    "version": "1.0.0-dev",
+    "homepage": "http://github.com/Taluu/Tamed-Framework.git",
+    "type": "library",
+    "keywords": ["framework", "lightweight"],
+
+    "require": {
+        "php": ">= 5.4.0",
+
+        "taluu/link-tpl": "1.x-dev",
+        "tamed/orm": "1.0.x-dev"
+    },
+
+    "authors": [
+        {
+            "name": "Baptiste Clavié",
+            "email": "clavie.b@gmail.com",
+            "homepage": "http://baptiste.clavié.net",
+            "role": "Lead Developper"
+        }
+    ],
+
+    "minimum-stability": "dev"
+}
